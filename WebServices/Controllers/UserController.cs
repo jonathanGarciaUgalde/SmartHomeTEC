@@ -4,10 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-<<<<<<< HEAD
 using WebServices.Models;
-=======
->>>>>>> API
+using Npgsql;
+
+
+
+using WebServices.Models;
+using Newtonsoft.Json.Linq;
+
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WebServices.Controllers
@@ -16,15 +20,16 @@ namespace WebServices.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-<<<<<<< HEAD
+        NpgsqlConnection connection = new NpgsqlConnection();
+     
 
         /*
         * Método que se comunica mediante el protocolo http para validar si el usuario que inicia sesión está registrado.
         */
-        [HttpGet("{Username}/{Password}")]
-        public async Task<IActionResult> ValidUser(string Username, string Password)
+        [HttpGet("id/{id}")]
+        public async Task<IActionResult> ValidUser(int id)
         {
-            return Ok();
+            return Ok(id);
         }
         /*
         * Método que se comunica mediante el protocolo http y retorna todos los usuarios registrados.
@@ -41,59 +46,34 @@ namespace WebServices.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetClienteAsync(int id)
         {
-         
+
             return Ok();
         }
         /*
         * Método que se comunica mediante el protocolo http para insertar nuevos clientes en el app.
         */
-        [HttpPost]
+        [HttpPost("insert/user")]
         public async Task<IActionResult> AddClienteAsync(User newUser)
         {
-          
-            return CreatedAtRoute("default", new { id = newUser.Correo}, newUser);
-        }
-      
-        /*
-        * Método que se comunica mediante el protocolo http para eliminar el usuario que se indica en la página web
-        */
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteClienteAsync(int id)
-        {
+            connection.ConnectionString ="Server=localhost; Port = 5432;User Id=postgres;Password = 12345; Database = SmartHomeTec";
            
-            return Ok("toDelete");
-=======
-        // GET: api/<ValuesController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+            
+            String query = "insert into usuario VALUES(";
+            query+="'"+newUser.Correo+"'," + "'"+newUser.Password+"',"+"'"+ newUser.Nombre+"',"+"'" + newUser.Apellido1+"',"+"'"+ newUser.Apellido2+"',"+"'"+newUser.Direccion+"',"+"'"+newUser.Pais+"',"+"'"+newUser.Continente+"')";
+            connection.Open();
 
-        // GET api/<ValuesController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+            NpgsqlCommand execute = new NpgsqlCommand(query, connection);
+            execute.ExecuteNonQuery();
+            connection.Close();
 
-        // POST api/<ValuesController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+            return Ok("Success");
 
-        // PUT api/<ValuesController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
 
-        // DELETE api/<ValuesController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
->>>>>>> API
+
+
+
+
         }
     }
 }
+
