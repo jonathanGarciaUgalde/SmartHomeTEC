@@ -21,59 +21,104 @@ namespace WebServices.Controllers
     public class UserController : ControllerBase
     {
         NpgsqlConnection connection = new NpgsqlConnection();
-     
+        ServerConexion server = new ServerConexion();
+        LoginModel lg = new LoginModel();
+
 
         /*
         * Método que se comunica mediante el protocolo http para validar si el usuario que inicia sesión está registrado.
         */
-        [HttpGet("id/{id}")]
-        public async Task<IActionResult> ValidUser(int id)
+        [HttpPost]
+        [Route("verify/Login/{username}/{password}")]
+        public async Task<IActionResult> Login(string username, string password)
         {
-            return Ok(id);
+
+            connection.ConnectionString = server.init();
+            connection.Open();
+
+            string query = "select correo,password from usuario where correo = '" + username + "'";
+            NpgsqlCommand conector = new NpgsqlCommand(query, connection);
+
+            if (lg.verifyLogin(conector, username, password))
+            {
+                connection.Close();
+                return Ok(true);
+            }
+           
+           
+            return BadRequest("Username or password is incorrect");
         }
         /*
         * Método que se comunica mediante el protocolo http y retorna todos los usuarios registrados.
         */
-        [HttpGet("All/Users")]
-        public async Task<IActionResult> GetallAsync()
-        {
-            return Ok();
-        }
+
+
         /*
         * Método que se comunica mediante el protocolo http  y  este retorna el usuario del id que se consulta 
         * 
         */
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetClienteAsync(int id)
-        {
 
-            return Ok();
-        }
         /*
         * Método que se comunica mediante el protocolo http para insertar nuevos clientes en el app.
         */
         [HttpPost("insert/user")]
-        public async Task<IActionResult> AddClienteAsync(User newUser)
-        {
-            connection.ConnectionString ="Server=localhost; Port = 5432;User Id=postgres;Password = 12345; Database = SmartHomeTec";
-           
-            
-            String query = "insert into usuario VALUES(";
-            query+="'"+newUser.Correo+"'," + "'"+newUser.Password+"',"+"'"+ newUser.Nombre+"',"+"'" + newUser.Apellido1+"',"+"'"+ newUser.Apellido2+"',"+"'"+newUser.Direccion+"',"+"'"+newUser.Pais+"',"+"'"+newUser.Continente+"')";
-            connection.Open();
+            public async Task<IActionResult> AddClienteAsync(User newUser)
+            {
+                connection.ConnectionString = server.init();
+                // string query = "select Correo from usuario where correo = '" +newUser.Correo +"'";
+                //NpgsqlCommand conector = new NpgsqlCommand(query, connection);
+                //if (exist(conector))
+                //{
+                //  connection.Close();
+                //return BadRequest("User already exist");
+                //}
+                //else
+                
 
-            NpgsqlCommand execute = new NpgsqlCommand(query, connection);
-            execute.ExecuteNonQuery();
-            connection.Close();
-
-            return Ok("Success");
-
-
-
+                    string query = "insert into usuario VALUES(";
+                    query += "'" + newUser.Correo + "'," + "'" + newUser.Password + "'," + "'" + newUser.Nombre + "'," + "'" + newUser.Apellidos + "')";
 
 
 
-        }
-    }
-}
+                    connection.Open();
+
+                    NpgsqlCommand execute = new NpgsqlCommand(query, connection);
+                    execute.ExecuteNonQuery();
+                    query = " insert into region_x_usuario VALUES(";
+                    query += "'" + newUser.Region.Pais + "','" + newUser.Correo + "','" + newUser.Region.Continente + "')";
+                    NpgsqlCommand execute1 = new NpgsqlCommand(query, connection);
+                    execute1.ExecuteNonQuery();
+
+
+
+
+
+                    int i = 0;
+                    while (newUser.Direccion.Count > i)
+                    {
+                        query = "insert into direccion VALUES(";
+                        query += "'" + newUser.Correo + "'," + "'" + newUser.Direccion.ElementAt(i).Provincia + "','" + newUser.Direccion.ElementAt(i).Canton + "','" + newUser.Direccion.ElementAt(i).Distrito + "')";
+
+                        NpgsqlCommand execute3 = new NpgsqlCommand(query, connection);
+                        execute3.ExecuteNonQuery();
+                        i++;
+
+
+
+                    }
+                    connection.Close();
+                    return Ok("Success");
+
+
+                }
+
+
+
+
+
+
+            } } 
+    
+    
+
 
