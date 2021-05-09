@@ -1,1 +1,90 @@
-<p>register works!</p>
+<nav class="navbar navbar-expand-lg navbar-light navbar-laravel">
+    <div class="container">
+        <a class="navbar-brand" routerLink="/">SmartHomeTEC</a>
+          
+    </div>
+</nav>
+
+
+<div class="login-form">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">Registrarse</div>
+                    <div class="card-body">
+                            <div class="form-group row">
+                                <label for="nombre" class="col-md-4 col-form-label">Nombre</label>
+                                <div class="col-md-6">
+                                    <input type="text" id="nombre" class="form-control" name="nombre" required autofocus>
+                                </div>
+                            </div>
+
+                            <div class="form-group row mt-2">
+                                <label for="apellidos" class="col-md-4 col-form-label text-md-right">Apellidos</label>
+                                <div class="col-md-6">
+                                    <input type="text" id="apellidos" class="form-control" name="apellidos" required>
+                                </div>
+                            </div>
+                            <div class="form-group row mt-2">
+                                <label for="continente" class="col-md-4 col-form-label text-md-right">Continente</label>
+                                <div class="col-md-6">
+                                    <select name="continente" id="continente" class="form-control" >
+                                        <option value="Opcion 1">Opcion 1</option>
+                                        <option value="Opcion 2">Opcion 2</option>
+                                        <option value="Opcion 3">Opcion 3</option>
+                                    </select>
+                                </div>
+                            </div>
+                             <div class="form-group row mt-2">
+                                <label for="pais" class="col-md-4 col-form-label text-md-right">País</label>
+                                <div class="col-md-6">
+                                    <select name="pais" id="pais" class="form-control" >
+                                        <option value="Opcion 1">Opcion 1</option>
+                                        <option value="Opcion 2">Opcion 2</option>
+                                        <option value="Opcion 3">Opcion 3</option>
+                                    </select>
+                                </div>
+                            </div>
+                             
+                             <div class="form-group row mt-2">
+                                <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
+                                <div class="col-md-6">
+                                    <input type="text" id="email" class="form-control" name="email" required>
+                                </div>
+                            </div>
+
+                             <div class="form-group row mt-2">
+                                <label for="contrasena" class="col-md-4 col-form-label text-md-right">Contraseña</label>
+                                <div class="col-md-6">
+                                    <input type="password" id="contrasena" class="form-control" name="contrasena" required>
+                                </div>
+                            </div>
+
+                             <div class="form-group row mt-2">
+                                <label for="confirmeContra" class="col-md-4 col-form-label text-md-right">Confirme Contraseña</label>
+                                <div class="col-md-6">
+                                    <input type="password" id="confirmeContra" class="form-control" name="confirmeContra" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group row mt-2">
+                                <label for="direccion" class="col-md-4 col-form-label text-md-right">Direccion</label>
+                                <div class="col-md-6">
+                                    <input type="text" id="direccion" class="form-control" name="direccion" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 offset-md-6 mt-2">
+                                <button type="submit" class="btn btn-light ">
+                                    Registrarse
+                                </button>                                
+                            </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+</div>
