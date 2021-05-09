@@ -28,54 +28,45 @@ namespace WebServices.Controllers
         /*
         * Método que se comunica mediante el protocolo http para validar si el usuario que inicia sesión está registrado.
         */
-        [HttpPost]
-        [Route("verify/Login/{username}/{password}")]
-        public async Task<IActionResult> Login(string username, string password)
+        [HttpGet]
+        [Route("Login/{Correo}/{password}")]
+        public async Task<IActionResult> Login(string Correo, string password)
         {
 
-            connection.ConnectionString = server.init();
+            connection.ConnectionString = server.init();// se inicia el  servidor de la base de datos 
             connection.Open();
 
-            string query = "select correo,password from usuario where correo = '" + username + "'";
+            string query = "SELECT Correo,Password FROM usuario WHERE usuario.Correo = '" + Correo+"'";
             NpgsqlCommand conector = new NpgsqlCommand(query, connection);
-
-            if (lg.verifyLogin(conector, username, password))
-            {
+            
+            
+            if ( lg.verifyLogin(conector, password)){ 
                 connection.Close();
-                return Ok(true);
+                return Ok(true);//
             }
-           
-           
-            return BadRequest("Username or password is incorrect");
+            connection.Close();
+
+
+            
+            return BadRequest("usuario  o contraseña invalido");
         }
-        /*
-        * Método que se comunica mediante el protocolo http y retorna todos los usuarios registrados.
-        */
+        
 
-
-        /*
-        * Método que se comunica mediante el protocolo http  y  este retorna el usuario del id que se consulta 
-        * 
-        */
-
-        /*
-        * Método que se comunica mediante el protocolo http para insertar nuevos clientes en el app.
-        */
-        [HttpPost("insert/user")]
+        [HttpPost("Register/user")]
             public async Task<IActionResult> AddClienteAsync(User newUser)
             {
                 connection.ConnectionString = server.init();
-                // string query = "select Correo from usuario where correo = '" +newUser.Correo +"'";
-                //NpgsqlCommand conector = new NpgsqlCommand(query, connection);
-                //if (exist(conector))
-                //{
-                //  connection.Close();
-                //return BadRequest("User already exist");
-                //}
-                //else
+               string query = "select correo from usuario where correo = '" +newUser.Correo +"'";
+                NpgsqlCommand conector = new NpgsqlCommand(query, connection);
+                if (lg.existsUser(conector))
+                {
+                  connection.Close();
+                return BadRequest("User already exist");
+                }
+                else
                 
 
-                    string query = "insert into usuario VALUES(";
+                     query = "insert into usuario VALUES(";
                     query += "'" + newUser.Correo + "'," + "'" + newUser.Password + "'," + "'" + newUser.Nombre + "'," + "'" + newUser.Apellidos + "')";
 
 
