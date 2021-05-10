@@ -11,6 +11,8 @@ import { NavbarAdminComponent } from './componentes/admin/navbar-admin/navbar-ad
 import { ModalDispositivosComponent } from './componentes/admin/modal-dispositivos/modal-dispositivos.component';
 import { GestionTipoComponent } from './componentes/admin/gestion-tipo/gestion-tipo.component';
 import { DashboardComponent } from './componentes/admin/dashboard/dashboard.component';
+import { TiendaComponent } from './componentes/admin/tienda/tienda.component';
+import { ModalTipoComponent } from './componentes/admin/modal-tipo/modal-tipo.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import { DashboardComponent } from './componentes/admin/dashboard/dashboard.comp
     NavbarAdminComponent,
     ModalDispositivosComponent,
     GestionTipoComponent,
-    DashboardComponent
+    DashboardComponent,
+    TiendaComponent,
+    ModalTipoComponent
   ],
   imports: [
     BrowserModule,

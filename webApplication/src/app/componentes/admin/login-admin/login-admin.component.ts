@@ -17,7 +17,7 @@ export class LoginAdminComponent implements OnInit {
 
   verificarCredenciales():void{
 
-  	this.router.navigate(["admin/dispositivos"]);
+  	this.router.navigate(["admin/dashboard"]);
 
   }
 

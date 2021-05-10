@@ -6,6 +6,7 @@ import { RegisterComponent } from './componentes/cliente/register/register.compo
 import { DispositivosComponent } from './componentes/admin/dispositivos/dispositivos.component';
 import { GestionTipoComponent } from './componentes/admin/gestion-tipo/gestion-tipo.component';
 import { DashboardComponent } from './componentes/admin/dashboard/dashboard.component';
+import { TiendaComponent } from './componentes/admin/tienda/tienda.component';
 
 
 const routes: Routes = [
@@ -15,6 +16,7 @@ const routes: Routes = [
 {path:'admin/dispositivos', component: DispositivosComponent},
 {path:'admin/tipo', component: GestionTipoComponent},
 {path:'admin/dashboard', component: DashboardComponent},
+{path:'admin/tienda', component: TiendaComponent},
 {path: '**', pathMatch:'full', redirectTo: ''}
 
 ];
