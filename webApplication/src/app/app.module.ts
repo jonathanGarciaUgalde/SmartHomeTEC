@@ -13,6 +13,9 @@ import { GestionTipoComponent } from './componentes/admin/gestion-tipo/gestion-t
 import { DashboardComponent } from './componentes/admin/dashboard/dashboard.component';
 import { TiendaComponent } from './componentes/admin/tienda/tienda.component';
 import { ModalTipoComponent } from './componentes/admin/modal-tipo/modal-tipo.component';
+import { PerfilComponent } from './componentes/cliente/perfil/perfil.component';
+import { NavbarClienteComponent } from './componentes/cliente/navbar-cliente/navbar-cliente.component';
+import { ReportesComponent } from './componentes/cliente/reportes/reportes.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +29,10 @@ import { ModalTipoComponent } from './componentes/admin/modal-tipo/modal-tipo.co
     GestionTipoComponent,
     DashboardComponent,
     TiendaComponent,
-    ModalTipoComponent
+    ModalTipoComponent,
+    PerfilComponent,
+    NavbarClienteComponent,
+    ReportesComponent
   ],
   imports: [
     BrowserModule,
