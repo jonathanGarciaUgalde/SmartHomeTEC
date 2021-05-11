@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#3F87BF"
@@ -11,36 +10,39 @@
     android:paddingRight="16dp"
     android:paddingBottom="16dp">
 
-    <ImageView
-        android:id="@+id/imageView"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="128dp"
-        app:srcCompat="@drawable/icon_login"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="16sp"
         android:layout_marginBottom="20dp"
-        android:layout_marginTop="20dp" />
+        android:text="Encender/Apagar dispositivos" />
 
-    <EditText
-        android:id="@+id/txt_correo"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:hint="Correo electrónico"
-        android:layout_marginBottom="10dp" />
+        android:layout_marginBottom="20dp"
+        android:text="Lista de dispositivos:" />
 
-    <EditText
-        android:id="@+id/txt_password"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_encender_apagar_dispositivos"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:hint="Password"
-        android:layout_marginBottom="20dp" />
+        android:layout_height="350dp" >
+    </androidx.recyclerview.widget.RecyclerView>
 
     <Button
-        android:id="@+id/button2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Iniciar sesión"
-        android:onClick="btn_iniciar_sesion"
+        android:text="Encender/Apagar dispositivo"
+        android:onClick="btn_encender_apagar_dispositivo"
+        android:background="@drawable/borde_redondo"
+        android:layout_marginBottom="10dp" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Historial dispositivos"
+        android:onClick="btn_historial_dispositivo"
         android:background="@drawable/borde_redondo"
         android:layout_marginBottom="10dp" />
 

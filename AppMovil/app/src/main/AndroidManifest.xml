@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.appmovil">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -19,6 +21,17 @@
 
         <activity android:name=".VentanaInformacionPerfil"></activity>
 
+        <activity android:name=".VentanaGestionAposentos"></activity>
+
+        <activity android:name=".VentanaGestionDispositivos"></activity>
+
+        <activity android:name=".VentanaControlDispositivos"></activity>
+
+        <activity android:name=".VentanaVisualizarDispositivos"></activity>
+
+        <activity android:name=".VentanaPasarDispositivoDeCuenta"></activity>
+
+        <activity android:name=".VentanaHistorial"></activity>
 
     </application>
 

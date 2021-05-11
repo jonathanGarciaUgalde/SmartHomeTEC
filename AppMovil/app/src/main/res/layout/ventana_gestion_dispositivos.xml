@@ -15,7 +15,7 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Informacion del perfil"
+        android:text="Gestion de dispositivos"
         android:layout_gravity="center"
         android:layout_marginBottom="15dp"
         android:textSize="18sp" />
@@ -23,70 +23,100 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="Nombre: "
+            android:text="Descripcion: "
             android:textSize="15sp" />
 
-        <TextView
-            android:id="@+id/txt_nombre"
+        <EditText
+            android:id="@+id/edit_descripcion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="15sp" />
+            android:ems="10"
+            android:inputType="textPersonName" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="Apellidos: "
+            android:text="Tipo: "
             android:textSize="15sp" />
 
-        <TextView
-            android:id="@+id/txt_apellidos"
+        <EditText
+            android:id="@+id/edit_tipo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="15sp" />
+            android:ems="10"
+            android:inputType="textPersonName" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="Region: "
+            android:text="Marca: "
             android:textSize="15sp" />
 
-        <TextView
-            android:id="@+id/txt_continente"
-            android:layout_width="100dp"
+        <EditText
+            android:id="@+id/edit_marca"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="15sp" />
+            android:ems="10"
+            android:inputType="textEmailAddress" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/txt_pais"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text=""
+            android:text="Serie: "
             android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edit_numero_serie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPassword" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="Consumo: "
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/edit_consumo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPassword" />
 
     </LinearLayout>
 
@@ -99,42 +129,47 @@
         <TextView
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="Correo: "
+            android:text="Aposento: "
             android:textSize="15sp" />
 
-        <TextView
-            android:id="@+id/txt_correo"
+        <EditText
+            android:id="@+id/edit_aposento"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="15sp" />
+            android:ems="10"
+            android:inputType="textPassword" />
 
     </LinearLayout>
 
     <Button
-        android:id="@+id/button1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Gestion de aposentos"
-        android:onClick="btn_gestion_smarthome"
+        android:text="Agregar dispositivo"
+        android:onClick="btn_agregar_dispositivo"
         android:background="@drawable/borde_redondo"
         android:layout_marginBottom="10dp" />
 
     <Button
-        android:id="@+id/button2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Gestion de dispositivos"
-        android:onClick="btn_gestion_dispositivos"
+        android:text="Pasar dispositivo de cuenta"
+        android:onClick="btn_pasar_dispositivo_de_cuenta"
         android:background="@drawable/borde_redondo"
         android:layout_marginBottom="10dp" />
 
     <Button
-        android:id="@+id/button3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Control de dispositivos"
-        android:onClick="btn_control_dispositivos"
+        android:text="Dispositivos de cada aposento"
+        android:onClick="btn_visualizar_dispositivo"
+        android:background="@drawable/borde_redondo"
+        android:layout_marginBottom="10dp" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sincronizar"
+        android:onClick="btn_sincronizar"
         android:background="@drawable/borde_redondo"
         android:layout_marginBottom="10dp" />
 
