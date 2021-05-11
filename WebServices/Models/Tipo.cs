@@ -10,7 +10,7 @@ namespace WebServices.Models
  
 
 
-        public string Serie { get; set; }//dispositivo asociado
+       // public int Serie { get; set; }//dispositivo asociado
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
        

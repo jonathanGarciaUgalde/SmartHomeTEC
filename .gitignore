@@ -4,3 +4,7 @@ WebServices/.vs/WebServices/DesignTimeBuild/
 WebServices/.vs/WebServices/v16/
 
 WebServices/.vs/
+
+WebServices/bin/
+
+WebServices/obj/

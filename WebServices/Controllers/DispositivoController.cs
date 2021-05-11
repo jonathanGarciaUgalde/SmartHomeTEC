@@ -68,28 +68,29 @@ namespace WebServices.Controllers
         public async Task<IActionResult> AddClienteAsync(DispositivoManual dispositivo)
         {
             connection.ConnectionString = server.init();
-            string query = "select Numero_serie from dispositivo_manual where dispositivo_manual.Numero_serie = '" + dispositivo.Numero_serie + "'";
+            string query = "select Numero_serie from dispositivo_manual where Numero_serie = '" + dispositivo.NumeroSerie + "'";
             NpgsqlCommand conector = new NpgsqlCommand(query, connection);
             if (validaciones.exists(conector))
             {
                 connection.Close();
-                return BadRequest("User already exist");
+                return BadRequest("dispositive already exist");
 
             }
-
 
             else
             {
                 query = "insert into dispositivo_manual VALUES(";
-                query += "'" + dispositivo.Numero_serie + "'," + "'" + dispositivo.Marca + "'," + "'" + dispositivo.Consumo + "'," + "'" + dispositivo.Estado + "'," + "'" + dispositivo.Usuario + "'," + "'" + dispositivo.Descripcion + "'," + "'" + dispositivo.FechaLimiteGarantia + "')";
+                query += "'" + dispositivo.NumeroSerie + "'," + "'" + dispositivo.Marca + "'," + "'" + dispositivo.Consumo + "'," + "'" + dispositivo.Descripcion + "'," + "'" + dispositivo.Usuario + "'," + "'" + dispositivo.FechaLimiteGarantia.Date + "'," + "'" + dispositivo.Estado + "')";
 
 
                 connection.Open();
+                NpgsqlCommand execute = new NpgsqlCommand(query, connection);
+                execute.ExecuteNonQuery();
 
-                query = " insert into tipo VALUES(";
-                query += "'" + dispositivo.Numero_serie + "','" + dispositivo.Tipo.Nombre + "','" + dispositivo.Tipo.Descripcion + "')";
+              /*  query = " INSERT INTO tipo (numeroserie,nombre, descripcion) VALUES(";
+                query += "'" + dispositivo.NumeroSerie+ "','" + dispositivo.Tipo.Nombre+ "','" + dispositivo.Tipo.Descripcion + "')";
                 NpgsqlCommand execute1 = new NpgsqlCommand(query, connection);
-                execute1.ExecuteNonQuery();
+                execute1.ExecuteNonQuery();*/
                 return Ok("insercion exitosa");
 
             }
