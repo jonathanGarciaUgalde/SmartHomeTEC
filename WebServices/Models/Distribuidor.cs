@@ -7,7 +7,7 @@ namespace WebServices.Models
 {
     public class Distribuidor
     {
-        public string CedulaJuridica { get; set; }
+        public int CedulaJuridica { get; set; }
         public string Nombre { get; set; }
         public Region Region { get; set; }
       

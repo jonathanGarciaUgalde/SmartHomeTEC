@@ -7,21 +7,15 @@ namespace WebServices.Models
 {
     
     public class ServerConexion
-
-    {
-       
-
+    {       
         public ServerConexion()
         {
-            init();
-
-          
+            init();          
         }
 
-        public string init() {
-
+        public string init() 
+        {
             return "Server=localhost; Port = 5432;User Id=postgres;Password = 12345; Database = SmartHomeTec";
         }
-
     }
 }
