@@ -14,16 +14,16 @@ namespace WebServices.Models
             /// <summary>
             /// Verifica los datos del login
             /// </summary>
-            /// <param name="conector"></param>
+            /// <param name="command"></param>
             /// <param name="password"></param>
             /// <returns>bool</returns>
-            public bool verifyLogin(NpgsqlCommand conector, string correo,string password)
+            public bool verifyLogin(NpgsqlCommand command, string correo,string password)
             {
                 try
                 {
-                    NpgsqlDataReader dr = conector.ExecuteReader();
+                    NpgsqlDataReader dr = command.ExecuteReader();
                     dr.Read();
-                    if (dr[0].ToString()==correo && dr[1].ToString()==password)
+                    if (dr["correo"].ToString()==correo && dr["password"].ToString()==password)
                     {
                         return true;
                     } 

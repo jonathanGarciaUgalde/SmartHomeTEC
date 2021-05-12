@@ -23,11 +23,8 @@ namespace WebServices.Controllers
         NpgsqlConnection connection = new NpgsqlConnection();
         ServerConexion server = new ServerConexion();
         LoginModel lg = new LoginModel();
-
-
-        /*
-        * Método que se comunica mediante el protocolo http para validar si el usuario que inicia sesión está registrado.
-        */
+        
+        //Método que se comunica mediante el protocolo http para validar si el usuario que inicia sesión está registrado.        
         [HttpPost]
         [Route("{correo}/{password}")]
         public async Task<IActionResult> Login(string correo, string password)
@@ -48,47 +45,21 @@ namespace WebServices.Controllers
            
             return BadRequest("Username or password is incorrect");
         }
-        /*
-        * Método que se comunica mediante el protocolo http y retorna todos los usuarios registrados.
-        */
 
+        
 
         /*
-        * Método que se comunica mediante el protocolo http  y  este retorna el usuario del id que se consulta 
-        * 
-        */
-
-        /*
-        * Método que se comunica mediante el protocolo http para insertar nuevos clientes en el app.
+        * Método que se comunica mediante el protocolo http para registrar nuevos clientes en el app.
         */
         [HttpPost]
         public async Task<IActionResult> Signin([FromBody] User  newUser)
-        {
+        {            
             connection.ConnectionString = server.init();
-
-            /*
-            string query = "select Correo from usuario where correo = '" +newUser.Correo +"'";
-            NpgsqlCommand conector = new NpgsqlCommand(query, connection);
-            if (exist(conector))
-            {
-              connection.Close();
-            return BadRequest("User already exist");
-            }
-            else
-            */
-
-            string query = $"insert into \"Usuario\" VALUES('{newUser.Correo}','{newUser.Password}', '{newUser.Nombre}', '{newUser.Apellidos}', '{newUser.Region.Continente}', '{newUser.Region.Pais}')";
-            
             connection.Open();
 
+            string query = $"insert into \"Usuario\" VALUES('{newUser.Correo}','{newUser.Password}', '{newUser.Nombre}', '{newUser.Apellidos}', '{newUser.Region.Continente}', '{newUser.Region.Pais}')";
             NpgsqlCommand execute = new NpgsqlCommand(query, connection);
             execute.ExecuteNonQuery();
-
-            /*
-            query = $"insert into region_x_usuario VALUES('{newUser.Region.Pais}','{newUser.Correo}','{newUser.Region.Continente}')";                    
-            NpgsqlCommand execute1 = new NpgsqlCommand(query, connection);
-            execute1.ExecuteNonQuery();
-            */
 
             int i = 0;
             while (newUser.Direccion.Count > i)
@@ -121,7 +92,7 @@ namespace WebServices.Controllers
         }
 
 
-        [HttpGet] //Route-> api/User/Credenciales
+        [HttpPost] //Route-> api/User/Credenciales
         public async Task<IActionResult> Credenciales([FromBody] User user)
         {
             connection.ConnectionString = server.init();
