@@ -32,10 +32,8 @@ namespace WebServices.Controllers
         {                        
             connection.ConnectionString = server.init();
             string query = $"SELECT " +
-                $"                    \"Nombre\", \"Pais\", \"Continente\" " +
-                $"         FROM       \"distribuidor\" " +
-                $"         INNER JOIN \"region_x_distribuidor\" " +
-                $"            ON \"Cedula_juridica\" = \"Distribuidor_asociado\";";
+                $"                    \"nombre\", \"pais\", \"continente\" " +
+                $"         FROM       \"Distribuidor\";";
 
             connection.Open();
             NpgsqlCommand command = new NpgsqlCommand(query, connection);
@@ -47,8 +45,8 @@ namespace WebServices.Controllers
             int numeroDistribuidor = 1;
             while (dr.Read())
             {
-                Region region = new Region() { Pais = (string)dr["Pais"], Continente = (string)dr["Continente"] };
-                Distribuidor distribuidor = new Distribuidor() { Nombre = (string)dr["Nombre"], Region = region };
+                Region region = new Region() { Pais = (string)dr["pais"], Continente = (string)dr["continente"] };
+                Distribuidor distribuidor = new Distribuidor() { Nombre = (string)dr["nombre"], Region = region };
                 distribuidores.Add(distribuidor);
 
             }
@@ -61,15 +59,12 @@ namespace WebServices.Controllers
         public async Task<IActionResult> Create([FromBody] Distribuidor dist)
         {
             connection.ConnectionString = server.init();
-            string query = $"INSERT INTO distribuidor VALUES({dist.CedulaJuridica},'{dist.Nombre}');";
+            string query = $"INSERT INTO \"Distribuidor\" VALUES({dist.CedulaJuridica},'{dist.Nombre}','{dist.Region.Continente}','{dist.Region.Pais}');";
             connection.Open();
 
             NpgsqlCommand command1 = new NpgsqlCommand(query, connection);
             command1.ExecuteNonQuery();
 
-            query = $"INSERT INTO region_x_distribuidor VALUES('{dist.Region.Pais}',{dist.CedulaJuridica},'{dist.Region.Continente}')";
-            NpgsqlCommand command2 = new NpgsqlCommand(query, connection);
-            command2.ExecuteNonQuery();
             
             connection.Close();
             return Ok();
@@ -85,19 +80,13 @@ namespace WebServices.Controllers
         [HttpDelete("{CedulaJuridica}")]
         public async Task<IActionResult> Delete(int CedulaJuridica)
         {
-
-            connection.ConnectionString = server.init();
-            string query = $"DELETE FROM region_x_distribuidor WHERE \"Distribuidor_asociado\" = {CedulaJuridica};";
             
+            connection.ConnectionString = server.init();
+            string query = $"DELETE FROM \"Distribuidor\" WHERE \"cedulaJuridica\" = {CedulaJuridica};";
             connection.Open();
-
 
             NpgsqlCommand command1 = new NpgsqlCommand(query, connection);
             command1.ExecuteNonQuery();
-
-            query = $"DELETE FROM distribuidor WHERE \"Cedula_juridica\" = {CedulaJuridica};";
-            NpgsqlCommand command2 = new NpgsqlCommand(query, connection);
-            command2.ExecuteNonQuery();
 
             connection.Close();
             return Ok();

@@ -36,7 +36,7 @@ namespace WebServices.Controllers
             connection.ConnectionString = server.init();
             connection.Open();
 
-            string query = $"SELECT \"Correo\",\"Password\" FROM \"usuario\" WHERE \"Correo\" = '{correo}';";
+            string query = $"SELECT \"correo\",\"password\" FROM \"Usuario\" WHERE \"correo\" = '{correo}';";
             NpgsqlCommand conector = new NpgsqlCommand(query, connection);
 
             if (lg.verifyLogin(conector, correo, password))
@@ -77,21 +77,23 @@ namespace WebServices.Controllers
             else
             */
 
-            string query = $"insert into usuario VALUES('{newUser.Correo}','{newUser.Password}', '{newUser.Nombre}', '{newUser.Apellidos}')";
+            string query = $"insert into \"Usuario\" VALUES('{newUser.Correo}','{newUser.Password}', '{newUser.Nombre}', '{newUser.Apellidos}', '{newUser.Region.Continente}', '{newUser.Region.Pais}')";
             
             connection.Open();
 
             NpgsqlCommand execute = new NpgsqlCommand(query, connection);
             execute.ExecuteNonQuery();
 
+            /*
             query = $"insert into region_x_usuario VALUES('{newUser.Region.Pais}','{newUser.Correo}','{newUser.Region.Continente}')";                    
             NpgsqlCommand execute1 = new NpgsqlCommand(query, connection);
             execute1.ExecuteNonQuery();
+            */
 
             int i = 0;
             while (newUser.Direccion.Count > i)
             {
-                query = $"insert into direccion VALUES('{newUser.Correo}','{ newUser.Direccion.ElementAt(i).Provincia}','{newUser.Direccion.ElementAt(i).Canton}','{newUser.Direccion.ElementAt(i).Distrito}')";
+                query = $"insert into \"direccionEntrega\" VALUES('{newUser.Correo}','{ newUser.Direccion.ElementAt(i).Ubicacion}');";
                 
                 NpgsqlCommand execute3 = new NpgsqlCommand(query, connection);
                 execute3.ExecuteNonQuery();
@@ -108,12 +110,10 @@ namespace WebServices.Controllers
         {
             connection.ConnectionString = server.init();
             string query = $"SELECT " +
-                $"              \"Nombre\", \"Apellidos\", \"Pais\", \"Continente\" " +
+                $"              \"nombre\", \"apellidos\", \"pais\", \"continente\" " +
                 $"         FROM " +
-                $"              \"usuario\" " +
-                $"         INNER JOIN \"region_x_usuario\" " +
-                $"            ON \"Correo\" = \"Usuario_asociado\"" +
-                $"         WHERE \"Correo\" = '{user.Correo}';";
+                $"              \"Usuario\" " +
+                $"         WHERE \"correo\" = '{user.Correo}';";
 
             connection.Open();
             NpgsqlCommand command = new NpgsqlCommand(query, connection);
@@ -121,19 +121,17 @@ namespace WebServices.Controllers
             NpgsqlDataReader dr = command.ExecuteReader();
             dr.Read();
 
-            Region outputRegion = new Region() { Pais = (string)dr["Pais"], Continente = (string)dr["Continente"] };
-            User outputUser = new User() { Nombre = (string)dr["Nombre"], Apellidos = (string)dr["Apellidos"], Region = outputRegion };
+            Region outputRegion = new Region() { Pais = (string)dr["pais"], Continente = (string)dr["continente"] };
+            User outputUser = new User() { Nombre = (string)dr["nombre"], Apellidos = (string)dr["apellidos"], Region = outputRegion };
             
             connection.Close();
 
             
             query = $"SELECT " +
-                    $"      \"Provincia\", \"Canton\", \"Distrito\" " +
+                    $"      \"ubicacion\" " +
                     $"FROM " +
-                    $"      \"usuario\" " +
-                    $"INNER JOIN \"direccion\" " +
-                    $"  ON \"Correo\" = \"Id_usuario\"" +
-                    $"WHERE \"Correo\" = '{user.Correo}';";
+                    $"      \"direccionEntrega\" " +
+                    $"WHERE \"correo\" = '{user.Correo}';";
 
             connection.Open();
             command = new NpgsqlCommand(query, connection);
@@ -143,9 +141,8 @@ namespace WebServices.Controllers
             List<Direccion> direcciones = new List<Direccion>();
             while (dr.Read())
             {                
-                Direccion direccion = new Direccion() { Provincia = (string)dr["Provincia"], Canton = (string)dr["Canton"], Distrito = (string)dr["Distrito"] };
+                Direccion direccion = new Direccion() { Ubicacion = (string)dr["ubicacion"] };
                 direcciones.Add(direccion);
-
             }
             outputUser.Direccion = direcciones;
             
