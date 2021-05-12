@@ -104,6 +104,22 @@ namespace WebServices.Controllers
             return Ok("Success");
         }
 
+        [HttpPost] //api/User/Aposento
+        public async Task<IActionResult> Aposento([FromBody] Aposento aposento)
+        {
+
+            connection.ConnectionString = server.init();
+            connection.Open();
+
+            string query = $"INSERT INTO \"Aposento\" VALUES('{aposento.Correo}','{aposento.Nombre}');";
+            NpgsqlCommand command = new NpgsqlCommand(query, connection);
+            command.ExecuteNonQuery();
+
+            connection.Close();
+
+            return Ok();
+        }
+
 
         [HttpGet] //Route-> api/User/Credenciales
         public async Task<IActionResult> Credenciales([FromBody] User user)
