@@ -34,8 +34,7 @@ export class LoginAdminComponent implements OnInit {
   	this.api.verificarCredenciales(this.datosUsuario.Email,this.datosUsuario.Password)
   	.subscribe(response=>{
 
-  		localStorage.clear();
-  		localStorage.setItem("email-admin", this.datosUsuario.Email);
+  		localStorage.setItem("email-admin", this.datosUsuario.Email)
   		this.router.navigate(["admin/dashboard"]);
 
   	},(error:any)=>{
