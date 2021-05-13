@@ -12,4 +12,10 @@ export class NavbarClienteComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  salir():void{
+
+  	localStorage.clear();
+
+  }
+
 }
