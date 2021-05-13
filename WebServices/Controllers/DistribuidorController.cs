@@ -17,7 +17,7 @@ namespace WebServices.Controllers
     {
         NpgsqlConnection connection = new NpgsqlConnection();
         ServerConexion server = new ServerConexion();
-        Distribuidor distModel = new Distribuidor();
+        Tipo distModel = new Tipo();
 
         // GET: api/<DistribuidorController>
         [HttpGet]
@@ -39,14 +39,14 @@ namespace WebServices.Controllers
             NpgsqlCommand command = new NpgsqlCommand(query, connection);
             command.ExecuteNonQuery();
             NpgsqlDataReader dr = command.ExecuteReader();
-            List<Distribuidor> distribuidores = new List<Distribuidor>();
+            List<Tipo> distribuidores = new List<Tipo>();
 
 
             int numeroDistribuidor = 1;
             while (dr.Read())
             {
                 Region region = new Region() { Pais = (string)dr["pais"], Continente = (string)dr["continente"] };
-                Distribuidor distribuidor = new Distribuidor() { Nombre = (string)dr["nombre"], Region = region };
+                Tipo distribuidor = new Tipo() { Nombre = (string)dr["nombre"], Region = region };
                 distribuidores.Add(distribuidor);
 
             }
@@ -56,7 +56,7 @@ namespace WebServices.Controllers
 
         // POST api/<DistribuidorController>/Create
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Distribuidor dist)
+        public async Task<IActionResult> Create([FromBody] Tipo dist)
         {
             connection.ConnectionString = server.init();
            string query = $"INSERT INTO \"Distribuidor\" VALUES({dist.CedulaJuridica},'{dist.Nombre}','{dist.Region.Continente}','{dist.Region.Pais}');";

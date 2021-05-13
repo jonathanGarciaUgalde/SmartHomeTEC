@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WebServices.Models
 {
-    public class Distribuidor
+    public class Tipo
     {
         public int CedulaJuridica { get; set; }
         public string Nombre { get; set; }
