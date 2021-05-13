@@ -29,7 +29,7 @@ namespace WebServices.Controllers
         // GET api/<DistribuidorController>
         [HttpGet]
         public async Task<IActionResult> GetDistribuidores([FromBody] User user)
-        {                        
+        {
             connection.ConnectionString = server.init();
             string query = $"SELECT " +
                 $"                    \"nombre\", \"pais\", \"continente\" " +
@@ -65,7 +65,7 @@ namespace WebServices.Controllers
             NpgsqlCommand command1 = new NpgsqlCommand(query, connection);
             command1.ExecuteNonQuery();
 
-            
+
             connection.Close();
             return Ok();
         }
@@ -80,7 +80,7 @@ namespace WebServices.Controllers
         [HttpDelete("{CedulaJuridica}")]
         public async Task<IActionResult> Delete(int CedulaJuridica)
         {
-            
+
             connection.ConnectionString = server.init();
             string query = $"DELETE FROM \"Distribuidor\" WHERE \"cedulaJuridica\" = {CedulaJuridica};";
             connection.Open();
