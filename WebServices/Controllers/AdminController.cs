@@ -51,7 +51,7 @@ namespace WebServices.Controllers
             }
 
             connection.Close();
-            return BadRequest("Username or password is incorrect");
+            return BadRequest("Mail or password incorrect");
             
         }
 

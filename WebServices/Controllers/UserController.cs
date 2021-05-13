@@ -80,15 +80,42 @@ namespace WebServices.Controllers
         {
 
             connection.ConnectionString = server.init();
-            connection.Open();
 
-            string query = $"INSERT INTO \"Aposento\" VALUES('{aposento.Correo}','{aposento.Nombre}');";
-            NpgsqlCommand command = new NpgsqlCommand(query, connection);
-            command.ExecuteNonQuery();
+            try
+            {
+                connection.Open();
+                string userQuery = $"SELECT \"correo\" FROM \"Usuario\" WHERE \"correo\" = '{aposento.Correo}';";
+                NpgsqlCommand userCommand = new NpgsqlCommand(userQuery, connection);
+                userCommand.ExecuteNonQuery();
 
-            connection.Close();
+                NpgsqlDataReader dr = userCommand.ExecuteReader();                
+                dr.Read(); //Si no existen filas por ller este metodo fallaria. Es debido a esto que se usa el try/catch.
+                User currentUser = new User() { Correo = (string)dr["correo"] };
+                connection.Close();
+            }
+            catch
+            {
+                connection.Close();
+                return BadRequest("User not found");
+            }
 
-            return Ok();
+            try
+            {
+                connection.Open();
+                string query = $"INSERT INTO \"Aposento\" VALUES('{aposento.Correo}','{aposento.Nombre}');";
+                NpgsqlCommand command = new NpgsqlCommand(query, connection);
+                command.ExecuteNonQuery();
+
+                connection.Close();
+
+                return Ok();
+            }
+            catch
+            {
+                connection.Close();
+                return BadRequest("Aposento ya definido");
+            }
+
         }
 
 
@@ -105,36 +132,47 @@ namespace WebServices.Controllers
             connection.Open();
             NpgsqlCommand command = new NpgsqlCommand(query, connection);
             command.ExecuteNonQuery();
-            NpgsqlDataReader dr = command.ExecuteReader();
-            dr.Read();
 
-            Region outputRegion = new Region() { Pais = (string)dr["pais"], Continente = (string)dr["continente"] };
-            User outputUser = new User() { Nombre = (string)dr["nombre"], Apellidos = (string)dr["apellidos"], Region = outputRegion };
-            
-            connection.Close();
+            try
+            {
+                NpgsqlDataReader dr = command.ExecuteReader();
+                dr.Read();
 
-            
-            query = $"SELECT " +
-                    $"      \"ubicacion\" " +
-                    $"FROM " +
-                    $"      \"direccionEntrega\" " +
-                    $"WHERE \"correo\" = '{user.Correo}';";
+                Region outputRegion = new Region() { Pais = (string)dr["pais"], Continente = (string)dr["continente"] };
+                User outputUser = new User() { Nombre = (string)dr["nombre"], Apellidos = (string)dr["apellidos"], Region = outputRegion };
 
-            connection.Open();
-            command = new NpgsqlCommand(query, connection);
-            command.ExecuteNonQuery();
-            dr = command.ExecuteReader();
+                connection.Close();
 
-            List<Direccion> direcciones = new List<Direccion>();
-            while (dr.Read())
-            {                
-                Direccion direccion = new Direccion() { Ubicacion = (string)dr["ubicacion"] };
-                direcciones.Add(direccion);
+
+                query = $"SELECT " +
+                        $"      \"ubicacion\" " +
+                        $"FROM " +
+                        $"      \"direccionEntrega\" " +
+                        $"WHERE \"correo\" = '{user.Correo}';";
+
+                connection.Open();
+                command = new NpgsqlCommand(query, connection);
+                command.ExecuteNonQuery();
+                dr = command.ExecuteReader();
+
+                List<Direccion> direcciones = new List<Direccion>();
+                while (dr.Read())
+                {
+                    Direccion direccion = new Direccion() { Ubicacion = (string)dr["ubicacion"] };
+                    direcciones.Add(direccion);
+                }
+                outputUser.Direccion = direcciones;
+
+                connection.Close();
+                return Ok(outputUser);
             }
-            outputUser.Direccion = direcciones;
             
-            connection.Close();
-            return Ok(outputUser);
+            catch
+            {
+                return BadRequest("User not found");
+            }
+            
+
         }
 
 
