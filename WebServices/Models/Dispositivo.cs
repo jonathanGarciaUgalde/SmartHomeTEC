@@ -16,7 +16,7 @@ namespace WebServices.Models
         public string NombreAposento { get; set; }// estos son atributos  que pueden ser  null  porque  en la tabla estan validados como ta
         // tipo
         public string Tipo { get; set; }
-        public DateTime TiempoGarantia { get; set; }
+        public int TiempoGarantia { get; set; }
 
     }
 }

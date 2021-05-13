@@ -19,7 +19,7 @@ namespace WebServices.Models
       
         public string Tipo {get; set;}
         public string Descripcion {get; set;}
-        public DateTime TiempoGarantia { get; set; }
+        public int TiempoGarantia { get; set; }
 
     }
 

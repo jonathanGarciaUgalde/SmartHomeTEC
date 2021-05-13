@@ -59,7 +59,7 @@ namespace WebServices.Controllers
         public async Task<IActionResult> Create([FromBody] Distribuidor dist)
         {
             connection.ConnectionString = server.init();
-            string query = $"INSERT INTO \"Distribuidor\" VALUES({dist.CedulaJuridica},'{dist.Nombre}','{dist.Region.Continente}','{dist.Region.Pais}');";
+           string query = $"INSERT INTO \"Distribuidor\" VALUES({dist.CedulaJuridica},'{dist.Nombre}','{dist.Region.Continente}','{dist.Region.Pais}');";
             connection.Open();
 
             NpgsqlCommand command1 = new NpgsqlCommand(query, connection);
