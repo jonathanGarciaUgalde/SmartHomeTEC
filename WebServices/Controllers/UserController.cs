@@ -23,11 +23,8 @@ namespace WebServices.Controllers
         NpgsqlConnection connection = new NpgsqlConnection();
         ServerConexion server = new ServerConexion();
         LoginModel lg = new LoginModel();
-
-
-        /*
-        * Método que se comunica mediante el protocolo http para validar si el usuario que inicia sesión está registrado.
-        */
+        
+        //Método que se comunica mediante el protocolo http para validar si el usuario que inicia sesión está registrado.        
         [HttpPost]
         [Route("{correo}/{password}")]
         public async Task<IActionResult> Login(string correo, string password)
@@ -48,47 +45,21 @@ namespace WebServices.Controllers
            
             return BadRequest("Username or password is incorrect");
         }
-        /*
-        * Método que se comunica mediante el protocolo http y retorna todos los usuarios registrados.
-        */
 
+        
 
         /*
-        * Método que se comunica mediante el protocolo http  y  este retorna el usuario del id que se consulta 
-        * 
-        */
-
-        /*
-        * Método que se comunica mediante el protocolo http para insertar nuevos clientes en el app.
+        * Método que se comunica mediante el protocolo http para registrar nuevos clientes en el app.
         */
         [HttpPost]
         public async Task<IActionResult> Signin([FromBody] User  newUser)
-        {
+        {            
             connection.ConnectionString = server.init();
-
-            /*
-            string query = "select Correo from usuario where correo = '" +newUser.Correo +"'";
-            NpgsqlCommand conector = new NpgsqlCommand(query, connection);
-            if (exist(conector))
-            {
-              connection.Close();
-            return BadRequest("User already exist");
-            }
-            else
-            */
-
-            string query = $"insert into \"Usuario\" VALUES('{newUser.Correo}','{newUser.Password}', '{newUser.Nombre}', '{newUser.Apellidos}', '{newUser.Region.Continente}', '{newUser.Region.Pais}')";
-            
             connection.Open();
 
+            string query = $"insert into \"Usuario\" VALUES('{newUser.Correo}','{newUser.Password}', '{newUser.Nombre}', '{newUser.Apellidos}', '{newUser.Region.Continente}', '{newUser.Region.Pais}')";
             NpgsqlCommand execute = new NpgsqlCommand(query, connection);
             execute.ExecuteNonQuery();
-
-            /*
-            query = $"insert into region_x_usuario VALUES('{newUser.Region.Pais}','{newUser.Correo}','{newUser.Region.Continente}')";                    
-            NpgsqlCommand execute1 = new NpgsqlCommand(query, connection);
-            execute1.ExecuteNonQuery();
-            */
 
             int i = 0;
             while (newUser.Direccion.Count > i)
@@ -104,8 +75,51 @@ namespace WebServices.Controllers
             return Ok("Success");
         }
 
+        [HttpPost] //api/User/Aposento
+        public async Task<IActionResult> Aposento([FromBody] Aposento aposento)
+        {
 
-        [HttpGet] //Route-> api/User/Credenciales
+            connection.ConnectionString = server.init();
+
+            try
+            {
+                connection.Open();
+                string userQuery = $"SELECT \"correo\" FROM \"Usuario\" WHERE \"correo\" = '{aposento.Correo}';";
+                NpgsqlCommand userCommand = new NpgsqlCommand(userQuery, connection);
+                userCommand.ExecuteNonQuery();
+
+                NpgsqlDataReader dr = userCommand.ExecuteReader();                
+                dr.Read(); //Si no existen filas por ller este metodo fallaria. Es debido a esto que se usa el try/catch.
+                User currentUser = new User() { Correo = (string)dr["correo"] };
+                connection.Close();
+            }
+            catch
+            {
+                connection.Close();
+                return BadRequest("User not found");
+            }
+
+            try
+            {
+                connection.Open();
+                string query = $"INSERT INTO \"Aposento\" VALUES('{aposento.Correo}','{aposento.Nombre}');";
+                NpgsqlCommand command = new NpgsqlCommand(query, connection);
+                command.ExecuteNonQuery();
+
+                connection.Close();
+
+                return Ok();
+            }
+            catch
+            {
+                connection.Close();
+                return BadRequest("Aposento ya definido");
+            }
+
+        }
+
+
+        [HttpPost] //Route-> api/User/Credenciales
         public async Task<IActionResult> Credenciales([FromBody] User user)
         {
             connection.ConnectionString = server.init();
@@ -118,36 +132,47 @@ namespace WebServices.Controllers
             connection.Open();
             NpgsqlCommand command = new NpgsqlCommand(query, connection);
             command.ExecuteNonQuery();
-            NpgsqlDataReader dr = command.ExecuteReader();
-            dr.Read();
 
-            Region outputRegion = new Region() { Pais = (string)dr["pais"], Continente = (string)dr["continente"] };
-            User outputUser = new User() { Nombre = (string)dr["nombre"], Apellidos = (string)dr["apellidos"], Region = outputRegion };
-            
-            connection.Close();
+            try
+            {
+                NpgsqlDataReader dr = command.ExecuteReader();
+                dr.Read();
 
-            
-            query = $"SELECT " +
-                    $"      \"ubicacion\" " +
-                    $"FROM " +
-                    $"      \"direccionEntrega\" " +
-                    $"WHERE \"correo\" = '{user.Correo}';";
+                Region outputRegion = new Region() { Pais = (string)dr["pais"], Continente = (string)dr["continente"] };
+                User outputUser = new User() { Nombre = (string)dr["nombre"], Apellidos = (string)dr["apellidos"], Region = outputRegion };
 
-            connection.Open();
-            command = new NpgsqlCommand(query, connection);
-            command.ExecuteNonQuery();
-            dr = command.ExecuteReader();
+                connection.Close();
 
-            List<Direccion> direcciones = new List<Direccion>();
-            while (dr.Read())
-            {                
-                Direccion direccion = new Direccion() { Ubicacion = (string)dr["ubicacion"] };
-                direcciones.Add(direccion);
+
+                query = $"SELECT " +
+                        $"      \"ubicacion\" " +
+                        $"FROM " +
+                        $"      \"direccionEntrega\" " +
+                        $"WHERE \"correo\" = '{user.Correo}';";
+
+                connection.Open();
+                command = new NpgsqlCommand(query, connection);
+                command.ExecuteNonQuery();
+                dr = command.ExecuteReader();
+
+                List<Direccion> direcciones = new List<Direccion>();
+                while (dr.Read())
+                {
+                    Direccion direccion = new Direccion() { Ubicacion = (string)dr["ubicacion"] };
+                    direcciones.Add(direccion);
+                }
+                outputUser.Direccion = direcciones;
+
+                connection.Close();
+                return Ok(outputUser);
             }
-            outputUser.Direccion = direcciones;
             
-            connection.Close();
-            return Ok(outputUser);
+            catch
+            {
+                return BadRequest("User not found");
+            }
+            
+
         }
 
 
