@@ -8,11 +8,16 @@ namespace WebServices.Models
 {
     public class Dispositivo
     {
-        public int Numero_serie { get; set; }
+        public int NumeroSerie { get; set; }
         public string Marca { get; set; }
         public string Descripcion { get; set; }// estos son atributos  que pueden ser  null  porque  en la tabla estan validados como tal
         public string FechaLimiteGarantia { get; set; }// estos son atributos  que pueden ser  null  porque  en la tabla estan validados como tal
         public Tipo Tipo { get; set; } // se le asigna al modelo de tipo la estructura 
+        public bool EstadoActivo { get; set; }
+        public string FechaActivacion { get; set; }
+        public string FechaDesactivacion { get; set; }
+        public string  HoraActivacion { get; set; }
+        public string HoraDesactivacion { get; set; }
 
 
     }
