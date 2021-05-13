@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 
 import {Router} from '@angular/router';
 
+import {AdminService} from 'src/app/servicios/admin/admin.service'
+
 @Component({
   selector: 'app-login-admin',
   templateUrl: './login-admin.component.html',
@@ -9,16 +11,34 @@ import {Router} from '@angular/router';
 })
 export class LoginAdminComponent implements OnInit {
 
-  constructor(public router:Router) { }
+  constructor(private router:Router, private api:AdminService) { }
 
   ngOnInit(): void {
+
+  	if(localStorage.getItem("email-admin") != null){
+
+  		this.router.navigate(["admin/dashboard"]);
+  	}
+ 
+  }
+
+
+  public datosUsuario = {
+    Email:null,
+    Password:null
   }
 
 
   verificarCredenciales():void{
 
-  	this.router.navigate(["admin/dashboard"]);
+  	this.api.verificarCredenciales(this.datosUsuario.Email,this.datosUsuario.Password)
+  	.subscribe(response=>{
 
-  }
+  		localStorage.setItem("email-admin", this.datosUsuario.Email)
+  		this.router.navigate(["admin/dashboard"]);
 
+  	},(error:any)=>{
+        alert("Usuario o contraseña incorrecta, intente de nuevo");
+      });
+  }  
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
@@ -33,7 +34,7 @@ namespace WebServices.Controllers
             return Ok();
         }
 
-        [HttpGet] // api/Admin/Login
+        [HttpPost] // api/Admin/Login
         public async Task<IActionResult> Login([FromBody] User admin) 
         {
             connection.ConnectionString = server.init();

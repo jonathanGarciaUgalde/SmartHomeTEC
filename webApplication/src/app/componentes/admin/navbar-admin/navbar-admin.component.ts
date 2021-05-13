@@ -12,4 +12,11 @@ export class NavbarAdminComponent implements OnInit {
   ngOnInit(): void {
   }
 
+
+  salir():void{
+  	localStorage.clear()
+  	localStorage.removeItem("email-admin");
+  }
+
+
 }
