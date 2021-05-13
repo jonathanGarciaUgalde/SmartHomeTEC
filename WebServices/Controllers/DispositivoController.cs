@@ -32,24 +32,24 @@ namespace WebServices.Controllers
         //Metodos para dispositivos en Stock
 
         [HttpPost]
-        public async Task<IActionResult> insertDispositivoStock([FromBody] Dispositivo newDispositivo)
+        public async Task<IActionResult> insertDispositivoStock([FromBody] DispositivoStock newDispositivo)
         {
 
             connection.ConnectionString = server.init();
             connection.Open();
-            string query = $"INSERT INTO \"DispositivoStock\" VALUES({newDispositivo.NumeroSerie},'{newDispositivo.Marca}','{newDispositivo.ConsumoElectrico}');";
-           
+            string query = $"INSERT INTO \"DispositivoStock\" VALUES({newDispositivo.NumeroSerie},'{newDispositivo.Marca}',{newDispositivo.ConsumoElectrico},{newDispositivo.CedulaJuridica},'{newDispositivo.Tipo}','{newDispositivo.TiempoGarantia}','{newDispositivo.Descripcion}',{newDispositivo.EnVenta});";
+
             NpgsqlCommand execute = new NpgsqlCommand(query, connection);
-            
+
             execute.ExecuteNonQuery();
             connection.Close();
-            connection.Open();
+           /*  connection.Open();
 
            string query1 = $"INSERT INTO \"Tipo\" VALUES('{newDispositivo.Tipo.Nombre}',{newDispositivo.NumeroSerie},'{newDispositivo.Tipo.Descripcion},'{newDispositivo.Tipo.TiempoGarantia}');";
             NpgsqlCommand execute1 = new NpgsqlCommand(query1, connection);
             execute1.ExecuteNonQuery();
 
-            connection.Close();
+            connection.Close();*/
             return Ok("insercion exitosa");
 
 
@@ -64,7 +64,7 @@ namespace WebServices.Controllers
        // metodos  de dispostivo desde app movil 
 
         [HttpPost]
-        public async Task<IActionResult> insertDispositivoManual(DispositivoManual dis)
+        public async Task<IActionResult> insertDispositivo(Dispositivo dis)
         {
             connection.ConnectionString = server.init();
             string query = $"SELECT \"correo\" FROM \"Dispositivo\" WHERE \"numeroSerie\" = '{dis.NumeroSerie}';"; 
@@ -82,21 +82,19 @@ namespace WebServices.Controllers
 
             else
             {
-                query = $"INSERT INTO \"Dispositivo\" VALUES({dis.NumeroSerie},'{dis.Consumo}','{dis.Marca},'{dis.EstadoActivo},'{dis.Usuario},'{dis.Aposento}');";
+                query = $"INSERT INTO \"Dispositivo\" VALUES({dis.NumeroSerie},{dis.Consumo},'{dis.Marca}',{dis.EstadoActivo},'{dis.NombreAposento}','{dis.CorreoPosedor}','{dis.Tipo}','{dis.TiempoGarantia}');";
 
                
 
-                connection.Open();
+      
                 NpgsqlCommand execute = new NpgsqlCommand(query, connection);
                 execute.ExecuteNonQuery();
-
-
-
-                query = $"INSERT INTO \"Tipo\" VALUES({dis.Tipo.Nombre},'{dis.NumeroSerie}','{dis.Tipo.Descripcion},'{dis.Tipo.TiempoGarantia}');";
-                NpgsqlCommand execute1 = new NpgsqlCommand(query, connection);
-                execute1.ExecuteNonQuery();
-
                 connection.Close();
+
+
+
+
+
                 return Ok("insercion exitosa");
 
 

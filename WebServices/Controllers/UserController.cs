@@ -48,19 +48,7 @@ namespace WebServices.Controllers
 
             return BadRequest("Username or password is incorrect");
         }
-        /*
-        * Método que se comunica mediante el protocolo http y retorna todos los usuarios registrados.
-        */
-
-
-        /*
-        * Método que se comunica mediante el protocolo http  y  este retorna el usuario del id que se consulta 
-        * 
-        */
-
-        /*
-        * Método que se comunica mediante el protocolo http para insertar nuevos clientes en el app.
-        */
+       
         [HttpPost]
         public async Task<IActionResult> Signin([FromBody] User newUser)
         {
