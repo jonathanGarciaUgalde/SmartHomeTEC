@@ -13,7 +13,12 @@ using System.Security.Cryptography;
 
 namespace WebServices.Controllers
 {
-    [Route("api/[controller]")]
+
+
+
+
+
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class DispositivoController : ControllerBase
     {
@@ -23,35 +28,28 @@ namespace WebServices.Controllers
         Validaciones validaciones = new Validaciones();
 
         // se debe realizar un cambio para que no hayan in consitencias  en la tabla dispositivo
-        [HttpPost("add/dispositivo")]
-        public async Task<IActionResult> insertDispositivo(Dispositivo newDispositivo)
+
+        //Metodos para dispositivos en Stock
+
+        [HttpPost]
+        public async Task<IActionResult> insertDispositivoStock([FromBody] Dispositivo newDispositivo)
         {
-           string serie = GetCode(4);
+
             connection.ConnectionString = server.init();
-            string query = "select Numero_serie from dispositivo where dispositivo.Numero_serie= '" + serie + "'";
-            NpgsqlCommand conector = new NpgsqlCommand(query, connection);
-            if (validaciones.exists(conector))
-            {
-                connection.Close();
-                return BadRequest("Este dispositivo ya está  registrado");
-            }
-            else
-
+            connection.Open();
+            string query = $"INSERT INTO \"DispositivoStock\" VALUES({newDispositivo.NumeroSerie},'{newDispositivo.Marca}','{newDispositivo.ConsumoElectrico}');";
            
-            query = "insert into dispositivo VALUES(";
-            query += "'" +serie+ "'," + "'" + newDispositivo.Marca + "'," + "'" + newDispositivo.Consumo + "'," + "'" + newDispositivo.Estado + "')";
-
-
-
+            NpgsqlCommand execute = new NpgsqlCommand(query, connection);
+            
+            execute.ExecuteNonQuery();
+            connection.Close();
             connection.Open();
 
-            NpgsqlCommand execute = new NpgsqlCommand(query, connection);
-            execute.ExecuteNonQuery();
-
-            query = " insert into tipo VALUES(";
-            query += "'" + serie + "','" + newDispositivo.Tipo.Nombre + "','" + newDispositivo.Tipo.Descripcion + "')";
-            NpgsqlCommand execute1 = new NpgsqlCommand(query, connection);
+           string query1 = $"INSERT INTO \"Tipo\" VALUES('{newDispositivo.Tipo.Nombre}',{newDispositivo.NumeroSerie},'{newDispositivo.Tipo.Descripcion},'{newDispositivo.Tipo.TiempoGarantia}');";
+            NpgsqlCommand execute1 = new NpgsqlCommand(query1, connection);
             execute1.ExecuteNonQuery();
+
+            connection.Close();
             return Ok("insercion exitosa");
 
 
@@ -63,35 +61,55 @@ namespace WebServices.Controllers
 
 
 
+       // metodos  de dispostivo desde app movil 
 
-        [HttpPost("add/dispositivoManual")]
-        public async Task<IActionResult> AddClienteAsync(DispositivoManual dispositivo)
+        [HttpPost]
+        public async Task<IActionResult> insertDispositivoManual(DispositivoManual dis)
         {
             connection.ConnectionString = server.init();
-            string query = "select Numero_serie from dispositivo_manual where Numero_serie = '" + dispositivo.NumeroSerie + "'";
+            string query = $"SELECT \"correo\" FROM \"Dispositivo\" WHERE \"numeroSerie\" = '{dis.NumeroSerie}';"; 
             NpgsqlCommand conector = new NpgsqlCommand(query, connection);
+           
+            connection.Open();
+
+            
             if (validaciones.exists(conector))
             {
                 connection.Close();
-                return BadRequest("dispositive already exist");
+                return BadRequest("element already exist");
 
             }
 
             else
             {
-                query = "insert into dispositivo_manual VALUES(";
-                query += "'" + dispositivo.NumeroSerie + "'," + "'" + dispositivo.Marca + "'," + "'" + dispositivo.Consumo + "'," + "'" + dispositivo.Descripcion + "'," + "'" + dispositivo.Usuario + "'," + "'" + dispositivo.FechaLimiteGarantia.Date + "'," + "'" + dispositivo.Estado + "')";
+                query = $"INSERT INTO \"Dispositivo\" VALUES({dis.NumeroSerie},'{dis.Consumo}','{dis.Marca},'{dis.EstadoActivo},'{dis.Usuario},'{dis.Aposento}');";
 
+               
 
                 connection.Open();
                 NpgsqlCommand execute = new NpgsqlCommand(query, connection);
                 execute.ExecuteNonQuery();
 
-              /*  query = " INSERT INTO tipo (numeroserie,nombre, descripcion) VALUES(";
-                query += "'" + dispositivo.NumeroSerie+ "','" + dispositivo.Tipo.Nombre+ "','" + dispositivo.Tipo.Descripcion + "')";
+
+
+                query = $"INSERT INTO \"Tipo\" VALUES({dis.Tipo.Nombre},'{dis.NumeroSerie}','{dis.Tipo.Descripcion},'{dis.Tipo.TiempoGarantia}');";
                 NpgsqlCommand execute1 = new NpgsqlCommand(query, connection);
-                execute1.ExecuteNonQuery();*/
+                execute1.ExecuteNonQuery();
+
+                connection.Close();
                 return Ok("insercion exitosa");
+
+
+                /*  query = " INSERT INTO tipo (numeroserie,nombre, descripcion) VALUES(";
+                  query += "'" + dispositivo.NumeroSerie+ "','" + dispositivo.Tipo.Nombre+ "','" + dispositivo.Tipo.Descripcion + "')";
+                  NpgsqlCommand execute1 = new NpgsqlCommand(query, connection);
+                  execute1.ExecuteNonQuery();
+
+                 Npgsql.PostgresException (0x80004005): 42703: no existe la columna «numeroserie» en la relación «tipo»
+     at Npgsql.NpgsqlConnector.<ReadMessage>g__ReadMessageLong|194_0(NpgsqlConnector connector, Boolean async, DataRowLoadingMode dataRowLoadingMode, Boolean readingNotifications, Boolean isReadingPrependedMessage)
+
+                 */
+                
 
             }
 
