@@ -11,7 +11,7 @@ namespace WebServices.Controllers {
 
     [Route("api/[controller]/[action]")]
 [ApiController]
-public class TipoController : ControllerBase
+public class TipoAdminController : ControllerBase
 
 {
 
@@ -33,10 +33,10 @@ public class TipoController : ControllerBase
             NpgsqlCommand command = new NpgsqlCommand(query, connection);
             command.ExecuteNonQuery();
             NpgsqlDataReader dr = command.ExecuteReader();
-            List<Tipo> listTipos = new List<Tipo>();
+            List<TipoAdmin> listTipos = new List<TipoAdmin>();
             while (dr.Read())
             {
-        Tipo estructurasTipo= new Tipo() { CorreoAdmin = (string)dr["correoDelAdmin"], Nombre =(string)dr["nombre"],
+        TipoAdmin estructurasTipo= new TipoAdmin() { CorreoAdmin = (string)dr["correoDelAdmin"], Nombre =(string)dr["nombre"],
             DescripcionDelTipo=(string)dr["descripcion"],TiempoGarantia=(int)dr["tiempoGarantia"]};
                 listTipos.Add(estructurasTipo);
             }
@@ -48,7 +48,7 @@ public class TipoController : ControllerBase
 
         // POST api/<DistribuidorController>/Create
         [HttpPost]
-        public async Task<IActionResult> SetTipo([FromBody] Tipo newTipo)
+        public async Task<IActionResult> SetTipo([FromBody] TipoAdmin newTipo)
         {
             connection.ConnectionString = server.init();
             string query = $"INSERT INTO \"Tipo\" VALUES({newTipo.CorreoAdmin},'{newTipo.Nombre}','{newTipo.DescripcionDelTipo}',{newTipo.TiempoGarantia});";

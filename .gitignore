@@ -10,3 +10,7 @@ WebServices/bin/
 WebServices/obj/
 
 WebServices/WebServices.csproj
+
+WebServices/Models/.idea/
+
+WebServices/WebServices.csproj.user

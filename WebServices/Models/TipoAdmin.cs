@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 
 namespace WebServices.Models
 {
-    public class Tipo
+    public class TipoAdmin
     {
-        public string Serie { get; set; }
+        public string CorreoAdmin { get; set; }
         public string Nombre { get; set; }
-        public string Descripcion { get; set; }
-        public string IdTipo { get; set; }
+        public string DescripcionDelTipo { get; set; }
+        public int TiempoGarantia { get; set; }
 
+
+       
     }
 }

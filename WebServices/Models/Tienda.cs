@@ -9,7 +9,7 @@ namespace WebServices.Models
     public class Tienda
     {
         public string IdGestion { get; set; }
-        public List<Tipo>Distribuidor { get; set; }// se deben insertar  con un PK combinando Iddistribuidor+idProducto para id Gestion
+        public List<TipoAdmin>Distribuidor { get; set; }// se deben insertar  con un PK combinando Iddistribuidor+idProducto para id Gestion
         public List<DispositivoStock> Dispositivos { get; set; }//
         public int Cantidad { get; set; }
 

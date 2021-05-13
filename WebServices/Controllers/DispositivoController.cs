@@ -106,14 +106,45 @@ namespace WebServices.Controllers
             catch
             {
                 return BadRequest(" el dispositivo no forma parte del stock");
-            }        }
-//--------------------------------------------------------------------------dispositivos manuales-----------------------------------------------------------
 
-       
-        
-        
-        
-        
+
+            }        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateDispositivoStock([FromBody] DispositivoStock disp)
+        {
+            connection.ConnectionString = server.init();
+            try
+
+            {
+
+
+                connection.Open();
+                string query = $"UPDATE DispositivoStock SET \"consumoElectrico\"={ disp.ConsumoElectrico}, \"marca\"={disp.Marca}," +
+                    $" \"estadoActivo\"={disp.EnVenta} , \"tipo\"={disp.Tipo} , \"tiempoGarantia\"={disp.TiempoGarantia} , \"descripcion\"={disp.Descripcion}" +
+                   $"         WHERE   \"numeroSerie\" = {disp.NumeroSerie} ";
+
+
+
+                NpgsqlCommand conector = new NpgsqlCommand(query, connection);
+                conector.ExecuteNonQuery();
+                connection.Close();
+                return Ok("Success");
+            }
+            catch
+            {
+                return BadRequest("No se pudo actualizar el dispositivo");
+            }
+        }
+        //--------------------------------------------------------------------------dispositivos manuales-----------------------------------------------------------
+
+
+
+
+
+
         [HttpPost]
         public async Task<IActionResult> setDispositivo(Dispositivo dis)
         {
@@ -201,6 +232,33 @@ namespace WebServices.Controllers
            
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateDispositivo([FromBody]  Dispositivo disp)
+        {
+            connection.ConnectionString = server.init();
+            try
+
+            {
+
+         
+                connection.Open();
+                string query = $"UPDATE Dispositivo SET \"consumoElectrico\"={ disp.Consumo}, \"marca\"={disp.Marca}," +
+                    $" \"estadoActivo\"={disp.EstadoActivo},\"nombreAposento\"={disp.NombreAposento} , \"tipo\"={disp.Tipo} , \"tiempoGarantia\"={disp.TiempoGarantia}" +
+                   $"         WHERE   \"numeroSerie\" = {disp.NumeroSerie} ";
+
+
+
+                NpgsqlCommand conector = new NpgsqlCommand(query, connection);
+                conector.ExecuteNonQuery();
+                connection.Close();
+                return Ok("Success");
+            }
+            catch
+            {
+                return BadRequest("No se pudo actualizar el dispositivo");
+            }
+        }
 
 
 
