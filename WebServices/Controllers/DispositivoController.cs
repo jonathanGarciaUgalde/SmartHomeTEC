@@ -80,6 +80,36 @@ namespace WebServices.Controllers
 
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> setListDispositivosStock([FromBody]  ListaDispositivoStock newDispositivo) {
+            connection.ConnectionString = server.init();
+           
+
+            int i = 0;
+            while (newDispositivo.Stocks.Count > i)
+            {
+
+              
+                string query = $"INSERT INTO \"DispositivoStock\" VALUES({newDispositivo.Stocks.ElementAt(i).NumeroSerie},'{newDispositivo.Stocks.ElementAt(i).Marca}'," +
+                    $"{newDispositivo.Stocks.ElementAt(i).ConsumoElectrico},{newDispositivo.Stocks.ElementAt(i).CedulaJuridica},'{newDispositivo.Stocks.ElementAt(i).Tipo}'," +
+                    $"{newDispositivo.Stocks.ElementAt(i).TiempoGarantia}," +
+                    $"'{newDispositivo.Stocks.ElementAt(i).Descripcion}',{newDispositivo.Stocks.ElementAt(i).EnVenta});";
+                connection.Open();
+                NpgsqlCommand execute = new NpgsqlCommand(query, connection);
+
+                execute.ExecuteNonQuery();
+                connection.Close();
+                i++;
+            }
+            
+            return Ok("Success");
+            
+            
+
+
+        }
+
         // Este metodo se encarg a de eliminar los dispotisitivos por DISTRIBUIDOR que se encuentren disponibles en la tienda, y no se hayan vendido
         [HttpDelete("{numeroSerie}")]
         public async Task<IActionResult> DeleteDispStock(int numeroSerie)
@@ -109,9 +139,6 @@ namespace WebServices.Controllers
 
 
             }        }
-
-
-
         [HttpPost]
         public async Task<IActionResult> UpdateDispositivoStock([FromBody] DispositivoStock disp)
         {
@@ -120,13 +147,10 @@ namespace WebServices.Controllers
 
             {
 
-
                 connection.Open();
                 string query = $"UPDATE DispositivoStock SET \"consumoElectrico\"={ disp.ConsumoElectrico}, \"marca\"={disp.Marca}," +
                     $" \"estadoActivo\"={disp.EnVenta} , \"tipo\"={disp.Tipo} , \"tiempoGarantia\"={disp.TiempoGarantia} , \"descripcion\"={disp.Descripcion}" +
                    $"         WHERE   \"numeroSerie\" = {disp.NumeroSerie} ";
-
-
 
                 NpgsqlCommand conector = new NpgsqlCommand(query, connection);
                 conector.ExecuteNonQuery();
@@ -138,6 +162,9 @@ namespace WebServices.Controllers
                 return BadRequest("No se pudo actualizar el dispositivo");
             }
         }
+
+
+
         //--------------------------------------------------------------------------dispositivos manuales-----------------------------------------------------------
 
 
@@ -246,7 +273,8 @@ namespace WebServices.Controllers
          
                 connection.Open();
                 string query = $"UPDATE Dispositivo SET \"consumoElectrico\"={ disp.Consumo}, \"marca\"={disp.Marca}," +
-                    $" \"estadoActivo\"={disp.EstadoActivo},\"nombreAposento\"={disp.NombreAposento} , \"tipo\"={disp.Tipo} , \"tiempoGarantia\"={disp.TiempoGarantia}  , \"descripcion\"={disp.Descripcion}"  +
+                    $" \"estadoActivo\"={disp.EstadoActivo},\"nombreAposento\"={disp.NombreAposento} , \"tipo\"={disp.Tipo}" +
+                    $" , \"tiempoGarantia\"={disp.TiempoGarantia}  , \"descripcion\"={disp.Descripcion}"  +
                    $"         WHERE   \"numeroSerie\" = {disp.NumeroSerie} ";
 
 

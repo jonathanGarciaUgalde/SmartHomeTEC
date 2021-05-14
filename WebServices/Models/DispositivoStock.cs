@@ -22,5 +22,9 @@ namespace WebServices.Models
         public int TiempoGarantia { get; set; }
 
     }
+    public class ListaDispositivoStock { 
+        public List<DispositivoStock> Stocks { get; set; }
+    
+    }
 
 }
