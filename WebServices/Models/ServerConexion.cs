@@ -13,9 +13,10 @@ namespace WebServices.Models
             init();          
         }
 
-        public string init() 
+        public string init()
         {
-            return "Server=localhost; Port = 5432;User Id=postgres;Password = 12345; Database = SmartHomeTEC";
+            return "Server=localhost; Port = 5432;User Id=postgres;Password = 12345; Database = SmartHomeTec";
         }
+       
     }
 }

@@ -45,12 +45,7 @@ namespace WebServices.Controllers
            
             return BadRequest("Username or password is incorrect");
         }
-
         
-
-        /*
-        * Método que se comunica mediante el protocolo http para registrar nuevos clientes en el app.
-        */
         [HttpPost]
         public async Task<IActionResult> Signin([FromBody] User  newUser)
         {            
@@ -118,7 +113,6 @@ namespace WebServices.Controllers
 
         }
 
-
         [HttpPost] //Route-> api/User/Credenciales
         public async Task<IActionResult> Credenciales([FromBody] User user)
         {
@@ -174,7 +168,6 @@ namespace WebServices.Controllers
             
 
         }
-
 
         [HttpPost] //Route-> api/User/ActivarDispositivo
         public async Task<IActionResult> ActivarDispositivo([FromBody] Historial historialDisp)
@@ -290,7 +283,6 @@ namespace WebServices.Controllers
             }            
         }
 
-
         [HttpPost] //Route-> api/User/DesactivarDispositivo
         public async Task<IActionResult> GetEstadoDispositivos([FromBody] User user)
         {
@@ -384,6 +376,51 @@ namespace WebServices.Controllers
             }
         }
 
+        [HttpPost] //Route-> api/User/PasarDispositivo
+        public async Task<IActionResult> PasarDispositivo([FromBody] PasarDispositivo disp)
+        {
+
+            connection.ConnectionString = server.init();
+            string query = $"SELECT " +
+                $"              \"correoPosedor\" " +
+                $"          FROM \"Dispositivo\" " +
+                $"          WHERE \"numeroSerie\" = {disp.NumeroSerie} AND \"correoPosedor\" = '{disp.PosedorActual}';";
+
+            connection.Open();
+            NpgsqlCommand command = new NpgsqlCommand(query, connection);
+            command.ExecuteNonQuery();
+            NpgsqlDataReader dr = command.ExecuteReader();
+            
+
+            if (dr.HasRows)
+            {
+                connection.Close();
+                try
+                {
+                    query = $"UPDATE \"Dispositivo\" SET \"correoPosedor\" = '{disp.FuturoPosedor}' WHERE  \"numeroSerie\" = {disp.NumeroSerie}  AND \"correoPosedor\" = '{disp.PosedorActual}';";
+                    connection.Open();
+                    command = new NpgsqlCommand(query, connection);
+                    command.ExecuteNonQuery();
+                    connection.Close();
+
+                    return Ok();
+
+                    
+                }
+                catch
+                {
+                    connection.Close();
+                    return BadRequest($"El usuario {disp.PosedorActual} no puede pasar un dispositivo a un usuario no registrado: {disp.FuturoPosedor}");
+                }
+            }
+            else
+            {
+                connection.Close();
+                return BadRequest($"El usuario {disp.PosedorActual} no es el posedor actual del dispositivo {disp.NumeroSerie}");
+            }
+
+
+        }
     }
 } 
     
