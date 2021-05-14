@@ -23,12 +23,11 @@ namespace WebServices.Controllers
     public class DispositivoController : ControllerBase
     {
 
-        NpgsqlConnection connection = new NpgsqlConnection();
-        ServerConexion server = new ServerConexion();
+        NpgsqlConnection connection = new NpgsqlConnection();// instacias  mecanismo de comunicacion con postgre
+        ServerConexion server = new ServerConexion();// conexion de servidor 
         Validaciones validaciones = new Validaciones();
 
-        // se debe realizar un cambio para que no hayan in consitencias  en la tabla dispositivo
-
+        
 
 
 
@@ -55,9 +54,9 @@ namespace WebServices.Controllers
            List<DispositivoStock> ListDispositivosStock = new List<DispositivoStock>();
             while (dr.Read())
             {
-                DispositivoStock dispositivoStock = new DispositivoStock() { NumeroSerie = (int)dr["numeroSerie"],
-                    Marca = (string)dr["marca"], ConsumoElectrico = (double)dr["consumoElectrico"], CedulaJuridica = (int)dr["cedulaJuridica"], 
-                    Tipo = (string)dr["tipo"], TiempoGarantia = (int)dr["tiempoGarantia"], Descripcion = (string)dr["descripcion"], EnVenta = (bool)dr["enVenta"] };
+                DispositivoStock dispositivoStock = new DispositivoStock() { numeroSerie = (int)dr["numeroSerie"],
+                    marca = (string)dr["marca"], consumoElectrico = (double)dr["consumoElectrico"], cedulaJuridica = (int)dr["cedulaJuridica"], 
+                    tipo = (string)dr["tipo"], tiempoGarantia = (int)dr["tiempoGarantia"], descripcion = (string)dr["descripcion"], enVenta = (bool)dr["enVenta"] };
                 ListDispositivosStock.Add(dispositivoStock);
             }
             connection.Close();
@@ -68,9 +67,9 @@ namespace WebServices.Controllers
         {
             connection.ConnectionString = server.init();
             connection.Open();
-            string query = $"INSERT INTO \"DispositivoStock\" VALUES({newDispositivo.NumeroSerie},'{newDispositivo.Marca}'," +
-                $"{newDispositivo.ConsumoElectrico},{newDispositivo.CedulaJuridica},'{newDispositivo.Tipo}',{newDispositivo.TiempoGarantia}," +
-                $"'{newDispositivo.Descripcion}',{newDispositivo.EnVenta});";
+            string query = $"INSERT INTO \"DispositivoStock\" VALUES({newDispositivo.numeroSerie},'{newDispositivo.marca}'," +
+                $"{newDispositivo.consumoElectrico},{newDispositivo.cedulaJuridica},'{newDispositivo.tipo}',{newDispositivo.tiempoGarantia}," +
+                $"'{newDispositivo.descripcion}',{newDispositivo.enVenta});";
             NpgsqlCommand execute = new NpgsqlCommand(query, connection);
 
             execute.ExecuteNonQuery();
@@ -81,6 +80,27 @@ namespace WebServices.Controllers
 
         }
 
+        // Metodo para  insertar el Stock cargado por un administrador atraves de  un documento Excel.
+        [HttpPost]
+        public async Task<IActionResult> setListDispositivosStock([FromBody]  ListaDispositivoStock newDispositivo) {
+            connection.ConnectionString = server.init();
+            int i = 0;
+            while (newDispositivo.stocks.Count > i)
+            {
+                string query = $"INSERT INTO \"DispositivoStock\" VALUES({newDispositivo.stocks.ElementAt(i).numeroSerie},'{newDispositivo.stocks.ElementAt(i).marca}'," +
+                    $"{newDispositivo.stocks.ElementAt(i).consumoElectrico},{newDispositivo.stocks.ElementAt(i).cedulaJuridica},'{newDispositivo.stocks.ElementAt(i).tipo}'," +
+                    $"{newDispositivo.stocks.ElementAt(i).tiempoGarantia}," +
+                    $"'{newDispositivo.stocks.ElementAt(i).descripcion}',{newDispositivo.stocks.ElementAt(i).enVenta});";
+                connection.Open();
+                NpgsqlCommand execute = new NpgsqlCommand(query, connection);
+
+                execute.ExecuteNonQuery();
+                connection.Close();
+                i++;
+            }
+            return Ok("Success");
+      
+        }
         // Este metodo se encarg a de eliminar los dispotisitivos por DISTRIBUIDOR que se encuentren disponibles en la tienda, y no se hayan vendido
         [HttpDelete("{numeroSerie}")]
         public async Task<IActionResult> DeleteDispStock(int numeroSerie)
@@ -90,6 +110,7 @@ namespace WebServices.Controllers
 
             try
             {
+                
                 string query1 = $"DELETE FROM \"DispositivoStock\" WHERE \"numeroSerie\" ={numeroSerie}'AND \"estadoActivo\" = {true};";
                 connection.Open();
 
@@ -110,10 +131,7 @@ namespace WebServices.Controllers
 
 
             }        }
-
-
-
-        [HttpPost]
+       [HttpPost]
         public async Task<IActionResult> UpdateDispositivoStock([FromBody] DispositivoStock disp)
         {
             connection.ConnectionString = server.init();
@@ -121,13 +139,10 @@ namespace WebServices.Controllers
 
             {
 
-
                 connection.Open();
-                string query = $"UPDATE DispositivoStock SET \"consumoElectrico\"={ disp.ConsumoElectrico}, \"marca\"={disp.Marca}," +
-                    $" \"estadoActivo\"={disp.EnVenta} , \"tipo\"={disp.Tipo} , \"tiempoGarantia\"={disp.TiempoGarantia} , \"descripcion\"={disp.Descripcion}" +
-                   $"         WHERE   \"numeroSerie\" = {disp.NumeroSerie} ";
-
-
+                string query = $"UPDATE DispositivoStock SET \"consumoElectrico\"={ disp.consumoElectrico}, \"marca\"={disp.marca}," +
+                    $" \"estadoActivo\"={disp.enVenta} , \"tipo\"={disp.tipo} , \"tiempoGarantia\"={disp.tiempoGarantia} , \"descripcion\"={disp.descripcion}" +
+                   $"         WHERE   \"numeroSerie\" = {disp.numeroSerie} ";
 
                 NpgsqlCommand conector = new NpgsqlCommand(query, connection);
                 conector.ExecuteNonQuery();
@@ -139,6 +154,9 @@ namespace WebServices.Controllers
                 return BadRequest("No se pudo actualizar el dispositivo");
             }
         }
+
+
+
         //--------------------------------------------------------------------------dispositivos manuales-----------------------------------------------------------
 
 
@@ -150,7 +168,7 @@ namespace WebServices.Controllers
         public async Task<IActionResult> setDispositivo(Dispositivo dis)
         {
             connection.ConnectionString = server.init();
-            string query = $"SELECT \"correo\" FROM \"Dispositivo\" WHERE \"numeroSerie\" = '{dis.NumeroSerie} ;"; 
+            string query = $"SELECT \"correo\" FROM \"Dispositivo\" WHERE \"numeroSerie\" = '{dis.numeroSerie} ;"; 
             NpgsqlCommand conector = new NpgsqlCommand(query, connection);
             connection.Open();
             
@@ -161,8 +179,8 @@ namespace WebServices.Controllers
             }
             else
             {
-                query = $"INSERT INTO \"Dispositivo\" VALUES({dis.NumeroSerie},{dis.Consumo},'{dis.Marca}',{dis.EstadoActivo}," +
-                    $"'{dis.NombreAposento}','{dis.CorreoPosedor}','{dis.Tipo}','{dis.TiempoGarantia}','{dis.Descripcion}');";
+                query = $"INSERT INTO \"Dispositivo\" VALUES({dis.numeroSerie},{dis.consumo},'{dis.marca}',{dis.estadoActivo}," +
+                    $"'{dis.nombreAposento}','{dis.correoPosedor}','{dis.tipo}','{dis.tiempoGarantia}','{dis.descripcion}');";
                 NpgsqlCommand execute = new NpgsqlCommand(query, connection);
                 execute.ExecuteNonQuery();
                 connection.Close();
@@ -194,8 +212,8 @@ namespace WebServices.Controllers
             List<Dispositivo> ListDispositivos = new List<Dispositivo>();
             while (dr.Read())
             {
-                Dispositivo dispositivo = new Dispositivo() { NumeroSerie = (int)dr["numeroSerie"], Consumo = (double)dr["consumoElectrico"], Marca = (string)dr["marca"],
-                    EstadoActivo = (bool)dr["estadoActivo"], NombreAposento = (string)dr["nombreAposento"],CorreoPosedor=(string)dr["correoPosedor"], Tipo = (string)dr["tipo"],TiempoGarantia = (int)dr["tiempoGarantia"],Descripcion=(string)dr["descripcion"] };
+                Dispositivo dispositivo = new Dispositivo() { numeroSerie = (int)dr["numeroSerie"], consumo = (double)dr["consumoElectrico"], marca = (string)dr["marca"],
+                    estadoActivo = (bool)dr["estadoActivo"], nombreAposento = (string)dr["nombreAposento"],correoPosedor=(string)dr["correoPosedor"], tipo = (string)dr["tipo"],tiempoGarantia = (int)dr["tiempoGarantia"],descripcion=(string)dr["descripcion"] };
                 ListDispositivos.Add(dispositivo);
             }
             connection.Close();
@@ -208,25 +226,44 @@ namespace WebServices.Controllers
         {
 
             connection.ConnectionString = server.init();
+
+
+
+
+            //REVISAR  PORQUE NO ESTA CUMPLIENDO CON EL AND AND Dispositivo.\"estadoActivo\"={false}  AND  \"estadoActivo\"= {false};
             try
             {
-                //REVISAR  PORQUE NO ESTA CUMPLIENDO CON EL AND AND Dispositivo.\"estadoActivo\"={false}
-
-                string query1 = $"DELETE FROM \"Dispositivo\" WHERE Dispositivo.\"numeroSerie\" = {numeroSerie} ;";
+                string query1 = $"DELETE FROM \"Dispositivo\" WHERE \"numeroSerie\" = {numeroSerie} ";
                 connection.Open();
 
                 NpgsqlCommand command1 = new NpgsqlCommand(query1, connection);
-                command1.ExecuteNonQuery();
+                if (validaciones.validaEstado(command1))
+                { 
 
-                connection.Close();
-                if (getListcurrentDisp().Count == 0)
+
+                    command1.ExecuteNonQuery();
+
+                    connection.Close();
+                    if (getListcurrentDisp().Count == 0)
+                    {
+                        return Ok(false);
+                    }
+                    else
+                    {
+                        return Ok(getListcurrentDisp());
+                    }
+
+                }
+                else
                 {
-                    return Ok(false);
+                    return BadRequest(" el dispositivo no forma parte del stock");
                 }
 
-                return Ok(getListcurrentDisp());
             }
-            catch {
+
+
+            catch
+            {
 
                 return BadRequest(" el dispositivo no forma parte del stock");
             }
@@ -246,9 +283,10 @@ namespace WebServices.Controllers
 
          
                 connection.Open();
-                string query = $"UPDATE Dispositivo SET \"consumoElectrico\"={ disp.Consumo}, \"marca\"={disp.Marca}," +
-                    $" \"estadoActivo\"={disp.EstadoActivo},\"nombreAposento\"={disp.NombreAposento} , \"tipo\"={disp.Tipo} , \"tiempoGarantia\"={disp.TiempoGarantia}  , \"descripcion\"={disp.Descripcion}"  +
-                   $"         WHERE   \"numeroSerie\" = {disp.NumeroSerie} ";
+                string query = $"UPDATE Dispositivo SET \"consumoElectrico\"={ disp.consumo}, \"marca\"={disp.marca}," +
+                    $" \"estadoActivo\"={disp.estadoActivo},\"nombreAposento\"={disp.nombreAposento} , \"tipo\"={disp.tipo}" +
+                    $" , \"tiempoGarantia\"={disp.tiempoGarantia}  , \"descripcion\"={disp.descripcion}"  +
+                   $"         WHERE   \"numeroSerie\" = {disp.numeroSerie} ";
 
 
 

@@ -8,19 +8,23 @@ namespace WebServices.Models
 {
     public class DispositivoStock
     {
-        public int NumeroSerie { get; set; }
-        public string Marca { get; set; }
-        public double ConsumoElectrico { get; set; }
-        public int CedulaJuridica { get; set; }
-        public bool EnVenta { get; set; }
+        public int numeroSerie { get; set; }
+        public string marca { get; set; }
+        public double consumoElectrico { get; set; }
+        public int cedulaJuridica { get; set; }
+        public bool enVenta { get; set; }
 
       
         //tipo
       
-        public string Tipo {get; set;}
-        public string Descripcion {get; set;}
-        public int TiempoGarantia { get; set; }
+        public string tipo {get; set;}
+        public string descripcion {get; set;}
+        public int tiempoGarantia { get; set; }
 
+    }
+    public class ListaDispositivoStock { 
+        public List<DispositivoStock> stocks { get; set; }
+    
     }
 
 }

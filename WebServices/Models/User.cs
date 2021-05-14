@@ -7,12 +7,12 @@ namespace WebServices.Models
 {
     public class User
     {
-        public string Correo { get; set; }//PK
-        public string Password { get; set; }
-        public string Nombre { get; set; }
-        public string Apellidos { get; set; }
-        public Region Region { get; set; }
-        public List<Direccion> Direccion{get;set;}
+        public string correo { get; set; }//PK
+        public string password { get; set; }
+        public string nombre { get; set; }
+        public string apellidos { get; set; }
+        public Region region { get; set; }
+        public List<Direccion> direccion{get;set;}
        
 
 

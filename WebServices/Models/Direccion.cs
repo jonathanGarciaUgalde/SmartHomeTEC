@@ -7,6 +7,6 @@ namespace WebServices.Models
 {
     public class Direccion
     {
-        public string Ubicacion { get; set; }        
+        public string ubicacion { get; set; }        
     }
 }

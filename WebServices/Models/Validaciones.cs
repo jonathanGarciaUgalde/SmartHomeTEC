@@ -37,17 +37,54 @@ namespace WebServices.Models
             }
         }
 
-    
-    /// <summary>
-    /// Valida si existe una tupla de dos keys en la tabla de la entrada
-    /// </summary>
-    /// <param name="table"></param>
-    /// <param name="tableKey1"></param>
-    /// <param name="tableKey2"></param>
-    /// <param name="userKey1"></param>
-    /// <param name="userKey2"></param>
-    /// <returns>bool</returns>
-    public bool validation(string table, string tableKey1, string tableKey2, string userKey1, string userKey2)
+
+        public bool validaEstado(NpgsqlCommand command) {
+            try
+            {
+                NpgsqlDataReader dr = command.ExecuteReader();
+                dr.Read();
+                if (!(bool)dr["estadoActivo"])
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+
+        }
+
+        public bool verifyuser(NpgsqlCommand command, string element)
+        {
+            try
+            {
+                NpgsqlDataReader dr = command.ExecuteReader();
+                dr.Read();
+                if ( dr["correo"].ToString().ToLowerInvariant().Equals(element.ToLowerInvariant()))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        /// <summary>
+        /// Valida si existe una tupla de dos keys en la tabla de la entrada
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="tableKey1"></param>
+        /// <param name="tableKey2"></param>
+        /// <param name="userKey1"></param>
+        /// <param name="userKey2"></param>
+        /// <returns>bool</returns>
+        public bool validation(string table, string tableKey1, string tableKey2, string userKey1, string userKey2)
         {
             connection.ConnectionString = server.init();
 

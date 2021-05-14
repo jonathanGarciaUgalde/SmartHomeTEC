@@ -7,10 +7,10 @@ namespace WebServices.Models
 {
     public class Tipo
     {
-        public string Serie { get; set; }
-        public string Nombre { get; set; }
-        public string Descripcion { get; set; }
-        public string IdTipo { get; set; }
+        public string serie { get; set; }
+        public string nombre { get; set; }
+        public string descripcion { get; set; }
+        public string idTipo { get; set; }
 
         
         

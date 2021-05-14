@@ -36,8 +36,8 @@ public class TipoAdminController : ControllerBase
             List<TipoAdmin> listTipos = new List<TipoAdmin>();
             while (dr.Read())
             {
-        TipoAdmin estructurasTipo= new TipoAdmin() { CorreoAdmin = (string)dr["correoDelAdmin"], Nombre =(string)dr["nombre"],
-            DescripcionDelTipo=(string)dr["descripcion"],TiempoGarantia=(int)dr["tiempoGarantia"]};
+        TipoAdmin estructurasTipo= new TipoAdmin() { correoAdmin = (string)dr["correoDelAdmin"], nombre =(string)dr["nombre"],
+            descripcionDelTipo=(string)dr["descripcion"],tiempoGarantia=(int)dr["tiempoGarantia"]};
                 listTipos.Add(estructurasTipo);
             }
             connection.Close();
@@ -51,7 +51,7 @@ public class TipoAdminController : ControllerBase
         public async Task<IActionResult> SetTipo([FromBody] TipoAdmin newTipo)
         {
             connection.ConnectionString = server.init();
-            string query = $"INSERT INTO \"Tipo\" VALUES({newTipo.CorreoAdmin},'{newTipo.Nombre}','{newTipo.DescripcionDelTipo}',{newTipo.TiempoGarantia});";
+            string query = $"INSERT INTO \"Tipo\" VALUES({newTipo.correoAdmin},'{newTipo.nombre}','{newTipo.descripcionDelTipo}',{newTipo.tiempoGarantia});";
             connection.Open();
 
             NpgsqlCommand command1 = new NpgsqlCommand(query, connection);
