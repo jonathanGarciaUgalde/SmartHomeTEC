@@ -27,7 +27,7 @@ namespace WebServices.Controllers
         }
 
         // GET api/<DistribuidorController>
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> GetDistribuidores([FromBody] User user)
         {                        
             connection.ConnectionString = server.init();

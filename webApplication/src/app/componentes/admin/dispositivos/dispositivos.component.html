@@ -10,27 +10,69 @@
 						<th>Tipo</th>
 						<th>Numero de serie</th>
 						<th>Marca</th>
-						<th>Consumo eléctrico (Kw/h)</th>
+						<th>Consumo eléctrico (W/h)</th>
 						<th>Acciones</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr class="text-center">
-						<td>Prueba</td>
-						<td>12345678</td>
-						<td>Samsung</td>
-						<td>20</td>	
+					<tr class="text-center" *ngFor="let dispositivo of dispositivos; let i = index">
+						<td>{{dispositivo.tipo}}</td>
+						<td>{{dispositivo.numeroSerie}}</td>
+						<td>{{dispositivo.marca}}</td>
+						<td>{{dispositivo.consumoElectrico}}</td>	
 						<td> 
-							<a class="btn btn-light"> Editar </a> 
-							<a class="btn btn-danger ml-2"> Eliminar </a> 
+							<a class="btn btn-light" (click)="preActualizar(mymodal,dispositivo)"> Editar </a> 
+							<a (click)="eliminar(dispositivo)" class="btn btn-danger ml-4"> Eliminar </a>
 						</td>			
 					</tr>
 				</tbody>
 			</table>
-			<button type="submit" class="btn btn-light">
+			<button type="submit" class="btn btn-success" (click)="crearNuevo(mymodal)">
 				Crear nuevo
 			</button>
 		</div>
 	</div>
 </div>
 
+   
+<ng-template #mymodal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{!this.api.dispositivoActual.numeroSerie ? 'Cargar Dispositivo' : 'Actualizar dispositivo'}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form class="form-dispositivo" #formDispositvo="ngForm" (ngSubmit)="guardarDispositivo(formDispositvo)">
+          <input type="hidden" id="numero" name="numero" class="form-control" [(ngModel)]="this.api.dispositivoActual.numeroSerie">
+          <div class="form-group">
+            <label for="Marca">Marca</label>
+            <input type="text" id="Marca" name="Marca" class="form-control" placeholder="Marca" [(ngModel)]="this.api.dispositivoActual.marca">
+          </div>
+          <div class="form-group">
+            <label for="Tipo">Tipo</label>
+            <input type="text" id="Tipo" name="Tipo" class="form-control" placeholder="Tipo" [(ngModel)]="this.api.dispositivoActual.tipo">
+          </div>
+          <div class="form-group">
+            <label for="consumo">Consumo Electrico</label>
+            <input type="text" id="conusmo" name="consumo" class="form-control" placeholder="Consumo Electrico" [(ngModel)]="this.api.dispositivoActual.consumoElectrico">
+          </div>
+          <div class="form-group">
+            <label for="cedula">Cedula Juridica</label>
+            <input type="text" id="cedula" name="cedula" class="form-control" placeholder="Cedula Juridica" [(ngModel)]="this.api.dispositivoActual.cedulaJuridica">
+          </div>
+          <div class="form-group">
+            <label for="garantia">Tiempo Garantia</label>
+            <input type="text" id="garantia" name="garantia" class="form-control" placeholder="Tiempo Garantia" [(ngModel)]="this.api.dispositivoActual.tiempoGarantia">
+          </div>  
+          <div class="form-group">
+            <label for="Descripcion">Descripción</label>
+            <textarea name="Descripcion" id="Descripcion" class="form-control" cols="50" rows="4" [(ngModel)]="this.api.dispositivoActual.descripcion"></textarea>
+          </div>
+          
+        </form>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-light" (click)="guardarDispositivo(formDispositvo)">Guardar</button>
+  </div>
+</ng-template>

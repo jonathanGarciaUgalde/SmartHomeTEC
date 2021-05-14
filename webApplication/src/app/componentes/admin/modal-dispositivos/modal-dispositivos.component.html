@@ -1,0 +1,31 @@
+<!-- Modal -->
+<div id="modalDispositivos" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Hola</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form-dispositivo" #formDispositvo="ngForm" (ngSubmit)="guardarDispositivo(formDispositvo)">
+          <input type="hidden" id="numero" name="numero" class="form-control" [(ngModel)]="this.api.dispositivoActual.numeroSerie">
+          <div class="form-group">
+            <label for="">Marca</label>
+            <input type="text" id="Marca" name="Marca" class="form-control" placeholder="Marca" [(ngModel)]="this.api.dispositivoActual.marca">
+          </div>
+          <div class="form-group">
+            <label for="Tipo">Tipo</label>
+            <input type="text" id="Tipo" name="Tipo" class="form-control" placeholder="Tipo" [(ngModel)]="this.api.dispositivoActual.tipo">
+          </div>     
+          <div class="form-group">
+            <label for="Descripcion">Descripción</label>
+            <textarea name="Descripcion" id="Descripcion" class="form-control" cols="50" rows="4" [(ngModel)]="this.api.dispositivoActual.descripcion"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary float-right">Guardar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

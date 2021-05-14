@@ -35,7 +35,7 @@ namespace WebServices.Controllers
         //Metodos para dispositivos en Stock
        
         //Retorna todos los dispositivos  asociados a un  proveedor 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> GetDispositivoStock()
         {
             
@@ -44,6 +44,7 @@ namespace WebServices.Controllers
 
 
         public List<DispositivoStock> getListcurrentDispStock() {
+            connection.ConnectionString = server.init();
             string query = $"SELECT " +
                $"                    \"numeroSerie\", \"marca\", \"consumoElectrico\", \"cedulaJuridica\", \"tipo\", \"tiempoGarantia\" , \"descripcion\" , \"enVenta\"" +
                $"         FROM       \"DispositivoStock\";";
