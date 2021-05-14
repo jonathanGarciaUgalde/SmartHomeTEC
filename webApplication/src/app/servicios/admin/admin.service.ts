@@ -52,6 +52,20 @@ export class AdminService {
  		});
  }
 
+   cargarDispositivo(dispositivo:Dispositivo){
+   const url_api = "https://localhost:44318/api/Dispositivo/SetDispositivoStock";
+   return this.http.post(url_api,
+     {
+        numeroSerie:dispositivo.numeroSerie,
+        marca:dispositivo.marca,
+        consumoElectrico:dispositivo.consumoElectrico,
+        cedulaJuridica:dispositivo.cedulaJuridica,
+        tipo:dispositivo.tipo,
+        descripcion:dispositivo.descripcion,
+        tiempoGarantia:dispositivo.tiempoGarantia
+     });
+ }
+
  actualizarDispositivo(dispositivo : NgForm){
  	const url_api = "https://localhost:44381/actualizarPlatillo";
  	return this.http.put(url_api,

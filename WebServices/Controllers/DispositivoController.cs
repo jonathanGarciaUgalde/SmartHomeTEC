@@ -75,7 +75,7 @@ namespace WebServices.Controllers
             execute.ExecuteNonQuery();
             connection.Close();
           
-            return Ok("insercion exitosa");
+            return Ok();
 
 
         }

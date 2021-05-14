@@ -92,6 +92,7 @@ export class DispositivosComponent implements OnInit {
 
   }
 
+
   guardarDispositivo(dispositivoForm: NgForm):void{
 
     this.modalService.dismissAll();

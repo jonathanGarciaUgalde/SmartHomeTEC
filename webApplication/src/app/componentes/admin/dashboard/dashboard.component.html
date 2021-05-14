@@ -35,18 +35,18 @@
 			<table id="platosTable" border="1" class="table table-bordered table-sm">
 				<thead class="thead-light text-center">
 					<tr>
-						<th>Nombre</th>
+						<th>Tipo</th>
 						<th>Marca</th>
 						<th>Número de serie</th>
 						<th>Posee usuario</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr class="text-center">
-						<td>Prueba</td>
-						<td>Nokia</td>
-						<td>12345</td>
-						<td>No</td>                     
+					<tr class="text-center" *ngFor="let dispositivo of dispositivos; let i = index">
+						<td>{{dispositivo.tipo}}</td>
+						<td>{{dispositivo.marca}}</td>
+						<td>{{dispositivo.numeroSerie}}</td>
+						<td>{{!dispositivo.enVenta ? 'Si' : 'No'}}</td>                     
 					</tr>
 				</tbody>
 			</table>
