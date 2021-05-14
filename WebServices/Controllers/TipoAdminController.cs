@@ -26,7 +26,7 @@ public class TipoAdminController : ControllerBase
         {
             connection.ConnectionString = server.init();
             string query = $"SELECT " +
-                $"                    \"correoDeAdmin\", \"nombre\", \"descripcion\", \"descripcion\" " +
+                $"                    \"correoDeAdmin\", \"nombre\", \"descripcion\", \"tiempoGarantia\" " +
                 $"         FROM       \"Tipo\";";
 
             connection.Open();

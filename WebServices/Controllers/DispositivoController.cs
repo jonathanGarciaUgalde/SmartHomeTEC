@@ -209,7 +209,7 @@ namespace WebServices.Controllers
             try
             {
                 //REVISAR  PORQUE NO ESTA CUMPLIENDO CON EL AND 
-                string query1 = $"DELETE FROM \"Dispositivo\" WHERE (\"numeroSerie\" = {numeroSerie}AND\"estadoActivo\" ={false}) ;";
+                string query1 = $"DELETE FROM \"Dispositivo\" WHERE Dispositivo.\"numeroSerie\" = {numeroSerie} ;";
                 connection.Open();
 
                 NpgsqlCommand command1 = new NpgsqlCommand(query1, connection);
@@ -262,6 +262,7 @@ namespace WebServices.Controllers
 
 
 
+     
 
 
     }
