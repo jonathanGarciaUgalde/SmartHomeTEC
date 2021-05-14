@@ -274,7 +274,7 @@ namespace WebServices.Controllers
                 {                    
                     Dispositivo dispositivo = new Dispositivo() { 
                                                                     Tipo = (string)dr["tipo"],
-                                                                    Aposento = (string)dr["nombreAposento"],
+                                                                    NombreAposento = (string)dr["nombreAposento"],
                                                                     NumeroSerie = (int)dr["numeroSerie"]
                     };
                     dispositivos.Add(dispositivo);
@@ -314,7 +314,7 @@ namespace WebServices.Controllers
                     Dispositivo dispositivo = new Dispositivo()
                     {
                         Tipo = (string)dr["tipo"],
-                        Aposento = (string)dr["nombreAposento"],
+                        NombreAposento = (string)dr["nombreAposento"],
                         NumeroSerie = (int)dr["numeroSerie"],
                         EstadoActivo = (bool)dr["estadoActivo"]
                     };

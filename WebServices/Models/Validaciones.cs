@@ -14,16 +14,40 @@ namespace WebServices.Models
 
         NpgsqlConnection connection = new NpgsqlConnection();
         ServerConexion server = new ServerConexion();
-        /// <summary>
-        /// Valida si existe una tupla de dos keys en la tabla de la entrada
-        /// </summary>
-        /// <param name="table"></param>
-        /// <param name="tableKey1"></param>
-        /// <param name="tableKey2"></param>
-        /// <param name="userKey1"></param>
-        /// <param name="userKey2"></param>
-        /// <returns>bool</returns>
-        public bool validation(string table, string tableKey1, string tableKey2, string userKey1, string userKey2)
+
+        public Validaciones()
+        {
+
+            
+
+        }
+
+        public bool exists(NpgsqlCommand conector)
+        {
+            try
+            {
+                NpgsqlDataReader dr = conector.ExecuteReader();
+                dr.Read();
+                //  System.Diagnostics.Debug.Print("User: " + (string)dr[0] + " ya existe");
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+    
+    /// <summary>
+    /// Valida si existe una tupla de dos keys en la tabla de la entrada
+    /// </summary>
+    /// <param name="table"></param>
+    /// <param name="tableKey1"></param>
+    /// <param name="tableKey2"></param>
+    /// <param name="userKey1"></param>
+    /// <param name="userKey2"></param>
+    /// <returns>bool</returns>
+    public bool validation(string table, string tableKey1, string tableKey2, string userKey1, string userKey2)
         {
             connection.ConnectionString = server.init();
 
@@ -43,6 +67,7 @@ namespace WebServices.Models
                 return true;
             }
         }
+        
     }
 }
 

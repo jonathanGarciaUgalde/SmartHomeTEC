@@ -17,7 +17,7 @@ namespace WebServices.Models
         // tipo
         public string Tipo { get; set; }
         public int TiempoGarantia { get; set; } 
-        public string Descripcion { get; set}
+        public string Descripcion { get; set; }
 
     }
 }
