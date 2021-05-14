@@ -135,26 +135,24 @@ namespace WebServices.Controllers
         public async Task<IActionResult> UpdateDispositivoStock([FromBody] DispositivoStock disp)
         {
             connection.ConnectionString = server.init();
-            try
-
-            {
 
                 connection.Open();
-                string query = $"UPDATE DispositivoStock SET \"consumoElectrico\"={ disp.consumoElectrico}, \"marca\"={disp.marca}," +
-                    $" \"estadoActivo\"={disp.enVenta} , \"tipo\"={disp.tipo} , \"tiempoGarantia\"={disp.tiempoGarantia} , \"descripcion\"={disp.descripcion}" +
-                   $"         WHERE   \"numeroSerie\" = {disp.numeroSerie} ";
+                string query = $"UPDATE \"DispositivoStock\" SET \"consumoElectrico\" = {disp.consumoElectrico}, \"marca\" = '{disp.marca}'," +
+                    $" \"tipo\" = '{disp.tipo}' , \"tiempoGarantia\" = {disp.tiempoGarantia} , \"descripcion\" = '{disp.descripcion}'" +
+                   $"         WHERE   \"numeroSerie\" = {disp.numeroSerie} ;";
+
 
                 NpgsqlCommand conector = new NpgsqlCommand(query, connection);
                 conector.ExecuteNonQuery();
                 connection.Close();
                 return Ok("Success");
-            }
-            catch
-            {
-                return BadRequest("No se pudo actualizar el dispositivo");
-            }
+            
+            
+               
+            
         }
 
+        
 
 
         //--------------------------------------------------------------------------dispositivos manuales-----------------------------------------------------------
@@ -280,13 +278,13 @@ namespace WebServices.Controllers
             try
 
             {
+       
 
-         
                 connection.Open();
-                string query = $"UPDATE Dispositivo SET \"consumoElectrico\"={ disp.consumo}, \"marca\"={disp.marca}," +
-                    $" \"estadoActivo\"={disp.estadoActivo},\"nombreAposento\"={disp.nombreAposento} , \"tipo\"={disp.tipo}" +
-                    $" , \"tiempoGarantia\"={disp.tiempoGarantia}  , \"descripcion\"={disp.descripcion}"  +
-                   $"         WHERE   \"numeroSerie\" = {disp.numeroSerie} ";
+                string query = $"UPDATE \"Dispositivo\" SET \"consumoElectrico\"={ disp.consumo}, \"marca\"='{ disp.marca}'," +
+                    $" \"nombreAposento\"='{disp.nombreAposento}' , \"tipo\"='{disp.tipo}'" +
+                    $" , \"tiempoGarantia\"={disp.tiempoGarantia}  , \"descripcion\"='{disp.descripcion}'"  +
+                   $"         WHERE   \"numeroSerie\" = {disp.numeroSerie} ;";
 
 
 
