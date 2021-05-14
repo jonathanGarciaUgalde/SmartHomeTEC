@@ -1,0 +1,45 @@
+<app-navbar-cliente></app-navbar-cliente>
+
+<div class="container mt-3">
+		<div class="card col-md-6 mx-auto">
+			<div class="card-header">Gestionar Perfil</div>
+			<div class="card-body">
+
+				<div class="row">
+					<div class="col-md-6">
+						<label>Nombre</label>
+					</div>
+					<div class="col-md-6" *ngIf="datosUsuario != null">
+						<p>{{datosUsuario.nombre}} {{datosUsuario.apellidos}}</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<label>Email</label>
+					</div>
+					<div class="col-md-6" *ngIf="datosUsuario != null">
+						<p>{{datosUsuario.correo}}</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<label>Región</label>
+					</div>
+					<div class="col-md-6" *ngIf="datosUsuario != null">
+						<p>{{datosUsuario.region.pais}}, {{datosUsuario.region.continente}}</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<label>Direcciones</label>
+					</div>
+					<div class="col-md-6" *ngIf="datosUsuario != null">
+						<p *ngFor="let direccion of datosUsuario.direccion; let a = index">{{datosUsuario.direccion[a].ubicacion}}</p>
+					</div>
+				</div>
+				<div class="row">
+					<button class="btn btn-light">Editar perfil</button>
+				</div>
+			</div>
+		</div>
+</div>
