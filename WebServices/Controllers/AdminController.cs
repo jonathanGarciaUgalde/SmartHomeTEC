@@ -25,7 +25,7 @@ namespace WebServices.Controllers
             connection.ConnectionString = server.init();
             connection.Open();
 
-            string query = $"INSERT INTO \"Admin\" VALUES('{newAdmin.Correo}','{newAdmin.Password}');";
+            string query = $"INSERT INTO \"Admin\" VALUES('{newAdmin.correo}','{newAdmin.password}');";
             NpgsqlCommand command = new NpgsqlCommand(query, connection);
             command.ExecuteNonQuery();
 
@@ -39,12 +39,12 @@ namespace WebServices.Controllers
             connection.ConnectionString = server.init();
             connection.Open();
             
-            string query = $"SELECT \"correo\",\"password\" FROM \"Admin\" WHERE \"correo\" = '{admin.Correo}';";
+            string query = $"SELECT \"correo\",\"password\" FROM \"Admin\" WHERE \"correo\" = '{admin.correo}';";
             NpgsqlCommand command = new NpgsqlCommand(query, connection);
             command.ExecuteNonQuery();
 
 
-            if (lg.verifyLogin(command, admin.Correo, admin.Password))
+            if (lg.verifyLogin(command, admin.correo, admin.password))
             {
                 connection.Close();
                 return Ok();

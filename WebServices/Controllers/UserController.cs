@@ -57,14 +57,14 @@ namespace WebServices.Controllers
             connection.ConnectionString = server.init();
             connection.Open();
 
-            string query = $"insert into \"Usuario\" VALUES('{newUser.Correo}','{newUser.Password}', '{newUser.Nombre}', '{newUser.Apellidos}', '{newUser.Region.Continente}', '{newUser.Region.Pais}')";
+            string query = $"insert into \"Usuario\" VALUES('{newUser.correo}','{newUser.password}', '{newUser.nombre}', '{newUser.apellidos}', '{newUser.region.continente}', '{newUser.region.pais}')";
             NpgsqlCommand execute = new NpgsqlCommand(query, connection);
             execute.ExecuteNonQuery();
 
             int i = 0;
-            while (newUser.Direccion.Count > i)
+            while (newUser.direccion.Count > i)
             {
-                query = $"insert into \"direccionEntrega\" VALUES('{newUser.Correo}','{ newUser.Direccion.ElementAt(i).Ubicacion}');";
+                query = $"insert into \"direccionEntrega\" VALUES('{newUser.correo}','{ newUser.direccion.ElementAt(i).ubicacion}');";
                 
                 NpgsqlCommand execute3 = new NpgsqlCommand(query, connection);
                 execute3.ExecuteNonQuery();
@@ -84,13 +84,13 @@ namespace WebServices.Controllers
             try
             {
                 connection.Open();
-                string userQuery = $"SELECT \"correo\" FROM \"Usuario\" WHERE \"correo\" = '{aposento.Correo}';";
+                string userQuery = $"SELECT \"correo\" FROM \"Usuario\" WHERE \"correo\" = '{aposento.correo}';";
                 NpgsqlCommand userCommand = new NpgsqlCommand(userQuery, connection);
                 userCommand.ExecuteNonQuery();
 
                 NpgsqlDataReader dr = userCommand.ExecuteReader();                
                 dr.Read(); //Si no existen filas por ller este metodo fallaria. Es debido a esto que se usa el try/catch.
-                User currentUser = new User() { Correo = (string)dr["correo"] };
+                User currentUser = new User() { correo = (string)dr["correo"] };
                 connection.Close();
             }
             catch
@@ -102,7 +102,7 @@ namespace WebServices.Controllers
             try
             {
                 connection.Open();
-                string query = $"INSERT INTO \"Aposento\" VALUES('{aposento.Correo}','{aposento.Nombre}');";
+                string query = $"INSERT INTO \"Aposento\" VALUES('{aposento.correo}','{aposento.nombre}');";
                 NpgsqlCommand command = new NpgsqlCommand(query, connection);
                 command.ExecuteNonQuery();
 
@@ -127,7 +127,7 @@ namespace WebServices.Controllers
                 $"              \"nombre\", \"apellidos\", \"pais\", \"continente\" " +
                 $"         FROM " +
                 $"              \"Usuario\" " +
-                $"         WHERE \"correo\" = '{user.Correo}';";
+                $"         WHERE \"correo\" = '{user.correo}';";
 
             connection.Open();
             NpgsqlCommand command = new NpgsqlCommand(query, connection);
@@ -138,8 +138,8 @@ namespace WebServices.Controllers
                 NpgsqlDataReader dr = command.ExecuteReader();
                 dr.Read();
 
-                Region outputRegion = new Region() { Pais = (string)dr["pais"], Continente = (string)dr["continente"] };
-                User outputUser = new User() { Nombre = (string)dr["nombre"], Apellidos = (string)dr["apellidos"], Region = outputRegion };
+                Region outputRegion = new Region() { pais = (string)dr["pais"], continente = (string)dr["continente"] };
+                User outputUser = new User() { nombre = (string)dr["nombre"], apellidos = (string)dr["apellidos"], region = outputRegion };
 
                 connection.Close();
 
@@ -148,7 +148,7 @@ namespace WebServices.Controllers
                         $"      \"ubicacion\" " +
                         $"FROM " +
                         $"      \"direccionEntrega\" " +
-                        $"WHERE \"correo\" = '{user.Correo}';";
+                        $"WHERE \"correo\" = '{user.correo}';";
 
                 connection.Open();
                 command = new NpgsqlCommand(query, connection);
@@ -158,10 +158,10 @@ namespace WebServices.Controllers
                 List<Direccion> direcciones = new List<Direccion>();
                 while (dr.Read())
                 {
-                    Direccion direccion = new Direccion() { Ubicacion = (string)dr["ubicacion"] };
+                    Direccion direccion = new Direccion() { ubicacion = (string)dr["ubicacion"] };
                     direcciones.Add(direccion);
                 }
-                outputUser.Direccion = direcciones;
+                outputUser.direccion = direcciones;
 
                 connection.Close();
                 return Ok(outputUser);
@@ -179,10 +179,10 @@ namespace WebServices.Controllers
         [HttpPost] //Route-> api/User/ActivarDispositivo
         public async Task<IActionResult> ActivarDispositivo([FromBody] Historial historialDisp)
         {
-            if (historialDisp.EstadoActivo)
+            if (historialDisp.estadoActivo)
             {
                 connection.ConnectionString = server.init();
-                string query = $"UPDATE \"Dispositivo\" SET \"estadoActivo\" = {true} WHERE \"numeroSerie\" = {historialDisp.NumeroSerie};";
+                string query = $"UPDATE \"Dispositivo\" SET \"estadoActivo\" = {true} WHERE \"numeroSerie\" = {historialDisp.numeroSerie};";
 
                 connection.Open();
 
@@ -196,7 +196,7 @@ namespace WebServices.Controllers
 
                 connection.Open();
                 query = $"INSERT INTO \"Historial\"(\"fechaActivacion\",\"horaActivacion\",\"numeroSerie\") " +
-                        $"  VALUES('{dateString}','{timeZone}', {historialDisp.NumeroSerie});";
+                        $"  VALUES('{dateString}','{timeZone}', {historialDisp.numeroSerie});";
 
                 command = new NpgsqlCommand(query, connection);
                 command.ExecuteNonQuery();
@@ -213,10 +213,10 @@ namespace WebServices.Controllers
         [HttpPost] //Route-> api/User/DesactivarDispositivo
         public async Task<IActionResult> DesactivarDispositivo([FromBody] Historial historialDispositivo)
         {
-            if (!historialDispositivo.EstadoActivo)
+            if (!historialDispositivo.estadoActivo)
             {
                 connection.ConnectionString = server.init();
-                string query = $"UPDATE \"Dispositivo\" SET \"estadoActivo\" = {false} WHERE \"numeroSerie\" = {historialDispositivo.NumeroSerie};";
+                string query = $"UPDATE \"Dispositivo\" SET \"estadoActivo\" = {false} WHERE \"numeroSerie\" = {historialDispositivo.numeroSerie};";
 
                 connection.Open();
 
@@ -231,11 +231,11 @@ namespace WebServices.Controllers
                 
                 query = $"UPDATE \"Historial\"" +
                         $"SET    \"fechaDesactivacion\" =  '{dateString}', \"horaDesactivacion\" = '{timeZone}'" +
-                        $"WHERE \"numeroSerie\" = {historialDispositivo.NumeroSerie} " +
+                        $"WHERE \"numeroSerie\" = {historialDispositivo.numeroSerie} " +
                         $"AND \"horaActivacion\" = " +
                         $" (SELECT \"horaActivacion\" " +
                         $"  FROM \"Historial\" " +
-                        $"  WHERE \"numeroSerie\" = {historialDispositivo.NumeroSerie} " +
+                        $"  WHERE \"numeroSerie\" = {historialDispositivo.numeroSerie} " +
                         $"  ORDER BY \"horaActivacion\" DESC" +
                         $"  LIMIT 1);";
                 connection.Open();
@@ -259,7 +259,7 @@ namespace WebServices.Controllers
             string query = $"SELECT " +
                 $"                \"nombreAposento\", \"tipo\", \"numeroSerie\", \"estadoActivo\", \"consumoElectrico\", \"correoPosedor\", \"marca\" " +
                 $"          FROM  \"Dispositivo\" " +
-                $"          WHERE \"correoPosedor\" = '{user.Correo}';";
+                $"          WHERE \"correoPosedor\" = '{user.correo}';";
 
             connection.Open();
             NpgsqlCommand command = new NpgsqlCommand(query, connection);
@@ -273,9 +273,9 @@ namespace WebServices.Controllers
                 while (dr.Read())
                 {                    
                     Dispositivo dispositivo = new Dispositivo() { 
-                                                                    Tipo = (string)dr["tipo"],
-                                                                    NombreAposento = (string)dr["nombreAposento"],
-                                                                    NumeroSerie = (int)dr["numeroSerie"]
+                                                                    tipo = (string)dr["tipo"],
+                                                                    nombreAposento = (string)dr["nombreAposento"],
+                                                                    numeroSerie = (int)dr["numeroSerie"]
                     };
                     dispositivos.Add(dispositivo);
 
@@ -298,7 +298,7 @@ namespace WebServices.Controllers
             string query = $"SELECT " +
                 $"                \"nombreAposento\", \"tipo\", \"numeroSerie\", \"estadoActivo\" " +
                 $"          FROM  \"Dispositivo\" " +
-                $"          WHERE \"correoPosedor\" = '{user.Correo}';";
+                $"          WHERE \"correoPosedor\" = '{user.correo}';";
 
             connection.Open();
             NpgsqlCommand command = new NpgsqlCommand(query, connection);
@@ -313,10 +313,10 @@ namespace WebServices.Controllers
                 {
                     Dispositivo dispositivo = new Dispositivo()
                     {
-                        Tipo = (string)dr["tipo"],
-                        NombreAposento = (string)dr["nombreAposento"],
-                        NumeroSerie = (int)dr["numeroSerie"],
-                        EstadoActivo = (bool)dr["estadoActivo"]
+                        tipo = (string)dr["tipo"],
+                        nombreAposento = (string)dr["nombreAposento"],
+                        numeroSerie = (int)dr["numeroSerie"],
+                        estadoActivo = (bool)dr["estadoActivo"]
                     };
                     dispositivos.Add(dispositivo);
 
@@ -338,7 +338,7 @@ namespace WebServices.Controllers
             string query = $"SELECT " +
                 $"                * " +
                 $"          FROM  \"Historial\" " +
-                $"          WHERE \"numeroSerie\" = {disp.NumeroSerie} AND \"fechaDesactivacion\" IS NOT NULL;";
+                $"          WHERE \"numeroSerie\" = {disp.numeroSerie} AND \"fechaDesactivacion\" IS NOT NULL;";
 
             connection.Open();
             NpgsqlCommand command = new NpgsqlCommand(query, connection);
@@ -358,11 +358,11 @@ namespace WebServices.Controllers
 
                         Historial historialActual = new Historial()
                         {
-                            FechaActivacion = (string)dr["fechaActivacion"],
-                            FechaDesactivacion = (string)dr["fechaDesactivacion"],
-                            HoraActivacion = (string)dr["horaActivacion"],
-                            HoraDesactivacion = (string)dr["horaDesactivacion"],
-                            NumeroSerie = (int)dr["NumeroSerie"]
+                            fechaActivacion = (string)dr["fechaActivacion"],
+                            fechaDesactivacion = (string)dr["fechaDesactivacion"],
+                            horaActivacion = (string)dr["horaActivacion"],
+                            horaDesactivacion = (string)dr["horaDesactivacion"],
+                            numeroSerie = (int)dr["numeroSerie"]
                         };
                         historial.Add(historialActual);
 

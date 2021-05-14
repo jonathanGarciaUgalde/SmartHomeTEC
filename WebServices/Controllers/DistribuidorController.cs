@@ -45,8 +45,8 @@ namespace WebServices.Controllers
             int numeroDistribuidor = 1;
             while (dr.Read())
             {
-                Region region = new Region() { Pais = (string)dr["pais"], Continente = (string)dr["continente"] };
-                Distribuidor distribuidor = new Distribuidor() { Nombre = (string)dr["nombre"], Region = region };
+                Region region = new Region() { pais = (string)dr["pais"], continente = (string)dr["continente"] };
+                Distribuidor distribuidor = new Distribuidor() { nombre = (string)dr["nombre"], region = region };
                 distribuidores.Add(distribuidor);
 
             }
@@ -59,7 +59,7 @@ namespace WebServices.Controllers
         public async Task<IActionResult> Create([FromBody] Distribuidor dist)
         {
             connection.ConnectionString = server.init();
-            string query = $"INSERT INTO \"Distribuidor\" VALUES({dist.CedulaJuridica},'{dist.Nombre}','{dist.Region.Continente}','{dist.Region.Pais}');";
+            string query = $"INSERT INTO \"Distribuidor\" VALUES({dist.cedulaJuridica},'{dist.nombre}','{dist.region.continente}','{dist.region.pais}');";
             connection.Open();
 
             NpgsqlCommand command1 = new NpgsqlCommand(query, connection);
