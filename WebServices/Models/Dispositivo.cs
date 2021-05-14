@@ -10,12 +10,13 @@ namespace WebServices.Models
     {
         public int NumeroSerie { get; set; }
         public string Marca { get; set; }
-        public string Descripcion { get; set; }// estos son atributos  que pueden ser  null  porque  en la tabla estan validados como tal
-        public int TiempoGarantia { get; set; }// estos son atributos  que pueden ser  null  porque  en la tabla estan validados como tal
-        public string Tipo { get; set; } // se le asigna al modelo de tipo la estructura 
-        public string Aposento { get; set; }
+        public int TiempoGarantia { get; set; }//Estos son atributos  que pueden ser  null  porque  en la tabla estan validados como tal
         public string ConsumoElectrico { get; set; }
         public bool EstadoActivo { get; set; }
+        public string NombreAposento { get; set; }
+
+        public string Tipo { get; set; } //Se le asigna al modelo de tipo la estructura 
         public string CorreoPosedor { get; set; }
+        public string Descripcion { get; set; } //Estos son atributos  que pueden ser  null  porque  en la tabla estan validados como tal
     }
 }

@@ -14,6 +14,68 @@ namespace WebServices.Models
 
         NpgsqlConnection connection = new NpgsqlConnection();
         ServerConexion server = new ServerConexion();
+
+        public Validaciones()
+        {
+
+
+
+        }
+
+        public bool exists(NpgsqlCommand conector)
+        {
+            try
+            {
+                NpgsqlDataReader dr = conector.ExecuteReader();
+                dr.Read();
+                //  System.Diagnostics.Debug.Print("User: " + (string)dr[0] + " ya existe");
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
+        public bool validaEstado(NpgsqlCommand command)
+        {
+            try
+            {
+                NpgsqlDataReader dr = command.ExecuteReader();
+                dr.Read();
+                if (!(bool)dr["estadoActivo"])
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+
+        }
+
+        public bool verifyuser(NpgsqlCommand command, string element)
+        {
+            try
+            {
+                NpgsqlDataReader dr = command.ExecuteReader();
+                dr.Read();
+                if (dr["correo"].ToString().ToLowerInvariant().Equals(element.ToLowerInvariant()))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
         /// <summary>
         /// Valida si existe una tupla de dos keys en la tabla de la entrada
         /// </summary>
@@ -43,6 +105,7 @@ namespace WebServices.Models
                 return true;
             }
         }
+
     }
 }
 
