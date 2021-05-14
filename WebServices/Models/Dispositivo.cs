@@ -11,7 +11,7 @@ namespace WebServices.Models
         public int NumeroSerie { get; set; }
         public string Marca { get; set; }
         public int TiempoGarantia { get; set; }//Estos son atributos  que pueden ser  null  porque  en la tabla estan validados como tal
-        public string ConsumoElectrico { get; set; }
+        public double ConsumoElectrico { get; set; }
         public bool EstadoActivo { get; set; }
         public string NombreAposento { get; set; }
 

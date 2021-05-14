@@ -10,7 +10,7 @@ using WebServices.Models;
 
 namespace WebServices.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class DispositivoController : ControllerBase
     {
@@ -150,7 +150,7 @@ namespace WebServices.Controllers
         public async Task<IActionResult> setDispositivo(Dispositivo dis)
         {
             connection.ConnectionString = server.init();
-            string query = $"SELECT \"correo\" FROM \"Dispositivo\" WHERE \"numeroSerie\" = '{dis.NumeroSerie} ;";
+            string query = $"SELECT \"correo\" FROM \"Dispositivo\" WHERE \"numeroSerie\" = {dis.NumeroSerie} ;";
             NpgsqlCommand conector = new NpgsqlCommand(query, connection);
             connection.Open();
 
@@ -198,7 +198,7 @@ namespace WebServices.Controllers
                 Dispositivo dispositivo = new Dispositivo()
                 {
                     NumeroSerie = (int)dr["numeroSerie"],
-                    ConsumoElectrico = (string)dr["consumoElectrico"],
+                    ConsumoElectrico = (double)dr["consumoElectrico"],
                     Marca = (string)dr["marca"],
                     EstadoActivo = (bool)dr["estadoActivo"],
                     NombreAposento = (string)dr["nombreAposento"],
