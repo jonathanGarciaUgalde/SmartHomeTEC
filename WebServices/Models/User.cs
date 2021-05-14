@@ -12,13 +12,13 @@ namespace WebServices.Models
         public string Nombre { get; set; }
         public string Apellidos { get; set; }
         public Region Region { get; set; }
-        public List<Direccion> Direccion { get; set; }
+        public List<Direccion> Direccion{get;set;}
+       
 
 
 
 
 
-
-
+        
     }
 }

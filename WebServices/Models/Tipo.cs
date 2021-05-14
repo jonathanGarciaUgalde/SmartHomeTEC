@@ -12,5 +12,7 @@ namespace WebServices.Models
         public string Descripcion { get; set; }
         public string IdTipo { get; set; }
 
+        
+        
     }
 }

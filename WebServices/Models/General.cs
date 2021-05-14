@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+﻿
+
+using Newtonsoft.Json.Linq;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -7,11 +9,10 @@ using System.Linq;
 using System.Web;
 namespace WebServices.Models
 {
-
+   
     public class General
     {
         NpgsqlConnection connection = new NpgsqlConnection();
-        ServerConexion server = new ServerConexion();
         public string checkForNullUpdate(string query, string[] ar, JObject obj)
         {
             foreach (string i in ar)
@@ -66,7 +67,7 @@ namespace WebServices.Models
 
         public bool validation(string table, string tableKey1, string tableKey2, string userKey1, string userKey2)
         {
-            connection.ConnectionString = connection.ConnectionString = server.init();
+            connection.ConnectionString = "Username = postgres; Password = 123; Host = localhost; Port = 5432; Database = StraviaTec";
             connection.Open();
             string query = "select " + tableKey1 + " from " + table + " where " + tableKey1 + " = '" + userKey1 + "' and " + tableKey2 + "= '" + userKey2 + "';";
             Debug.Print(query);
@@ -85,3 +86,4 @@ namespace WebServices.Models
         }
     }
 }
+
