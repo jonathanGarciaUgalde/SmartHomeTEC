@@ -143,8 +143,7 @@ namespace WebServices.Controllers
             return Ok("Success");
 
         }
-
-
+        
         //--------------------------------------------------------------------------dispositivos manuales-----------------------------------------------------------
 
         [HttpPost]
