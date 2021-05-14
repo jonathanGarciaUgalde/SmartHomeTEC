@@ -11,5 +11,5 @@ export interface Usuario {
 	apellidos?: string,
 	pais?: string,
 	region?: RegionInterface,
-	direccion?: Ubicacion[]
+	direccion?: Ubicacion
 }

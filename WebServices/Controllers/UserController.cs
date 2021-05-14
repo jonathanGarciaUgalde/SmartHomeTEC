@@ -53,15 +53,7 @@ namespace WebServices.Controllers
         */
         [HttpPost]
         public async Task<IActionResult> Signin([FromBody] User  newUser)
-        {
-            Console.Out.WriteLine(newUser);
-            System.Console.WriteLine(newUser.Correo);
-            System.Console.WriteLine(newUser.Nombre);
-            System.Console.WriteLine(newUser.Apellidos);
-            System.Console.WriteLine(newUser.Password);
-            System.Console.WriteLine(newUser.Region.Continente  + " " + newUser.Region.Pais); 
-            System.Console.WriteLine(newUser.Direccion.ElementAt(0).Ubicacion);
-
+        {            
             connection.ConnectionString = server.init();
             connection.Open();
 
@@ -80,7 +72,7 @@ namespace WebServices.Controllers
 
             }
             connection.Close();
-            return Ok();
+            return Ok("Success");
         }
 
         [HttpPost] //api/User/Aposento
