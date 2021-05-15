@@ -75,42 +75,70 @@ namespace WebServices.Controllers
         {
 
             connection.ConnectionString = server.init();
+            connection.Open();
+            string userQuery = $"SELECT \"correo\" FROM \"Usuario\" WHERE \"correo\" = '{aposento.Correo}';";
+            NpgsqlCommand userCommand = new NpgsqlCommand(userQuery, connection);
+            userCommand.ExecuteNonQuery();
 
-            try
+            NpgsqlDataReader dr = userCommand.ExecuteReader();
+
+            if (dr.HasRows)
             {
-                connection.Open();
-                string userQuery = $"SELECT \"correo\" FROM \"Usuario\" WHERE \"correo\" = '{aposento.Correo}';";
-                NpgsqlCommand userCommand = new NpgsqlCommand(userQuery, connection);
-                userCommand.ExecuteNonQuery();
-
-                NpgsqlDataReader dr = userCommand.ExecuteReader();                
-                dr.Read(); //Si no existen filas por ller este metodo fallaria. Es debido a esto que se usa el try/catch.
-                User currentUser = new User() { Correo = (string)dr["correo"] };
                 connection.Close();
+
+                try
+                {
+                    connection.Open();
+                    string query = $"INSERT INTO \"Aposento\" VALUES('{aposento.Correo}','{aposento.Nombre}');";
+                    NpgsqlCommand command = new NpgsqlCommand(query, connection);
+                    command.ExecuteNonQuery();
+
+                    connection.Close();
+
+                    return Ok();
+                }
+                catch
+                {
+                    connection.Close();
+                    return BadRequest("Aposento ya definido");
+                }
+
             }
-            catch
+            else
             {
                 connection.Close();
                 return BadRequest("User not found");
             }
+        }
 
-            try
+        [HttpPost] //api/User/GetAposentos
+        public async Task<IActionResult> GetAposentos([FromBody] User user)
+        {
+            connection.ConnectionString = server.init();
+            string userQuery = $"SELECT \"nombre\" FROM \"Aposento\" WHERE \"correo\" = '{user.Correo}';";
+            connection.Open();
+            NpgsqlCommand command = new NpgsqlCommand(userQuery, connection);
+            command.ExecuteNonQuery();
+            NpgsqlDataReader dr = command.ExecuteReader();
+
+            if (dr.HasRows)
             {
-                connection.Open();
-                string query = $"INSERT INTO \"Aposento\" VALUES('{aposento.Correo}','{aposento.Nombre}');";
-                NpgsqlCommand command = new NpgsqlCommand(query, connection);
-                command.ExecuteNonQuery();
+                List<Aposento> aposentos = new List<Aposento>();
+                while (dr.Read())
+                {
+                    Aposento aposento = new Aposento() {Correo = user.Correo, Nombre = (string)dr["nombre"] };
+                    aposentos.Add(aposento);
+
+                }
 
                 connection.Close();
+                return Ok(aposentos);
 
-                return Ok();
             }
-            catch
+            else
             {
-                connection.Close();
-                return BadRequest("Aposento ya definido");
+                return BadRequest($"El usuario {user.Correo} no posee ningun aposento registrado");
             }
-
         }
 
         [HttpPost] //Route-> api/User/Credenciales
@@ -118,7 +146,7 @@ namespace WebServices.Controllers
         {
             connection.ConnectionString = server.init();
             string query = $"SELECT " +
-                $"              \"nombre\", \"apellidos\", \"pais\", \"continente\" " +
+                $"              \"nombre\", \"apellidos\", \"pais\", \"continente\", \"correo\" " +
                 $"         FROM " +
                 $"              \"Usuario\" " +
                 $"         WHERE \"correo\" = '{user.Correo}';";
@@ -133,7 +161,7 @@ namespace WebServices.Controllers
                 dr.Read();
 
                 Region outputRegion = new Region() { Pais = (string)dr["pais"], Continente = (string)dr["continente"] };
-                User outputUser = new User() { Nombre = (string)dr["nombre"], Apellidos = (string)dr["apellidos"], Region = outputRegion };
+                User outputUser = new User() { Nombre = (string)dr["nombre"], Apellidos = (string)dr["apellidos"], Region = outputRegion, Correo = (string)dr["correo"] };
 
                 connection.Close();
 
