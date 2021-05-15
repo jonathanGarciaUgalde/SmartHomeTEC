@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebServices.Models;
 using Npgsql;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace WebServices.Controllers
 {
@@ -48,39 +50,74 @@ namespace WebServices.Controllers
             return ListPedidos;
         }
 
-/*
+
         [HttpPost]
         public async Task<IActionResult> SetVenta([FromBody] Pedido pedido)
         {
 
-            try
-            {
+              
                 connection.ConnectionString = server.init();
-                string query = $"INSERT INTO \"Pedido\" VALUES('{pedido.CorreoComprador}','{pedido.Fecha}',{pedido.NumeroSerie});";
                 connection.Open();
-                NpgsqlCommand execute = new NpgsqlCommand(query, connection);
-                execute.ExecuteNonQuery();
-                connection.Close();
-
-                // se toma el dispositivo y se le  actualiza el  estado para que ya no esté disponible en los dispositivos
-                string query1 = $"UPDATE \"DispositivoStock\" SET \"enVenta\" = {true} WHERE \"numeroSerie\" = {pedido.NumeroSerie};";
-                connection.Open();
+                string query = $"INSERT INTO \"Pedido\"(\"correoComprador\"," +
+                    $"\"fecha\",\"numeroSerie\") VALUES('{pedido.CorreoComprador}'" +
+                    $",'{pedido.Fecha}',{pedido.NumeroSerie});";
+               
+                NpgsqlCommand insertVenta = new NpgsqlCommand(query, connection);
+                insertVenta.ExecuteNonQuery();
+               
+                // se toma el dispositivo y se le  actualiza el  estado para que 
+                //ya no esté disponible en los dispositivos
+                string query1 = $"UPDATE \"DispositivoStock\" SET \"enVenta\" ={ false } WHERE \"numeroSerie\" = {pedido.NumeroSerie};";
+                
                 NpgsqlCommand command = new NpgsqlCommand(query1, connection);
                 command.ExecuteNonQuery();
                 connection.Close();
+                return Ok(GetFactura(pedido));
 
-                return Ok();
+            
 
-            }
-            catch { 
-            
-            
-            
-            
-            }
+        }
+        public Factura GetFactura(Pedido pedido) {
 
-        }*/
+            // se trae el Dispositivo para  insertarlo en la Factura 
+            string queryDipositivoStock =  $"SELECT " +
+               $"                    \"numeroSerie\", \"marca\", \"consumoElectrico\"," +
+               $" \"cedulaJuridica\", \"tipo\", \"tiempoGarantia\" , \"descripcion\", \"precio\", \"enVenta\"" +
+               $"         FROM      " +
+               $" \"DispositivoStock\"" +
+               $" WHERE" +
+               $" \"numeroSerie\" = {pedido.NumeroSerie};";
+            connection.Open();
+            NpgsqlCommand commandDisStock = new NpgsqlCommand(queryDipositivoStock, connection);
+            commandDisStock.ExecuteNonQuery();
+            NpgsqlDataReader dr = commandDisStock.ExecuteReader();
+            dr.Read();
 
+            DispositivoStock dispositivoStock = new DispositivoStock()
+            {
+                NumeroSerie = (int)dr["numeroSerie"],
+                Marca = (string)dr["marca"],
+                ConsumoElectrico = (double)dr["consumoElectrico"],
+                CedulaJuridica = (int)dr["cedulaJuridica"],
+                Tipo = (string)dr["tipo"],
+                TiempoGarantia = (int)dr["tiempoGarantia"],
+                Descripcion = (string)dr["descripcion"],
+                Precio=(int)dr["precio"],
+                EnVenta = (bool)dr["enVenta"]
+            };
+            Factura factura = new Factura() {
+
+                Consecutivo = GetCode(3),
+                Fecha =$" {DateTime.Now.DayOfWeek.ToString()} {DateTime.Now.Day.ToString()}of the year{DateTime.Now.Year.ToString()}",
+                Hora = $"{DateTime.Now.Hour.ToString()}:{DateTime.Now.Minute.ToString()}",
+                CorreoComprador = pedido.CorreoComprador,
+                Producto = dispositivoStock
+
+
+            };
+            connection.Close();
+            return factura;
+        }
 
         [HttpPost]
         public async Task<IActionResult> GetAllPedidos()
@@ -107,6 +144,25 @@ namespace WebServices.Controllers
             return Ok(ListPedidos);
         }
 
+
+        public  string GetCode(int length)
+        {
+            StringBuilder comprobante = new StringBuilder();
+            var rng = new RNGCryptoServiceProvider();
+            var rnd = new byte[1];
+            int n = 0;
+            while (n < length)
+            {
+                rng.GetBytes(rnd);
+                rnd[0] %= 64;
+                if (rnd[0] < 62)
+                {
+                    n++;
+                    comprobante.Append((byte)((rnd[0] <= 9 ? '0' : rnd[0] <= 35 ? 'A' - 10 : 'a' - 36) + rnd[0]));
+                }
+            }
+            return comprobante.ToString();
+        }
 
 
 

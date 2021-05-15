@@ -15,6 +15,7 @@ namespace WebServices.Models
         public bool EnVenta { get; set; }
         public string Tipo {get; set;}
         public string Descripcion {get; set;}
+        public int Precio { get; set; }
         public int TiempoGarantia { get; set; }
 
     }

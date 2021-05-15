@@ -31,7 +31,7 @@ namespace WebServices.Controllers
         {
             connection.ConnectionString = server.init();
             string query = $"SELECT " +
-               $"                    \"numeroSerie\", \"marca\", \"consumoElectrico\", \"cedulaJuridica\", \"tipo\", \"tiempoGarantia\" , \"descripcion\" , \"enVenta\"" +
+               $"                    \"numeroSerie\", \"marca\", \"consumoElectrico\", \"cedulaJuridica\", \"tipo\", \"tiempoGarantia\" , \"descripcion\" , \"precio\" , \"enVenta\"" +
                $"         FROM       \"DispositivoStock\";";
             connection.Open();
             NpgsqlCommand command = new NpgsqlCommand(query, connection);
@@ -49,6 +49,8 @@ namespace WebServices.Controllers
                     Tipo = (string)dr["tipo"],
                     TiempoGarantia = (int)dr["tiempoGarantia"],
                     Descripcion = (string)dr["descripcion"],
+                    Precio = (int)dr["precio"],
+
                     EnVenta = (bool)dr["enVenta"]
                 };
                 ListDispositivosStock.Add(dispositivoStock);
@@ -63,7 +65,7 @@ namespace WebServices.Controllers
             connection.Open();
             string query = $"INSERT INTO \"DispositivoStock\" VALUES({newDispositivo.NumeroSerie},'{newDispositivo.Marca}'," +
                 $"{newDispositivo.ConsumoElectrico},{newDispositivo.CedulaJuridica},'{newDispositivo.Tipo}',{newDispositivo.TiempoGarantia}," +
-                $"'{newDispositivo.Descripcion}',{newDispositivo.EnVenta});";
+                $"'{newDispositivo.Descripcion}',{newDispositivo.Precio},{newDispositivo.EnVenta});";
             NpgsqlCommand execute = new NpgsqlCommand(query, connection);
             execute.ExecuteNonQuery();
             connection.Close();
@@ -80,7 +82,7 @@ namespace WebServices.Controllers
                 string query = $"INSERT INTO \"DispositivoStock\" VALUES({newDispositivo.Stocks.ElementAt(i).NumeroSerie},'{newDispositivo.Stocks.ElementAt(i).Marca}'," +
                     $"{newDispositivo.Stocks.ElementAt(i).ConsumoElectrico},{newDispositivo.Stocks.ElementAt(i).CedulaJuridica},'{newDispositivo.Stocks.ElementAt(i).Tipo}'," +
                     $"{newDispositivo.Stocks.ElementAt(i).TiempoGarantia}," +
-                    $"'{newDispositivo.Stocks.ElementAt(i).Descripcion}',{newDispositivo.Stocks.ElementAt(i).EnVenta});";
+                    $"'{newDispositivo.Stocks.ElementAt(i).Descripcion}',{newDispositivo.Stocks.ElementAt(i).Precio},{newDispositivo.Stocks.ElementAt(i).EnVenta});";
                 connection.Open();
                 NpgsqlCommand execute = new NpgsqlCommand(query, connection);
                 execute.ExecuteNonQuery();
@@ -127,7 +129,7 @@ namespace WebServices.Controllers
             connection.ConnectionString = server.init();
             connection.Open();
             string query = $"UPDATE \"DispositivoStock\" SET \"consumoElectrico\" = {disp.ConsumoElectrico}, \"marca\" = '{disp.Marca}'," +
-                $" \"tipo\" = '{disp.Tipo}' , \"tiempoGarantia\" = {disp.TiempoGarantia} , \"descripcion\" = '{disp.Descripcion}'" +
+                $" \"tipo\" = '{disp.Tipo}' , \"tiempoGarantia\" = {disp.TiempoGarantia} , \"descripcion\" = '{disp.Descripcion}', \"precio\" = {disp.Precio}" +
                $"         WHERE   \"numeroSerie\" = {disp.NumeroSerie} ;";
 
             NpgsqlCommand conector = new NpgsqlCommand(query, connection);
