@@ -23,8 +23,11 @@ namespace WebServices.Controllers
         NpgsqlConnection connection = new NpgsqlConnection();
         ServerConexion server = new ServerConexion();
         LoginModel lg = new LoginModel();
-        
-        //Método que se comunica mediante el protocolo http para validar si el usuario que inicia sesión está registrado.        
+
+
+        /*
+        * Método que se comunica mediante el protocolo http para validar si el usuario que inicia sesión está registrado.
+        */
         [HttpPost]
         [Route("{correo}/{password}")]
         public async Task<IActionResult> Login(string correo, string password)
@@ -41,31 +44,45 @@ namespace WebServices.Controllers
                 connection.Close();
                 return Ok(true);
             }
-           
-           
+
+
             return BadRequest("Username or password is incorrect");
         }
-
-        
-
-        /*
-        * Método que se comunica mediante el protocolo http para registrar nuevos clientes en el app.
-        */
+       
         [HttpPost]
-        public async Task<IActionResult> Signin([FromBody] User  newUser)
-        {            
+        public async Task<IActionResult> Signin([FromBody] User newUser)
+        {
             connection.ConnectionString = server.init();
+
+            /*
+            string query = "select Correo from usuario where correo = '" +newUser.Correo +"'";
+            NpgsqlCommand conector = new NpgsqlCommand(query, connection);
+            if (exist(conector))
+            {
+              connection.Close();
+            return BadRequest("User already exist");
+            }
+            else
+            */
+
+            string query = $"insert into \"Usuario\" VALUES('{newUser.Correo}','{newUser.Password}', '{newUser.Nombre}', '{newUser.Apellidos}', '{newUser.Region.Continente}', '{newUser.Region.Pais}')";
+
             connection.Open();
 
-            string query = $"insert into \"Usuario\" VALUES('{newUser.correo}','{newUser.password}', '{newUser.nombre}', '{newUser.apellidos}', '{newUser.region.continente}', '{newUser.region.pais}')";
             NpgsqlCommand execute = new NpgsqlCommand(query, connection);
             execute.ExecuteNonQuery();
 
+            /*
+            query = $"insert into region_x_usuario VALUES('{newUser.Region.Pais}','{newUser.Correo}','{newUser.Region.Continente}')";                    
+            NpgsqlCommand execute1 = new NpgsqlCommand(query, connection);
+            execute1.ExecuteNonQuery();
+            */
+
             int i = 0;
-            while (newUser.direccion.Count > i)
+            while (newUser.Direccion.Count > i)
             {
-                query = $"insert into \"direccionEntrega\" VALUES('{newUser.correo}','{ newUser.direccion.ElementAt(i).ubicacion}');";
-                
+                query = $"insert into \"direccionEntrega\" VALUES('{newUser.Correo}','{ newUser.Direccion.ElementAt(i).Ubicacion}');";
+
                 NpgsqlCommand execute3 = new NpgsqlCommand(query, connection);
                 execute3.ExecuteNonQuery();
                 i++;
@@ -75,318 +92,53 @@ namespace WebServices.Controllers
             return Ok("Success");
         }
 
-        [HttpPost] //api/User/Aposento
-        public async Task<IActionResult> Aposento([FromBody] Aposento aposento)
-        {
 
-            connection.ConnectionString = server.init();
-
-            try
-            {
-                connection.Open();
-                string userQuery = $"SELECT \"correo\" FROM \"Usuario\" WHERE \"correo\" = '{aposento.correo}';";
-                NpgsqlCommand userCommand = new NpgsqlCommand(userQuery, connection);
-                userCommand.ExecuteNonQuery();
-
-                NpgsqlDataReader dr = userCommand.ExecuteReader();                
-                dr.Read(); //Si no existen filas por ller este metodo fallaria. Es debido a esto que se usa el try/catch.
-                User currentUser = new User() { correo = (string)dr["correo"] };
-                connection.Close();
-            }
-            catch
-            {
-                connection.Close();
-                return BadRequest("User not found");
-            }
-
-            try
-            {
-                connection.Open();
-                string query = $"INSERT INTO \"Aposento\" VALUES('{aposento.correo}','{aposento.nombre}');";
-                NpgsqlCommand command = new NpgsqlCommand(query, connection);
-                command.ExecuteNonQuery();
-
-                connection.Close();
-
-                return Ok();
-            }
-            catch
-            {
-                connection.Close();
-                return BadRequest("Aposento ya definido");
-            }
-
-        }
-
-
-        [HttpPost] //Route-> api/User/Credenciales
+        [HttpGet] //Route-> api/User/Credenciales
         public async Task<IActionResult> Credenciales([FromBody] User user)
         {
             connection.ConnectionString = server.init();
             string query = $"SELECT " +
-                $"              \"nombre\", \"apellidos\", \"pais\", \"continente\" " +
+                $"              \"Nombre\", \"apellidos\", \"pais\", \"continente\" " +
                 $"         FROM " +
                 $"              \"Usuario\" " +
-                $"         WHERE \"correo\" = '{user.correo}';";
-
-            connection.Open();
-            NpgsqlCommand command = new NpgsqlCommand(query, connection);
-            command.ExecuteNonQuery();
-
-            try
-            {
-                NpgsqlDataReader dr = command.ExecuteReader();
-                dr.Read();
-
-                Region outputRegion = new Region() { pais = (string)dr["pais"], continente = (string)dr["continente"] };
-                User outputUser = new User() { nombre = (string)dr["nombre"], apellidos = (string)dr["apellidos"], region = outputRegion };
-
-                connection.Close();
-
-
-                query = $"SELECT " +
-                        $"      \"ubicacion\" " +
-                        $"FROM " +
-                        $"      \"direccionEntrega\" " +
-                        $"WHERE \"correo\" = '{user.correo}';";
-
-                connection.Open();
-                command = new NpgsqlCommand(query, connection);
-                command.ExecuteNonQuery();
-                dr = command.ExecuteReader();
-
-                List<Direccion> direcciones = new List<Direccion>();
-                while (dr.Read())
-                {
-                    Direccion direccion = new Direccion() { ubicacion = (string)dr["ubicacion"] };
-                    direcciones.Add(direccion);
-                }
-                outputUser.direccion = direcciones;
-
-                connection.Close();
-                return Ok(outputUser);
-            }
-            
-            catch
-            {
-                return BadRequest("User not found");
-            }
-            
-
-        }
-
-
-        [HttpPost] //Route-> api/User/ActivarDispositivo
-        public async Task<IActionResult> ActivarDispositivo([FromBody] Historial historialDisp)
-        {
-            if (historialDisp.estadoActivo)
-            {
-                connection.ConnectionString = server.init();
-                string query = $"UPDATE \"Dispositivo\" SET \"estadoActivo\" = {true} WHERE \"numeroSerie\" = {historialDisp.numeroSerie};";
-
-                connection.Open();
-
-                NpgsqlCommand command = new NpgsqlCommand(query, connection);
-                command.ExecuteNonQuery();
-
-                connection.Close();
-
-                var dateString = DateTime.Now.ToString("yyyy-MM-dd");
-                var timeZone = DateTime.Now.ToString("hh:mm:ss");
-
-                connection.Open();
-                query = $"INSERT INTO \"Historial\"(\"fechaActivacion\",\"horaActivacion\",\"numeroSerie\") " +
-                        $"  VALUES('{dateString}','{timeZone}', {historialDisp.numeroSerie});";
-
-                command = new NpgsqlCommand(query, connection);
-                command.ExecuteNonQuery();
-
-                connection.Close();
-                return Ok();
-            }
-            else
-            {
-                return BadRequest("Para activar debe confirmalo con el atributo EstadoActivo = true");
-            }            
-        }
-
-        [HttpPost] //Route-> api/User/DesactivarDispositivo
-        public async Task<IActionResult> DesactivarDispositivo([FromBody] Historial historialDispositivo)
-        {
-            if (!historialDispositivo.estadoActivo)
-            {
-                connection.ConnectionString = server.init();
-                string query = $"UPDATE \"Dispositivo\" SET \"estadoActivo\" = {false} WHERE \"numeroSerie\" = {historialDispositivo.numeroSerie};";
-
-                connection.Open();
-
-                NpgsqlCommand command = new NpgsqlCommand(query, connection);
-                command.ExecuteNonQuery();
-
-                connection.Close();
-
-                var dateString = DateTime.Now.ToString("yyyy-MM-dd");
-                var timeZone = DateTime.Now.ToString("hh:mm:ss");
-
-                
-                query = $"UPDATE \"Historial\"" +
-                        $"SET    \"fechaDesactivacion\" =  '{dateString}', \"horaDesactivacion\" = '{timeZone}'" +
-                        $"WHERE \"numeroSerie\" = {historialDispositivo.numeroSerie} " +
-                        $"AND \"horaActivacion\" = " +
-                        $" (SELECT \"horaActivacion\" " +
-                        $"  FROM \"Historial\" " +
-                        $"  WHERE \"numeroSerie\" = {historialDispositivo.numeroSerie} " +
-                        $"  ORDER BY \"horaActivacion\" DESC" +
-                        $"  LIMIT 1);";
-                connection.Open();
-
-                command = new NpgsqlCommand(query, connection);
-                command.ExecuteNonQuery();
-                connection.Close();
-
-                return Ok();
-            }
-            else
-            {
-                return BadRequest("Para desactivar debe confirmalo con el atributo EstadoActivo = false");
-            }
-        }
-
-        [HttpPost] //Route-> api/User/DesactivarDispositivo
-        public async Task<IActionResult> GetDispositivos([FromBody] User user)
-        {
-            connection.ConnectionString = server.init();
-            string query = $"SELECT " +
-                $"                \"nombreAposento\", \"tipo\", \"numeroSerie\", \"estadoActivo\", \"consumoElectrico\", \"correoPosedor\", \"marca\" " +
-                $"          FROM  \"Dispositivo\" " +
-                $"          WHERE \"correoPosedor\" = '{user.correo}';";
+                $"         WHERE \"correo\" = '{user.Correo}';";
 
             connection.Open();
             NpgsqlCommand command = new NpgsqlCommand(query, connection);
             command.ExecuteNonQuery();
             NpgsqlDataReader dr = command.ExecuteReader();
+            dr.Read();
 
-            List<Dispositivo> dispositivos = new List<Dispositivo>();
+            Region outputRegion = new Region() { Pais = (string)dr["pais"], Continente = (string)dr["continente"] };
+            User outputUser = new User() { Nombre = (string)dr["Nombre"], Apellidos = (string)dr["apellidos"], Region = outputRegion };
 
-            try
-            {
-                while (dr.Read())
-                {                    
-                    Dispositivo dispositivo = new Dispositivo() { 
-                                                                    tipo = (string)dr["tipo"],
-                                                                    nombreAposento = (string)dr["nombreAposento"],
-                                                                    numeroSerie = (int)dr["numeroSerie"]
-                    };
-                    dispositivos.Add(dispositivo);
-
-                }
-                connection.Close();
-                return Ok(dispositivos);
-            }
-            catch
-            {
-                connection.Close();
-                return BadRequest("Usted no posee dispositivos");
-            }            
-        }
+            connection.Close();
 
 
-        [HttpPost] //Route-> api/User/DesactivarDispositivo
-        public async Task<IActionResult> GetEstadoDispositivos([FromBody] User user)
-        {
-            connection.ConnectionString = server.init();
-            string query = $"SELECT " +
-                $"                \"nombreAposento\", \"tipo\", \"numeroSerie\", \"estadoActivo\" " +
-                $"          FROM  \"Dispositivo\" " +
-                $"          WHERE \"correoPosedor\" = '{user.correo}';";
+            query = $"SELECT " +
+                    $"      \"ubicacion\" " +
+                    $"FROM " +
+                    $"      \"direccionEntrega\" " +
+                    $"WHERE \"correo\" = '{user.Correo}';";
 
             connection.Open();
-            NpgsqlCommand command = new NpgsqlCommand(query, connection);
+            command = new NpgsqlCommand(query, connection);
             command.ExecuteNonQuery();
-            NpgsqlDataReader dr = command.ExecuteReader();
+            dr = command.ExecuteReader();
 
-            List<Dispositivo> dispositivos = new List<Dispositivo>();
-
-            try
+            List<Direccion> direcciones = new List<Direccion>();
+            while (dr.Read())
             {
-                while (dr.Read())
-                {
-                    Dispositivo dispositivo = new Dispositivo()
-                    {
-                        tipo = (string)dr["tipo"],
-                        nombreAposento = (string)dr["nombreAposento"],
-                        numeroSerie = (int)dr["numeroSerie"],
-                        estadoActivo = (bool)dr["estadoActivo"]
-                    };
-                    dispositivos.Add(dispositivo);
+                Direccion direccion = new Direccion() { Ubicacion = (string)dr["ubicacion"] };
+                direcciones.Add(direccion);
+            }
+            outputUser.Direccion = direcciones;
 
-                }
-                connection.Close();
-                return Ok(dispositivos);
-            }
-            catch
-            {
-                connection.Close();
-                return BadRequest("Usted no posee dispositivos");
-            }
+            connection.Close();
+            return Ok(outputUser);
         }
 
-        [HttpPost] //Route-> api/User/DesactivarDispositivo
-        public async Task<IActionResult> GetHistorial([FromBody] Dispositivo disp)
-        {
-            connection.ConnectionString = server.init();
-            string query = $"SELECT " +
-                $"                * " +
-                $"          FROM  \"Historial\" " +
-                $"          WHERE \"numeroSerie\" = {disp.numeroSerie} AND \"fechaDesactivacion\" IS NOT NULL;";
 
-            connection.Open();
-            NpgsqlCommand command = new NpgsqlCommand(query, connection);
-            command.ExecuteNonQuery();
-            NpgsqlDataReader dr = command.ExecuteReader();
-
-            List<Historial> historial = new List<Historial>();
-
-            try
-            {
-                if (dr.HasRows)
-                {
-                    while (dr.Read())
-                    {
-                        var fechaAct = (string)dr["fechaActivacion"];
-                        var fechaDesact = (string)dr["fechaDesactivacion"];
-
-                        Historial historialActual = new Historial()
-                        {
-                            fechaActivacion = (string)dr["fechaActivacion"],
-                            fechaDesactivacion = (string)dr["fechaDesactivacion"],
-                            horaActivacion = (string)dr["horaActivacion"],
-                            horaDesactivacion = (string)dr["horaDesactivacion"],
-                            numeroSerie = (int)dr["numeroSerie"]
-                        };
-                        historial.Add(historialActual);
-
-                    }
-                    connection.Close();
-                    return Ok(historial);
-                }
-                else
-                {
-                    connection.Close();
-                    return BadRequest("Dispositivo no tiene un historial asociado");
-                }
-
-            }
-            catch
-            {
-                connection.Close();
-                return BadRequest("Dispositivo no tiene un historial asociado");
-            }
-        }
 
     }
-} 
-    
-    
-
-
+}

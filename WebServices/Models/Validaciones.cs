@@ -43,7 +43,7 @@ namespace WebServices.Models
             {
                 NpgsqlDataReader dr = command.ExecuteReader();
                 dr.Read();
-                if (!(bool)dr["estadoActivo"])
+                if (!(bool)dr["EstadoActivo"])
                 {
                     return true;
                 }

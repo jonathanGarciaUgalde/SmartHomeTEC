@@ -27,12 +27,12 @@ namespace WebServices.Controllers
         }
 
         // GET api/<DistribuidorController>
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> GetDistribuidores([FromBody] User user)
-        {                        
+        {
             connection.ConnectionString = server.init();
             string query = $"SELECT " +
-                $"                    \"nombre\", \"pais\", \"continente\" " +
+                $"                    \"Nombre\", \"pais\", \"continente\" " +
                 $"         FROM       \"Distribuidor\";";
 
             connection.Open();
@@ -45,8 +45,8 @@ namespace WebServices.Controllers
             int numeroDistribuidor = 1;
             while (dr.Read())
             {
-                Region region = new Region() { pais = (string)dr["pais"], continente = (string)dr["continente"] };
-                Distribuidor distribuidor = new Distribuidor() { nombre = (string)dr["nombre"], region = region };
+                Region region = new Region() { Pais = (string)dr["pais"], Continente = (string)dr["continente"] };
+                Distribuidor distribuidor = new Distribuidor() { Nombre = (string)dr["Nombre"], Region = region };
                 distribuidores.Add(distribuidor);
 
             }
@@ -59,13 +59,13 @@ namespace WebServices.Controllers
         public async Task<IActionResult> Create([FromBody] Distribuidor dist)
         {
             connection.ConnectionString = server.init();
-            string query = $"INSERT INTO \"Distribuidor\" VALUES({dist.cedulaJuridica},'{dist.nombre}','{dist.region.continente}','{dist.region.pais}');";
+            string query = $"INSERT INTO \"Distribuidor\" VALUES({dist.CedulaJuridica},'{dist.Nombre}','{dist.Region.Continente}','{dist.Region.Pais}');";
             connection.Open();
 
             NpgsqlCommand command1 = new NpgsqlCommand(query, connection);
             command1.ExecuteNonQuery();
 
-            
+
             connection.Close();
             return Ok();
         }
@@ -80,7 +80,7 @@ namespace WebServices.Controllers
         [HttpDelete("{CedulaJuridica}")]
         public async Task<IActionResult> Delete(int CedulaJuridica)
         {
-            
+
             connection.ConnectionString = server.init();
             string query = $"DELETE FROM \"Distribuidor\" WHERE \"cedulaJuridica\" = {CedulaJuridica};";
             connection.Open();

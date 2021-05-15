@@ -7,8 +7,8 @@ namespace WebServices.Models
 {
     public class Region
     {
-        public string pais { set; get; }
-        public string continente { set; get;}
+        public string Pais { set; get; }
+        public string Continente { set; get;}
 
 
     }

@@ -7,10 +7,10 @@ namespace WebServices.Models
 {
     public class TipoAdmin
     {
-        public string correoAdmin { get; set; }
-        public string nombre { get; set; }
-        public string descripcionDelTipo { get; set; }
-        public int tiempoGarantia { get; set; }
+        public string CorreoAdmin { get; set; }
+        public string Nombre { get; set; }
+        public string DescripcionDelTipo { get; set; }
+        public int TiempoGarantia { get; set; }
 
 
        

@@ -42,10 +42,10 @@ namespace WebServices.Controllers
             while (dr.Read())
             {
                 Pedido pedidos = new Pedido() {
-                    numeroPedido = (int)dr["numero"],
-                    correoComprador = (string)dr["correoComprador"],
-                    fecha = (string)dr["fecha"],
-                    numeroSerie = (int)dr["numeroSerie"]
+                    NumeroPedido = (int)dr["numero"],
+                    CorreoComprador = (string)dr["correoComprador"],
+                    Fecha = (string)dr["fecha"],
+                    NumeroSerie = (int)dr["numeroSerie"]
                 };
                 ListPedidos.Add(pedidos);
             }
@@ -59,7 +59,7 @@ namespace WebServices.Controllers
         public async Task<IActionResult> setPedido([FromBody] Pedido pedido)
         {
             connection.ConnectionString = server.init();
-            string query = $"INSERT INTO \"Pedido\" VALUES('{pedido.correoComprador}','{pedido.fecha}',{pedido.numeroSerie});";
+            string query = $"INSERT INTO \"Pedido\" VALUES('{pedido.CorreoComprador}','{pedido.Fecha}',{pedido.NumeroSerie});";
             connection.Open();
             NpgsqlCommand execute = new NpgsqlCommand(query, connection);
             execute.ExecuteNonQuery();
@@ -69,7 +69,7 @@ namespace WebServices.Controllers
         }
 
 
-            [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> GetAllPedidos()
         {
             connection.ConnectionString = server.init();
@@ -93,7 +93,6 @@ namespace WebServices.Controllers
             connection.Close();
             return Ok(ListPedidos);
         }
-       
 
 
 

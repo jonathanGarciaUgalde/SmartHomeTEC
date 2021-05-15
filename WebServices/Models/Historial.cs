@@ -7,11 +7,11 @@ namespace WebServices.Models
 {
     public class Historial
     {
-        public bool estadoActivo { get; set; }
-        public string fechaActivacion { get; set; }
-        public string fechaDesactivacion { get; set; }
-        public string horaActivacion { get; set; }
-        public string horaDesactivacion { get; set; }
-        public int numeroSerie { get; set; }
+        public bool EstadoActivo { get; set; }
+        public string FechaActivacion { get; set; }
+        public string FechaDesactivacion { get; set; }
+        public string HoraActivacion { get; set; }
+        public string HoraDesactivacion { get; set; }
+        public int NumeroSerie { get; set; }
     }
 }
