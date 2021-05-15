@@ -33,6 +33,14 @@ CREATE TABLE "Pedido"(
 );
 
 
+--CREATE TABLE "DireccionEntrega"(
+  -- "id" SERIAL NOT NULL,
+    --"correo" VARCHAR(255) NOT NULL,
+    --"ubicacion" VARCHAR(255) NOT NULL,
+ --   PRIMARY KEY ("correo", "id")
+--);
+
+
 CREATE TABLE "direccionEntrega"(
     "correo" VARCHAR(255) NOT NULL,
     "ubicacion" VARCHAR(255) NOT NULL,
