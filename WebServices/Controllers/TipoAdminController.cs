@@ -26,7 +26,7 @@ public class TipoAdminController : ControllerBase
         {
             connection.ConnectionString = server.init();
             string query = $"SELECT " +
-                $"                    \"correoDeAdmin\", \"nombre\", \"descripcion\", \"tiempoGarantia\" " +
+                $"                    \"correoDeAdmin\", \"Nombre\", \"descripcion\", \"tiempoGarantia\" " +
                 $"         FROM       \"Tipo\";";
 
             connection.Open();
@@ -36,7 +36,7 @@ public class TipoAdminController : ControllerBase
             List<TipoAdmin> listTipos = new List<TipoAdmin>();
             while (dr.Read())
             {
-        TipoAdmin estructurasTipo= new TipoAdmin() { CorreoAdmin = (string)dr["correoDelAdmin"], Nombre =(string)dr["nombre"],
+        TipoAdmin estructurasTipo= new TipoAdmin() { CorreoAdmin = (string)dr["correoDelAdmin"], Nombre =(string)dr["Nombre"],
             DescripcionDelTipo=(string)dr["descripcion"],TiempoGarantia=(int)dr["tiempoGarantia"]};
                 listTipos.Add(estructurasTipo);
             }
@@ -64,12 +64,12 @@ public class TipoAdminController : ControllerBase
 
        
         // DELETE api/<DistribuidorController>/5
-        [HttpDelete("{nombre}")]
+        [HttpDelete("{Nombre}")]
         public async Task<IActionResult> Delete(String nombre)
         {
 
             connection.ConnectionString = server.init();
-            string query = $"DELETE FROM \"Tipo\" WHERE \"nombre\" = {nombre};";
+            string query = $"DELETE FROM \"Tipo\" WHERE \"Nombre\" = {nombre};";
             connection.Open();
 
             NpgsqlCommand command1 = new NpgsqlCommand(query, connection);

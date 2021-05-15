@@ -98,7 +98,7 @@ namespace WebServices.Controllers
         {
             connection.ConnectionString = server.init();
             string query = $"SELECT " +
-                $"              \"nombre\", \"apellidos\", \"pais\", \"continente\" " +
+                $"              \"Nombre\", \"apellidos\", \"pais\", \"continente\" " +
                 $"         FROM " +
                 $"              \"Usuario\" " +
                 $"         WHERE \"correo\" = '{user.Correo}';";
@@ -110,7 +110,7 @@ namespace WebServices.Controllers
             dr.Read();
 
             Region outputRegion = new Region() { Pais = (string)dr["pais"], Continente = (string)dr["continente"] };
-            User outputUser = new User() { Nombre = (string)dr["nombre"], Apellidos = (string)dr["apellidos"], Region = outputRegion };
+            User outputUser = new User() { Nombre = (string)dr["Nombre"], Apellidos = (string)dr["apellidos"], Region = outputRegion };
 
             connection.Close();
 

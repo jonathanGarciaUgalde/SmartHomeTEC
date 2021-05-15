@@ -32,7 +32,7 @@ namespace WebServices.Controllers
         {
             connection.ConnectionString = server.init();
             string query = $"SELECT " +
-                $"                    \"nombre\", \"pais\", \"continente\" " +
+                $"                    \"Nombre\", \"pais\", \"continente\" " +
                 $"         FROM       \"Distribuidor\";";
 
             connection.Open();
@@ -46,7 +46,7 @@ namespace WebServices.Controllers
             while (dr.Read())
             {
                 Region region = new Region() { Pais = (string)dr["pais"], Continente = (string)dr["continente"] };
-                Distribuidor distribuidor = new Distribuidor() { Nombre = (string)dr["nombre"], Region = region };
+                Distribuidor distribuidor = new Distribuidor() { Nombre = (string)dr["Nombre"], Region = region };
                 distribuidores.Add(distribuidor);
 
             }

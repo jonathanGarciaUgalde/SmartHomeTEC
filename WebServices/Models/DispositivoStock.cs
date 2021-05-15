@@ -13,14 +13,14 @@ namespace WebServices.Models
         public double ConsumoElectrico { get; set; }
         public int CedulaJuridica { get; set; }
         public bool EnVenta { get; set; }
-
-      
-        //tipo
-      
         public string Tipo {get; set;}
         public string Descripcion {get; set;}
         public int TiempoGarantia { get; set; }
 
+    }
+    public class ListaDispositivoStock { 
+        public List<DispositivoStock> Stocks { get; set; }
+    
     }
 
 }
