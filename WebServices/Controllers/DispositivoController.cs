@@ -150,27 +150,60 @@ namespace WebServices.Controllers
         public async Task<IActionResult> setDispositivo(Dispositivo dis)
         {
             connection.ConnectionString = server.init();
-            string query = $"SELECT \"correo\" FROM \"Dispositivo\" WHERE \"numeroSerie\" = {dis.NumeroSerie} ;";
-            NpgsqlCommand conector = new NpgsqlCommand(query, connection);
+            string query = $"SELECT \"tiempoGarantia\" FROM \"Tipo\" WHERE \"nombre\" = '{dis.Tipo}';";
             connection.Open();
+            NpgsqlCommand command = new NpgsqlCommand(query, connection);
+            NpgsqlDataReader dr = command.ExecuteReader();
 
-            if (validaciones.exists(conector))
+            if (dr.HasRows)
             {
+                dr.Read();
+                dis.TiempoGarantia = (int)dr["tiempoGarantia"];
+
                 connection.Close();
-                return BadRequest("element already exist");
+
+
+                query = $"SELECT \"correoPosedor\" FROM \"Dispositivo\" WHERE \"numeroSerie\" = {dis.NumeroSerie} ;";
+
+                connection.Open();
+                command = new NpgsqlCommand(query, connection);
+                dr = command.ExecuteReader();
+
+                if (!dr.HasRows)
+                {
+                    connection.Close();
+
+                    query = $"INSERT INTO \"Dispositivo\" VALUES({dis.NumeroSerie},{dis.ConsumoElectrico},'{dis.Marca}',{false}," +
+                            $"'{dis.NombreAposento}','{dis.CorreoPosedor}','{dis.Tipo}',{dis.TiempoGarantia},'{dis.Descripcion}');";
+
+                    connection.Open();
+                    command = new NpgsqlCommand(query, connection);
+                    command.ExecuteNonQuery();
+
+                    connection.Close();
+
+                    query = $"INSERT INTO \"Registro\" VALUES({dis.NumeroSerie}, '{dis.CorreoPosedor}');";
+
+                    connection.Open();
+                    command = new NpgsqlCommand(query, connection);
+                    command.ExecuteNonQuery();
+
+                    connection.Close();
+
+                    return Ok("Insercion exitosa");
+                }
+                else
+                {
+                    connection.Close();
+                    return BadRequest("Dispositivo ya registrado");
+                }
             }
             else
             {
-                query = $"INSERT INTO \"Dispositivo\" VALUES({dis.NumeroSerie},{dis.ConsumoElectrico},'{dis.Marca}',{dis.EstadoActivo}," +
-                    $"'{dis.NombreAposento}','{dis.CorreoPosedor}','{dis.Tipo}','{dis.TiempoGarantia}','{dis.Descripcion}');";
-                NpgsqlCommand execute = new NpgsqlCommand(query, connection);
-                execute.ExecuteNonQuery();
                 connection.Close();
-                return Ok("insercion exitosa");
+                return BadRequest($"El Tipo {dis.Tipo} no es un tipo valido");
             }
         }
-
-
 
         [HttpPost]
         public async Task<IActionResult> GetDispositivo()
@@ -178,8 +211,6 @@ namespace WebServices.Controllers
 
             return Ok(getListcurrentDisp());
         }
-
-
 
         public List<Dispositivo> getListcurrentDisp()
         {

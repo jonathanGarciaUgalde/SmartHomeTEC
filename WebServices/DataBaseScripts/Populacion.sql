@@ -8,22 +8,22 @@ VALUES('josepablofa@gmail.com','jose1234');
 ------------------------ Populacion de Admin -------------------------------
 ---------------- Populacion de la tabla Distribuidor ----------------------
 INSERT INTO "Distribuidor"("cedulaJuridica","nombre","pais","continente") 
-VALUES(701230678,'Huawei','China', 'Asia');
+VALUES(701230678,'Huawei','Asia','China');
 
 INSERT INTO "Distribuidor"("cedulaJuridica","nombre","continente","pais") 
-VALUES(501230678,'Samsung','Korea', 'Asia');
+VALUES(501230678,'Samsung','Asia','Korea');
 
 INSERT INTO "Distribuidor"("cedulaJuridica","nombre","continente","pais") 
-VALUES(901230876,'Asus','Taiwan', 'Asia');
+VALUES(901230876,'Asus','Asia','Taiwan');
 
 INSERT INTO "Distribuidor"("cedulaJuridica","nombre","continente","pais") 
 VALUES(401230876,'Dell','USA', 'America');
 
 INSERT INTO "Distribuidor"("cedulaJuridica","nombre","continente","pais") 
-VALUES(903210876,'MSI','Taiwan', 'Asia');
+VALUES(903210876,'MSI','Asia','Taiwan');
 
 INSERT INTO "Distribuidor"("cedulaJuridica","nombre","continente","pais") 
-VALUES(603120878,'AOC','Taiwan', 'Asia');
+VALUES(603120878,'AOC','Asia','Taiwan');
 
 INSERT INTO "Distribuidor"("cedulaJuridica","nombre","continente","pais") 
 VALUES(302030594,'Apple','USA', 'America');
@@ -403,6 +403,21 @@ INTO
 VALUES(11000,'Samsung',35000, 501230678, 'Smart Home', 12, 'Samsung Galaxy S');
 
 ---------------- Populacion de la tabla DispositivoStock -------------------
+
+---------------- Populacion de la tabla Tipos ------------------------------
+INSERT INTO "Tipo"("nombre", "tiempoGarantia")
+VALUES ('Smart Phone', 12);
+
+INSERT INTO "Tipo"("nombre", "tiempoGarantia")
+VALUES ('Tablet', 18);
+
+INSERT INTO "Tipo"("nombre", "tiempoGarantia")
+VALUES ('Computer', 24);
+
+INSERT INTO "Tipo"("nombre", "tiempoGarantia")
+VALUES ('Pantalla', 15);
+
+---------------- Populacion de la tabla Tipos ------------------------------
 
 ---------------- Populacion de la tabla Usuario ----------------------------
 

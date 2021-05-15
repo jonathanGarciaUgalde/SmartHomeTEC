@@ -72,6 +72,14 @@ CREATE TABLE "Dispositivo"(
 	PRIMARY KEY("numeroSerie")
 );
 
+
+CREATE TABLE "Tipo" (
+	"nombre" VARCHAR(50) NOT NULL,
+	"tiempoGarantia" INT NOT NULL,	
+	PRIMARY KEY("nombre")
+);
+
+
 --Relación asociada a todos los usuarios que han sido dueños de un mismo disp.
 CREATE TABLE "Registro"(
     "numeroSerie" INTEGER NOT NULL,
