@@ -9,7 +9,7 @@ namespace WebServices.Models
     {
         public int CedulaJuridica { get; set; }
         public string Nombre { get; set; }
-        public Region Region { get; set; }
+        public region Region { get; set; }
       
     }
 }

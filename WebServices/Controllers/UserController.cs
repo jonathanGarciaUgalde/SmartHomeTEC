@@ -95,7 +95,7 @@ namespace WebServices.Controllers
             NpgsqlDataReader dr = command.ExecuteReader();
             dr.Read();
 
-            Region outputRegion = new Region() { Pais = (string)dr["pais"], Continente = (string)dr["continente"] };
+            region outputRegion = new region() { Pais = (string)dr["pais"], Continente = (string)dr["continente"] };
             User outputUser = new User() { Nombre = (string)dr["Nombre"], Apellidos = (string)dr["apellidos"], Region = outputRegion };
 
             connection.Close();

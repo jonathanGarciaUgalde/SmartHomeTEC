@@ -14,13 +14,9 @@ namespace WebServices.Controllers
     [ApiController]
     public class PedidoFacturaController : ControllerBase
     {
-
-
-
         NpgsqlConnection connection = new NpgsqlConnection();
         ServerConexion server = new ServerConexion();
         Validaciones val = new Validaciones();
-
 
         // lista general de los pedidos que se han realizado en la tienda 
         [HttpPost]
@@ -35,7 +31,6 @@ namespace WebServices.Controllers
                $"         FROM       \"Pedido\";";
             connection.Open();
             NpgsqlCommand command = new NpgsqlCommand(query, connection);
-
             command.ExecuteNonQuery();
             NpgsqlDataReader dr = command.ExecuteReader();
             List<Pedido> ListPedidos = new List<Pedido>();
@@ -53,20 +48,38 @@ namespace WebServices.Controllers
             return ListPedidos;
         }
 
-
-        // Metodo para  insertar el Stock cargado por un administrador atraves de  un documento Excel.
+/*
         [HttpPost]
-        public async Task<IActionResult> setPedido([FromBody] Pedido pedido)
+        public async Task<IActionResult> SetVenta([FromBody] Pedido pedido)
         {
-            connection.ConnectionString = server.init();
-            string query = $"INSERT INTO \"Pedido\" VALUES('{pedido.CorreoComprador}','{pedido.Fecha}',{pedido.NumeroSerie});";
-            connection.Open();
-            NpgsqlCommand execute = new NpgsqlCommand(query, connection);
-            execute.ExecuteNonQuery();
-            connection.Close();
-            return Ok("Success");
 
-        }
+            try
+            {
+                connection.ConnectionString = server.init();
+                string query = $"INSERT INTO \"Pedido\" VALUES('{pedido.CorreoComprador}','{pedido.Fecha}',{pedido.NumeroSerie});";
+                connection.Open();
+                NpgsqlCommand execute = new NpgsqlCommand(query, connection);
+                execute.ExecuteNonQuery();
+                connection.Close();
+
+                // se toma el dispositivo y se le  actualiza el  estado para que ya no esté disponible en los dispositivos
+                string query1 = $"UPDATE \"DispositivoStock\" SET \"enVenta\" = {true} WHERE \"numeroSerie\" = {pedido.NumeroSerie};";
+                connection.Open();
+                NpgsqlCommand command = new NpgsqlCommand(query1, connection);
+                command.ExecuteNonQuery();
+                connection.Close();
+
+                return Ok();
+
+            }
+            catch { 
+            
+            
+            
+            
+            }
+
+        }*/
 
 
         [HttpPost]

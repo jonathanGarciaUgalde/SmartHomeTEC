@@ -45,7 +45,7 @@ namespace WebServices.Controllers
             int numeroDistribuidor = 1;
             while (dr.Read())
             {
-                Region region = new Region() { Pais = (string)dr["pais"], Continente = (string)dr["continente"] };
+                region region = new region() { Pais = (string)dr["pais"], Continente = (string)dr["continente"] };
                 Distribuidor distribuidor = new Distribuidor() { Nombre = (string)dr["Nombre"], Region = region };
                 distribuidores.Add(distribuidor);
 
