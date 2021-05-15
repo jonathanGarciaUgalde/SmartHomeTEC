@@ -111,7 +111,7 @@ namespace WebServices.Controllers
             try
             {
                 
-                string query1 = $"DELETE FROM \"DispositivoStock\" WHERE \"numeroSerie\" ={numeroSerie}'AND \"EstadoActivo\" = {true};";
+                string query1 = $"DELETE FROM \"DispositivoStock\" WHERE \"numeroSerie\" ='{numeroSerie}';";
                 connection.Open();
 
                 NpgsqlCommand command1 = new NpgsqlCommand(query1, connection);
@@ -145,7 +145,7 @@ namespace WebServices.Controllers
                 NpgsqlCommand conector = new NpgsqlCommand(query, connection);
                 conector.ExecuteNonQuery();
                 connection.Close();
-                return Ok("Success");
+                return Ok();
             
             
                

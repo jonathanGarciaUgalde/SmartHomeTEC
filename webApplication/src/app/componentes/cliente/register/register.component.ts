@@ -59,8 +59,8 @@ export class RegisterComponent implements OnInit {
   		this.api.registrarUsuario(usuarioFinal)
   	.subscribe(response=>{
 
-  		localStorage.clear();
   		localStorage.setItem("email-cliente", user.email);
+      localStorage.setItem("pass-cliente", user.contra);
   		this.router.navigate(["/perfil"]);
 
   	});

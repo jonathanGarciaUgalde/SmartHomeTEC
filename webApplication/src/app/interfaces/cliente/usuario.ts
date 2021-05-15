@@ -9,7 +9,6 @@ export interface Usuario {
 	password?: string,
 	nombre?: string,
 	apellidos?: string,
-	pais?: string,
 	region?: RegionInterface,
 	direccion?: Ubicacion[]
 }

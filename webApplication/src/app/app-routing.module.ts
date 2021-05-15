@@ -7,12 +7,14 @@ import { GestionTipoComponent } from './componentes/admin/gestion-tipo/gestion-t
 import { DashboardComponent } from './componentes/admin/dashboard/dashboard.component';
 import { TiendaComponent } from './componentes/admin/tienda/tienda.component';
 import { PerfilComponent } from './componentes/cliente/perfil/perfil.component';
+import { TiendaClienteComponent } from './componentes/cliente/tienda-cliente/tienda-cliente.component';
 
 
 const routes: Routes = [
 {path:'', component: LoginClienteComponent},
 {path:'register', component: RegisterComponent},
 {path:'perfil', component: PerfilComponent},
+{path:'tienda', component: TiendaClienteComponent},
 {path:'admin', component: LoginAdminComponent},
 {path:'admin/dispositivos', component: DispositivosComponent},
 {path:'admin/tipo', component: GestionTipoComponent},

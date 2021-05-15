@@ -32,8 +32,8 @@ export class LoginClienteComponent implements OnInit {
 
   	this.api.verificarCredenciales(this.datosUsuario.Email,this.datosUsuario.Password)
   	.subscribe(response=>{
-  		localStorage.clear();
   		localStorage.setItem("email-cliente", this.datosUsuario.Email);
+      localStorage.setItem("pass-cliente", this.datosUsuario.Password);
   		this.router.navigate(["/perfil"]);
 
   	},(error:any)=>{

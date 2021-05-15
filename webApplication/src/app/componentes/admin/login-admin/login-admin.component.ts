@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 
 import {Router} from '@angular/router';
 
-import {AdminService} from 'src/app/servicios/admin/admin.service'
+import {AdminService} from 'src/app/servicios/admin/admin.service';
+
 
 @Component({
   selector: 'app-login-admin',
@@ -33,8 +34,6 @@ export class LoginAdminComponent implements OnInit {
 
   	this.api.verificarCredenciales(this.datosUsuario.Email,this.datosUsuario.Password)
   	.subscribe(response=>{
-
-  		localStorage.clear();
   		localStorage.setItem("email-admin", this.datosUsuario.Email);
   		this.router.navigate(["admin/dashboard"]);
 

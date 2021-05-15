@@ -1,45 +1,94 @@
 <app-navbar-cliente></app-navbar-cliente>
 
 <div class="container mt-3">
-		<div class="card col-md-6 mx-auto">
-			<div class="card-header">Gestionar Perfil</div>
-			<div class="card-body">
+	<div class="card col-md-6 mx-auto">
+		<div class="card-header">Gestionar Perfil</div>
+		<div class="card-body">
 
-				<div class="row">
-					<div class="col-md-6">
-						<label>Nombre</label>
-					</div>
-					<div class="col-md-6" *ngIf="datosUsuario != null">
-						<p>{{datosUsuario.nombre}} {{datosUsuario.apellidos}}</p>
-					</div>
+			<div class="row">
+				<div class="col-md-6">
+					<label>Nombre</label>
 				</div>
-				<div class="row">
-					<div class="col-md-6">
-						<label>Email</label>
-					</div>
-					<div class="col-md-6" *ngIf="datosUsuario != null">
-						<p>{{datosUsuario.correo}}</p>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-6">
-						<label>Región</label>
-					</div>
-					<div class="col-md-6" *ngIf="datosUsuario != null">
-						<p>{{datosUsuario.region.pais}}, {{datosUsuario.region.continente}}</p>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-6">
-						<label>Direcciones</label>
-					</div>
-					<div class="col-md-6" *ngIf="datosUsuario != null">
-						<p *ngFor="let direccion of datosUsuario.direccion; let a = index">{{datosUsuario.direccion[a].ubicacion}}</p>
-					</div>
-				</div>
-				<div class="row">
-					<button class="btn btn-light">Editar perfil</button>
+				<div class="col-md-6" *ngIf="datosUsuario != null">
+					<p>{{datosUsuario.nombre}} {{datosUsuario.apellidos}}</p>
 				</div>
 			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<label>Email</label>
+				</div>
+				<div class="col-md-6" *ngIf="datosUsuario != null">
+					<p>{{datosUsuario.correo}}</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<label>Región</label>
+				</div>
+				<div class="col-md-6" *ngIf="datosUsuario != null">
+					<p>{{datosUsuario.region.pais}}, {{datosUsuario.region.continente}}</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<label>Direcciones</label>
+				</div>
+				<div class="col-md-6" *ngIf="datosUsuario != null">
+					<p *ngFor="let direccion of datosUsuario.direccion; let a = index">{{datosUsuario.direccion[a].ubicacion}}</p>
+				</div>
+			</div>
+			<div class="row">
+				<button class="btn btn-light" (click)="open(mymodal)">Editar perfil</button>
+			</div>
 		</div>
+	</div>
 </div>
+
+<ng-template #mymodal let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">Editar información</h4>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true">×</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<form class="form-usuario" #formUsuario="ngForm" (ngSubmit)="guardarUsuario(formUsuario)">
+			<label for="nombre">Nombre</label>
+			<input type="nombre" id="nombre" name="nombre" class="form-control" [(ngModel)]="this.datosUsuario.nombre" placeholder="Nombre">
+			<div class="form-group">
+				<label for="apellidos">Apellidos</label>
+				<input type="text" id="apellidos" name="apellidos" class="form-control" placeholder="Apellidos" [(ngModel)]="this.datosUsuario.apellidos">
+			</div>
+			<div class="form-group">
+				<label for="contrasena">Contraseña</label>
+				<input type="password" id="contrasena" name="contrasena" class="form-control" placeholder="contrasena" [(ngModel)]="this.datosUsuario.password">
+			</div>          
+			<div class="form-group">
+				<label for="pais">País</label>
+				<select [(ngModel)]="this.datosUsuario.region.pais" name="pais" id="pais" class="form-control" placeholder="Seleccione el país" >
+					<option value="Costa Rica">Costa Rica</option>
+					<option value="España">España</option>
+					<option value="Argelia">Argelia</option>
+					<option value="Taiwan">Taiwan</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="continente">Continente</label>
+				<select [(ngModel)]="this.datosUsuario.region.continente" name="continente" id="continente" class="form-control" placeholder="Seleccione el continente">
+					<option value="America">America</option>
+					<option value="Europa">Europa</option>
+					<option value="Africa">Africa</option>
+					<option value="Asia">Asia</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="direccion">Direcciones</label>
+				<textarea type="text" id="direccion" name="direccion" class="form-control" placeholder="Direccion" [(ngModel)]="this.direcciones">
+				</textarea> 
+			</div> 
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button type="submit" class="btn btn-light" (click)="guardarUsuario(formUsuario)">Guardar</button>
+	</div>
+</ng-template>

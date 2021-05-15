@@ -5,6 +5,9 @@ import { HttpClientModule } from '@angular/common/http';
 
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
+import { PdfMakeWrapper } from 'pdfmake-wrapper';
+import {pdfFonts} from "pdfmake/build/vfs_fonts"; // fonts provided for pdfmake
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginAdminComponent } from './componentes/admin/login-admin/login-admin.component';
@@ -20,6 +23,9 @@ import { ModalTipoComponent } from './componentes/admin/modal-tipo/modal-tipo.co
 import { PerfilComponent } from './componentes/cliente/perfil/perfil.component';
 import { NavbarClienteComponent } from './componentes/cliente/navbar-cliente/navbar-cliente.component';
 import { ReportesComponent } from './componentes/cliente/reportes/reportes.component';
+import { TiendaClienteComponent } from './componentes/cliente/tienda-cliente/tienda-cliente.component';
+
+
 
 @NgModule({
   declarations: [
@@ -36,7 +42,8 @@ import { ReportesComponent } from './componentes/cliente/reportes/reportes.compo
     ModalTipoComponent,
     PerfilComponent,
     NavbarClienteComponent,
-    ReportesComponent
+    ReportesComponent,
+    TiendaClienteComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,19 @@
+<app-navbar-cliente></app-navbar-cliente>
+
+
+<div class="container mt-3">
+
+	<div class="row justify-content-center">
+		<div class="col-sm-auto" *ngFor="let dispositivo of dispositivosEnVenta; let i = index">
+			<div class="card mt-3 mb-2"  style="width: 18rem;">
+				<div class="card-body">
+					<h5 class="card-title">{{dispositivo.descripcion}}</h5>
+					<p class="card-text">Marca: {{dispositivo.marca}}</p>
+					<p class="card-text">Tipo: {{dispositivo.tipo}}</p>
+					<p class="card-text">Cosumo: {{dispositivo.consumoElectrico}} W/h</p>
+					<a class="btn btn-primary" (click)="comprarDispositivo(dispositivo)">Comprar</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

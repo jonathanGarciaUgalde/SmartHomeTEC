@@ -16,11 +16,11 @@
 				</thead>
 				<tbody>
 					<tr class="text-center" *ngFor="let dispositivo of dispositivos; let i = index">
-						<td>{{dispositivo.tipo}}</td>
-						<td>{{dispositivo.numeroSerie}}</td>
-						<td>{{dispositivo.marca}}</td>
-						<td>{{dispositivo.consumoElectrico}}</td>	
-						<td> 
+						<td *ngIf="dispositivo.enVenta">{{dispositivo.tipo}}</td>
+						<td *ngIf="dispositivo.enVenta">{{dispositivo.numeroSerie}}</td>
+						<td *ngIf="dispositivo.enVenta">{{dispositivo.marca}}</td>
+						<td *ngIf="dispositivo.enVenta">{{dispositivo.consumoElectrico}}</td>	
+						<td *ngIf="dispositivo.enVenta"> 
 							<a class="btn btn-light" (click)="preActualizar(mymodal,dispositivo)"> Editar </a> 
 							<a (click)="eliminar(dispositivo)" class="btn btn-danger ml-4"> Eliminar </a>
 						</td>			
@@ -44,30 +44,31 @@
   </div>
   <div class="modal-body">
     <form class="form-dispositivo" #formDispositvo="ngForm" (ngSubmit)="guardarDispositivo(formDispositvo)">
-          <input type="hidden" id="numero" name="numero" class="form-control" [(ngModel)]="this.api.dispositivoActual.numeroSerie">
+          <label for="numero">Numero de serie</label>
+          <input type="number" id="numero" name="numero" class="form-control" [(ngModel)]="this.api.dispositivoActual.numeroSerie">
           <div class="form-group">
-            <label for="Marca">Marca</label>
-            <input type="text" id="Marca" name="Marca" class="form-control" placeholder="Marca" [(ngModel)]="this.api.dispositivoActual.marca">
+            <label for="marca">Marca</label>
+            <input type="text" id="marca" name="marca" class="form-control" placeholder="Marca" [(ngModel)]="this.api.dispositivoActual.marca">
           </div>
           <div class="form-group">
-            <label for="Tipo">Tipo</label>
-            <input type="text" id="Tipo" name="Tipo" class="form-control" placeholder="Tipo" [(ngModel)]="this.api.dispositivoActual.tipo">
+            <label for="tipo">Tipo</label>
+            <input type="text" id="tipo" name="tipo" class="form-control" placeholder="Tipo" [(ngModel)]="this.api.dispositivoActual.tipo">
           </div>
           <div class="form-group">
             <label for="consumo">Consumo Electrico</label>
-            <input type="text" id="conusmo" name="consumo" class="form-control" placeholder="Consumo Electrico" [(ngModel)]="this.api.dispositivoActual.consumoElectrico">
+            <input type="number" id="consumo" name="consumo" class="form-control" placeholder="Consumo Electrico" [(ngModel)]="this.api.dispositivoActual.consumoElectrico">
           </div>
           <div class="form-group">
             <label for="cedula">Cedula Juridica</label>
-            <input type="text" id="cedula" name="cedula" class="form-control" placeholder="Cedula Juridica" [(ngModel)]="this.api.dispositivoActual.cedulaJuridica">
+            <input type="number" id="cedula" name="cedula" class="form-control" placeholder="Cedula Juridica" [(ngModel)]="this.api.dispositivoActual.cedulaJuridica">
           </div>
           <div class="form-group">
             <label for="garantia">Tiempo Garantia</label>
-            <input type="text" id="garantia" name="garantia" class="form-control" placeholder="Tiempo Garantia" [(ngModel)]="this.api.dispositivoActual.tiempoGarantia">
+            <input type="number" id="garantia" name="garantia" class="form-control" placeholder="Tiempo Garantia" [(ngModel)]="this.api.dispositivoActual.tiempoGarantia">
           </div>  
           <div class="form-group">
-            <label for="Descripcion">Descripción</label>
-            <textarea name="Descripcion" id="Descripcion" class="form-control" cols="50" rows="4" [(ngModel)]="this.api.dispositivoActual.descripcion"></textarea>
+            <label for="descripcion">Descripción</label>
+            <textarea name="descripcion" id="descripcion" class="form-control" cols="50" rows="4" [(ngModel)]="this.api.dispositivoActual.descripcion"></textarea>
           </div>
           
         </form>

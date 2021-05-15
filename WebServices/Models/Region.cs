@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WebServices.Models
 {
-    public class Region
+    public class region
     {
         public string Pais { set; get; }
         public string Continente { set; get;}

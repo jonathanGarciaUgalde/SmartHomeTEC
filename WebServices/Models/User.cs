@@ -11,7 +11,7 @@ namespace WebServices.Models
         public string Password { get; set; }
         public string Nombre { get; set; }
         public string Apellidos { get; set; }
-        public Region Region { get; set; }
+        public region Region { get; set; }
         public List<Direccion> Direccion{get;set;}
        
 

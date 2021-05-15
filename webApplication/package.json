@@ -22,6 +22,8 @@
     "@ng-bootstrap/ng-bootstrap": "^9.1.1",
     "bootstrap": "^5.0.1",
     "jquery": "^3.6.0",
+    "pdfmake": "^0.1.71",
+    "pdfmake-wrapper": "^2.1.1",
     "popper.js": "^1.16.1",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",

@@ -13,14 +13,16 @@ export class AdminService {
   constructor(private http:HttpClient) { }
 
   public dispositivoActual: Dispositivo = {
-  	numeroSerie: null,
-	marca: null,
-	consumoElectrico: null,
-	cedulaJuridica: null,
-	enVenta: null,
-	tipo: null,
-	descripcion: null,
-	tiempoGarantia: null
+
+    numeroSerie: null,
+	  marca: null,
+	  consumoElectrico: null,
+	  cedulaJuridica: null,
+	  enVenta: null,
+	  tipo: null,
+	  descripcion: null,
+	  tiempoGarantia: null
+
   }
 
   verificarCredenciales(email:string, password:string){
@@ -40,15 +42,17 @@ export class AdminService {
 
 
   insertarDispositivo(dispositivo:NgForm){
- 	const url_api = "https://localhost:44381/insertdispositivo";
+ 	const url_api = "https://localhost:44318/api/Dispositivo/SetDispositivoStock";
  	return this.http.post(url_api,
  		{
- 			/*Nombre: platillo.value.Nombre,
- 			Precio: platillo.value.Precio,
- 			Calorias: platillo.value.Calorias,
- 			Tipo: platillo.value.Tipo,
- 			Descripcion: platillo.value.Descripcion,
- 			TiempoPreparacion: platillo.value.TiempoPreparacion*/
+ 			   numeroSerie: dispositivo.value.numero,
+        marca: dispositivo.value.marca,
+        consumoElectrico: dispositivo.value.consumo,
+        cedulaJuridica: dispositivo.value.cedula,
+        tipo: dispositivo.value.tipo,
+        descripcion: dispositivo.value.descripcion,
+        tiempoGarantia: dispositivo.value.garantia,
+        enVenta:true
  		});
  }
 
@@ -62,23 +66,27 @@ export class AdminService {
         cedulaJuridica:dispositivo.cedulaJuridica,
         tipo:dispositivo.tipo,
         descripcion:dispositivo.descripcion,
-        tiempoGarantia:dispositivo.tiempoGarantia
+        tiempoGarantia:dispositivo.tiempoGarantia,
+        enVenta:true
      });
  }
 
  actualizarDispositivo(dispositivo : NgForm){
- 	const url_api = "https://localhost:44381/actualizarPlatillo";
- 	return this.http.put(url_api,
+ 	const url_api = "https://localhost:44318/api/Dispositivo/UpdateDispositivoStock";
+ 	return this.http.post(url_api,
  		{
- 			
+        numeroSerie: dispositivo.value.numero,
+        marca: dispositivo.value.marca,
+        consumoElectrico: dispositivo.value.consumo,
+        cedulaJuridica: dispositivo.value.cedula,
+        tipo: dispositivo.value.tipo,
+        descripcion: dispositivo.value.descripcion,
+        tiempoGarantia: dispositivo.value.garantia 		   	
  		});
  }
 
  eliminarDispositivo(dispositivo: Dispositivo){
- 	const url_api = "https://localhost:44381/eliminarPlatillo";
- 	return this.http.put(url_api,
- 		{
- 			
- 		});
+ 	const url_api = "https://localhost:44318/api/Dispositivo/DeleteDispStock/" + dispositivo.numeroSerie;
+ 	return this.http.delete(url_api);
  }
 }

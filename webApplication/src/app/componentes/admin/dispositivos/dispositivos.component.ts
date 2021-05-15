@@ -21,6 +21,8 @@ export class DispositivosComponent implements OnInit {
 
   title = 'appBootstrap';
 
+  public actualizar:boolean;
+
 
   closeResult: string;
 
@@ -64,18 +66,21 @@ export class DispositivosComponent implements OnInit {
 
   preActualizar(content, dispositvo: Dispositivo): void{
     this.api.dispositivoActual = Object.assign({},dispositvo);
+    this.actualizar = true; 
     this.open(content);
   }
 
   eliminar(dispositvo: Dispositivo):void{
     if (confirm('¿Está seguro que quiere eliminar el dispositvo?')){
-      /*this.dataApi.eliminarPlato(platillo)
-      .subscribe(response=>location.reload());*/
+      this.api.eliminarDispositivo(dispositvo)
+      .subscribe(response=>location.reload());
     }    
   }
 
   crearNuevo(content){
     this.limpiarForm();
+    this.actualizar = false;
+
     this.open(content);
   }
 
@@ -97,10 +102,10 @@ export class DispositivosComponent implements OnInit {
 
     this.modalService.dismissAll();
 
-    if(dispositivoForm.value.Codigo == null){
-      //this.api.insertarPlato(dispositivoForm).subscribe(response=>location.reload());
+    if(this.actualizar){
+      this.api.actualizarDispositivo(dispositivoForm).subscribe(response=>location.reload());
     }else{
-      //this.api.actualizarPlato(dispositivoForm).subscribe(response=>location.reload());
+      this.api.insertarDispositivo(dispositivoForm).subscribe(response=>location.reload());
     }
 
   }

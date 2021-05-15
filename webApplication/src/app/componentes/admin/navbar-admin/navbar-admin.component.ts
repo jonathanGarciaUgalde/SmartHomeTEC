@@ -14,7 +14,6 @@ export class NavbarAdminComponent implements OnInit {
 
 
   salir():void{
-  	localStorage.clear()
   	localStorage.removeItem("email-admin");
   }
 

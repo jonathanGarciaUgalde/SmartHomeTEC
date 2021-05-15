@@ -14,7 +14,9 @@ export class NavbarClienteComponent implements OnInit {
 
   salir():void{
 
-  	localStorage.clear();
+  	localStorage.removeItem("email-cliente");
+  	localStorage.removeItem("pass-cliente");
+    localStorage.removeItem("pais-cliente");
 
   }
 
