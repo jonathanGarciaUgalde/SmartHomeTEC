@@ -183,7 +183,7 @@ namespace WebServices.Controllers
                     connection.Close();
 
                     query = $"INSERT INTO \"Registro\" VALUES({dis.NumeroSerie}, '{dis.CorreoPosedor}');";
-
+                        
                     connection.Open();
                     command = new NpgsqlCommand(query, connection);
                     command.ExecuteNonQuery();

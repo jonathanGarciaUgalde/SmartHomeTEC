@@ -448,6 +448,36 @@ namespace WebServices.Controllers
 
 
         }
+
+        [HttpGet] //Route-> api/User/PasarDispositivo
+        public async Task<IActionResult> GetTipos()
+        {
+            connection.ConnectionString = server.init();
+            string query = $"SELECT \"nombre\" FROM \"Tipo\";";
+
+            connection.Open();
+            NpgsqlCommand command = new NpgsqlCommand(query, connection);
+            command.ExecuteNonQuery();
+            NpgsqlDataReader dr = command.ExecuteReader();
+
+            if (dr.HasRows)
+            {
+                List<Tipo> tipos = new List<Tipo>();
+                while (dr.Read())
+                {
+                    Tipo tipo = new Tipo() {Nombre = (string)dr["nombre"]};
+                    tipos.Add(tipo);
+                }
+                connection.Close();
+                return Ok(tipos);
+            }
+            else
+            {
+                connection.Close();
+                return BadRequest("No  hay Tipos definidos");
+            }            
+        }
+
     }
 } 
     
