@@ -69,7 +69,7 @@ namespace WebServices.Controllers
         }
 
 
-        [HttpPost]
+            [HttpPost]
         public async Task<IActionResult> GetAllPedidos()
         {
             connection.ConnectionString = server.init();
@@ -84,14 +84,16 @@ namespace WebServices.Controllers
             List<Pedido> ListPedidos = new List<Pedido>();
             while (dr.Read())
             {
-                Dispositivo dispositivo = new Dispositivo() {
-                    numeroSerie = (int)dr["numeroSerie"], consumo = (double)dr["consumoElectrico"], marca = (string)dr["marca"],
-                    estadoActivo = (bool)dr["estadoActivo"], nombreAposento = (string)dr["nombreAposento"], correoPosedor = (string)dr["correoPosedor"], tipo = (string)dr["tipo"], tiempoGarantia = (int)dr["tiempoGarantia"], descripcion = (string)dr["descripcion"]
+                 Pedido pedido = new Pedido() {
+                    NumeroPedido = (int)dr["numero"], CorreoComprador = (string)dr["correoComprador"], NumeroSerie = (int)dr["numeroSerie"]
+                   
                 };
-                ListPedidos.Add(dispositivo);
+                ListPedidos.Add(pedido);
             }
             connection.Close();
+            return Ok(ListPedidos);
         }
+       
 
 
 
