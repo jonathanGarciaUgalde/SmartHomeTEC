@@ -424,34 +424,34 @@ VALUES('davidqc05@gmail.com','123456789','David', 'Quesada Calderon', 'Oceania',
 ---------------- Populacion de la tabla Usuario -----------------------------
 
 ---------------- Populacion de la tabla direccionEntrega -----------------------------
-INSERT INTO "direccionEntrega"("correo","ubicacion") 
+INSERT INTO "DireccionEntrega"("correo","ubicacion") 
 VALUES('josuecub.mont@hotmail.com','Heredia, San Pablo, Casa 8-E');
 
-INSERT INTO "direccionEntrega"("correo","ubicacion") 
+INSERT INTO "DireccionEntrega"("correo","ubicacion") 
 VALUES('josuecub.mont@hotmail.com','San Jose, San Pedro, Casa 10-C');
 
-INSERT INTO "direccionEntrega"("correo","ubicacion") 
+INSERT INTO "DireccionEntrega"("correo","ubicacion") 
 VALUES('jdcubero1221@gmail.com','Limon, Guapiles, Casa 12-M');
 
-INSERT INTO "direccionEntrega"("correo","ubicacion") 
+INSERT INTO "DireccionEntrega"("correo","ubicacion") 
 VALUES('josepablofa@gmail.com','Alajuela, Poas, Casa 33-T');
 
-INSERT INTO "direccionEntrega"("correo","ubicacion") 
+INSERT INTO "DireccionEntrega"("correo","ubicacion") 
 VALUES('josepablofa@gmail.com','Alajuela, El Centro, Casa 05-A');
 
-INSERT INTO "direccionEntrega"("correo","ubicacion") 
+INSERT INTO "DireccionEntrega"("correo","ubicacion") 
 VALUES('josepablofa@gmail.com','Guanacaste, Liberia, Casa 1-A: El Ranchito');
 
-INSERT INTO "direccionEntrega"("correo","ubicacion") 
+INSERT INTO "DireccionEntrega"("correo","ubicacion") 
 VALUES('jonagaru1@gmail.com','Puntarenas, Esparza, Casa 51-R');
 
-INSERT INTO "direccionEntrega"("correo","ubicacion") 
+INSERT INTO "DireccionEntrega"("correo","ubicacion") 
 VALUES('jonagaru1@gmail.com','Cartago, El Guarco, Molino, Casa 15-J');
 
-INSERT INTO "direccionEntrega"("correo","ubicacion") 
+INSERT INTO "DireccionEntrega"("correo","ubicacion") 
 VALUES('davidqc05@gmail.com','San Jose, Plaza Viquez, Casa 10-C');
 
-INSERT INTO "direccionEntrega"("correo","ubicacion") 
+INSERT INTO "DireccionEntrega"("correo","ubicacion") 
 VALUES('davidqc05@gmail.com','Heredia, Lagunilla, Casa 31-G');
 
 

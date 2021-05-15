@@ -59,7 +59,7 @@ namespace WebServices.Controllers
             int i = 0;
             while (newUser.Direccion.Count > i)
             {
-                query = $"insert into \"direccionEntrega\" VALUES('{newUser.Correo}','{ newUser.Direccion.ElementAt(i).Ubicacion}');";
+                query = $"insert into \"DireccionEntrega\" (\"correo\",\"ubicacion\") VALUES('{newUser.Correo}','{ newUser.Direccion.ElementAt(i).Ubicacion}');";
                 
                 NpgsqlCommand execute3 = new NpgsqlCommand(query, connection);
                 execute3.ExecuteNonQuery();
@@ -169,7 +169,7 @@ namespace WebServices.Controllers
                 query = $"SELECT " +
                         $"      \"ubicacion\" " +
                         $"FROM " +
-                        $"      \"direccionEntrega\" " +
+                        $"      \"DireccionEntrega\" " +
                         $"WHERE \"correo\" = '{user.Correo}';";
 
                 connection.Open();
