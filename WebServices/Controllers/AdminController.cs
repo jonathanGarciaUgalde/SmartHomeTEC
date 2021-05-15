@@ -55,5 +55,51 @@ namespace WebServices.Controllers
             
         }
 
+        [HttpGet] // api/Admin/DispositivosActivos
+        public async Task<IActionResult> DispositivosActivos()
+        {
+            connection.ConnectionString = server.init();
+            connection.Open();
+
+            string query = $"SELECT COUNT(*) AS \"DispActivos\" FROM \"Dispositivo\" WHERE \"estadoActivo\" = TRUE;";
+
+            NpgsqlCommand command = new NpgsqlCommand(query, connection);
+            command.ExecuteNonQuery();
+
+            NpgsqlDataReader dr = command.ExecuteReader();
+
+            dr.Read();
+
+            Reporte reporte = new Reporte() { DispActivos = (int)(long)dr["DispActivos"] };
+
+            return Ok(reporte);
+
+        }
+
+        [HttpGet] // api/Admin/PromDispositivosPorUsuario
+        public async Task<IActionResult> PromDispositivosPorUsuario()
+        {
+            connection.ConnectionString = server.init();
+            connection.Open();
+
+            string query = $"SELECT CAST(COUNT(*) AS FLOAT)/(SELECT COUNT(*) FROM \"Usuario\") AS \"PromedioDispositivosPorUsuario\" FROM \"Dispositivo\";";
+
+            NpgsqlCommand command = new NpgsqlCommand(query, connection);
+            command.ExecuteNonQuery();
+
+            NpgsqlDataReader dr = command.ExecuteReader();
+
+            dr.Read();
+
+            Reporte reporte = new Reporte() { PromDispPorUsuario = (double)dr["PromedioDispositivosPorUsuario"] };
+
+            return Ok(reporte);
+
+        }
+
+
+
+
+
     }
 }
