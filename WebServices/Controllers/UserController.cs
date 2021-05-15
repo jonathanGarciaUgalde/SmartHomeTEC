@@ -54,16 +54,7 @@ namespace WebServices.Controllers
         {
             connection.ConnectionString = server.init();
 
-            /*
-            string query = "select Correo from usuario where correo = '" +newUser.Correo +"'";
-            NpgsqlCommand conector = new NpgsqlCommand(query, connection);
-            if (exist(conector))
-            {
-              connection.Close();
-            return BadRequest("User already exist");
-            }
-            else
-            */
+      
 
             string query = $"insert into \"Usuario\" VALUES('{newUser.Correo}','{newUser.Password}', '{newUser.Nombre}', '{newUser.Apellidos}', '{newUser.Region.Continente}', '{newUser.Region.Pais}')";
 
@@ -72,16 +63,11 @@ namespace WebServices.Controllers
             NpgsqlCommand execute = new NpgsqlCommand(query, connection);
             execute.ExecuteNonQuery();
 
-            /*
-            query = $"insert into region_x_usuario VALUES('{newUser.Region.Pais}','{newUser.Correo}','{newUser.Region.Continente}')";                    
-            NpgsqlCommand execute1 = new NpgsqlCommand(query, connection);
-            execute1.ExecuteNonQuery();
-            */
-
+          
             int i = 0;
             while (newUser.Direccion.Count > i)
             {
-                query = $"insert into \"direccionEntrega\" VALUES('{newUser.Correo}','{ newUser.Direccion.ElementAt(i).Ubicacion}');";
+                query = $"insert into \"DireccionEntrega\" (\"correo\",\"ubicacion\" ) VALUES('{newUser.Correo}','{ newUser.Direccion.ElementAt(i).Ubicacion}');";
 
                 NpgsqlCommand execute3 = new NpgsqlCommand(query, connection);
                 execute3.ExecuteNonQuery();
@@ -118,7 +104,7 @@ namespace WebServices.Controllers
             query = $"SELECT " +
                     $"      \"ubicacion\" " +
                     $"FROM " +
-                    $"      \"direccionEntrega\" " +
+                    $"      \"DireccionEntrega\" " +
                     $"WHERE \"correo\" = '{user.Correo}';";
 
             connection.Open();
@@ -137,6 +123,52 @@ namespace WebServices.Controllers
             connection.Close();
             return Ok(outputUser);
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateUsuario([FromBody] User newUse)
+        {
+            connection.ConnectionString = server.init();
+            try
+
+            {
+
+               
+               
+                string query = $"UPDATE \"Usuario\" SET \"nombre\"='{ newUse.Nombre}', \"apellidos\"='{ newUse.Apellidos}'," +
+                    $"\"continente\"='{newUse.Region.Continente}' , \"pais\"='{newUse.Region.Pais}'" +
+                   $"         WHERE   \"correo\" = '{newUse.Correo}' ;";
+
+                NpgsqlCommand conector = new NpgsqlCommand(query, connection);
+                connection.Open();
+                conector.ExecuteNonQuery();
+                connection.Close();
+
+                int i = 0;
+                while (newUse.Direccion.Count >i)
+                {
+                    query = $"UPDATE \"DireccionEntrega\" SET \"ubicacion\"='{ newUse.Direccion.ElementAt(i).Ubicacion}' " +
+                          $"         WHERE   \"correo\" ='{newUse.Correo}';";
+
+                    NpgsqlCommand execute3 = new NpgsqlCommand(query, connection);
+                    connection.Open();
+                    execute3.ExecuteNonQuery();
+                    connection.Close();
+                    i++;
+
+                }
+               
+                return Ok();
+
+            }
+            catch
+            {
+                return BadRequest("No se pudo actualizar el dispositivo");
+            }
+        }
+
+
+
 
 
 
