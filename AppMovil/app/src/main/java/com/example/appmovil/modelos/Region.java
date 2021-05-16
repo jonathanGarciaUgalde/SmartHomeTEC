@@ -5,11 +5,11 @@ import com.google.gson.annotations.SerializedName;
 
 public class Region {
 
-    @SerializedName("Continente")
+    @SerializedName("continente")
     @Expose
     private String continente;
 
-    @SerializedName("Pais")
+    @SerializedName("pais")
     @Expose
     private String pais;
 

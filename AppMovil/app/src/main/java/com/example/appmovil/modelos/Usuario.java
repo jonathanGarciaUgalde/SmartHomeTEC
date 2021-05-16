@@ -8,19 +8,19 @@ import java.util.List;
 
 public class Usuario {
 
-    @SerializedName("Nombre")
+    @SerializedName("nombre")
     @Expose
     private String nombre;
 
-    @SerializedName("Apellidos")
+    @SerializedName("apellidos")
     @Expose
     private String apellidos;
 
-    @SerializedName("Region")
+    @SerializedName("region")
     @Expose
-    private List<Region> region = null;
+    private Region region = null;
 
-    @SerializedName("Correo")
+    /*@SerializedName("Correo")
     @Expose
     private String correo;
 
@@ -30,15 +30,15 @@ public class Usuario {
 
     @SerializedName("Direcciones")
     @Expose
-    private ArrayList<String> direcciones;
+    private ArrayList<String> direcciones;*/
 
-    public Usuario(String nombre, String apellidos, List<Region> region, String correo, String password, ArrayList<String> direcciones) {
+    public Usuario(String nombre, String apellidos, Region region, String correo, String password, ArrayList<String> direcciones) {
         this.nombre = nombre;
         this.apellidos = apellidos;
-        this.region = region;
+        /*this.region = region;
         this.correo = correo;
         this.password = password;
-        this.direcciones = direcciones;
+        this.direcciones = direcciones;*/
     }
 
     public String getNombre() {
@@ -49,7 +49,7 @@ public class Usuario {
         this.nombre = nombre;
     }
 
-    public String getApellidos() {
+   public String getApellidos() {
         return apellidos;
     }
 
@@ -57,15 +57,15 @@ public class Usuario {
         this.apellidos = apellidos;
     }
 
-    public List<Region> getRegion() {
+    public Region getRegion() {
         return region;
     }
 
-    public void setRegion(List<Region> region) {
+    public void setRegion(Region region) {
         this.region = region;
     }
 
-    public String getCorreo() {
+     /*public String getCorreo() {
         return correo;
     }
 
@@ -87,5 +87,5 @@ public class Usuario {
 
     public void setDirecciones(ArrayList<String> direcciones) {
         this.direcciones = direcciones;
-    }
+    }*/
 }
