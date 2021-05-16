@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.appmovil"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -41,6 +41,9 @@ dependencies {
     // Con interceptor se obtiene los resultados de la peticion
     // en la consola (codigo de respuesta, etc)
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
+
+    // Se importa la libreria Volley
+    implementation 'com.android.volley:volley:1.1.1'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

@@ -4,19 +4,26 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appmovil.io.ApiAdapter;
-import com.example.appmovil.model.Dispositivo;
-import com.example.appmovil.model.DispositivoEncendidoApagado;
-import com.example.appmovil.ui.DispositivoAdapter;
+import com.example.appmovil.modelos.Dispositivo;
+import com.example.appmovil.modelos.DispositivoEncendidoApagado;
 import com.example.appmovil.ui.EncenderApagarDispositivoAdapter;
+import com.example.appmovil.utilidades.Utilidades;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,46 +55,60 @@ public class VentanaControlDispositivos extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
         // Fin RecyclerVew
 
-        // Metodo GET -> Obtener dispositivos
-        Call<ArrayList<Dispositivo>> call =  ApiAdapter.getApiService().getDataDevices();
+        // Recuperar datos del cliente
+        // Metodo GET
+
+        JsonObject gsonObject = new JsonObject();
+        try {
+            JSONObject jsonObj_ = new JSONObject();
+            jsonObj_.put("Correo", Utilidades.correoUsuario);
+
+            JsonParser jsonParser = new JsonParser();
+            gsonObject = (JsonObject) jsonParser.parse(jsonObj_.toString());
+
+            //print parameter
+            Log.v("MY gson.JSON:  ", "AS PARAMETER  " + gsonObject);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Call<ArrayList<Dispositivo>> call = ApiAdapter.getApiService().obtenerDispositivosConEstado(gsonObject);
         call.enqueue(new Callback<ArrayList<Dispositivo>>() {
             @Override
             public void onResponse(Call<ArrayList<Dispositivo>> call, Response<ArrayList<Dispositivo>> response) {
+
                 if (response.isSuccessful()){
+                    Log.v("mytag", "GET DATA USER");
+                    ArrayList<Dispositivo> datos_dispositivos = response.body();
 
-                    ArrayList<Dispositivo> respuestaServerDispositivos = response.body();
+                    if (datos_dispositivos.size() > 0) {
+                        ArrayList<DispositivoEncendidoApagado> listaDispositivos = new ArrayList<>();
 
-                    /*ArrayList<String> listaDispositivos = new ArrayList<String>();
-                    for (int i = 0; i < respuestaServerDispositivos.size(); i++){
-                        for (int j = 0; j < respuestaServerDispositivos.get(i).getDispositivos().size(); j++){
-                            listaDispositivos.add(respuestaServerDispositivos.get(i).getAposento() + ": " +
-                                    respuestaServerDispositivos.get(i).getDispositivos().get(j));
+                        for (int i = 0; i < datos_dispositivos.size(); i++) {
+                            DispositivoEncendidoApagado a1 = new DispositivoEncendidoApagado(datos_dispositivos.get(i).getNombreAposento(),
+                                    datos_dispositivos.get(i).getTipo(),
+                                    datos_dispositivos.get(i).getNumeroSerie(),
+                                    datos_dispositivos.get(i).getEstadoActivo(),
+                                    datos_dispositivos.get(i).getEstadoActivo());
+                            listaDispositivos.add(a1);
                         }
+
+                        mAdapter.setDataSet(listaDispositivos);
+                    }else{
+                        Toast.makeText(getApplicationContext(), "¡El usuario no posee dispositivos!", Toast.LENGTH_SHORT).show();
                     }
 
-                    for (int i = 0; i < listaDispositivos.size(); i++){
-                        Log.v("mytag", listaDispositivos.get(i));
-                    }*/
-
-                    ArrayList<DispositivoEncendidoApagado> listaDispositivos = new ArrayList<DispositivoEncendidoApagado>();
-                    DispositivoEncendidoApagado a1 = new DispositivoEncendidoApagado("Comedor", "Wifi", "On", "On");
-                    DispositivoEncendidoApagado a2 = new DispositivoEncendidoApagado("Comedor", "Bombillo", "Off", "Off");
-                    DispositivoEncendidoApagado a3 = new DispositivoEncendidoApagado("Sala", "Tv", "On", "On");
-                    DispositivoEncendidoApagado a4 = new DispositivoEncendidoApagado("Sala", "Bombillo", "On", "On");
-                    listaDispositivos.add(a1);
-                    listaDispositivos.add(a2);
-                    listaDispositivos.add(a3);
-                    listaDispositivos.add(a4);
-                    mAdapter.setDataSet(listaDispositivos);
-
-                    Log.v("mytag", "Respuesta exitosa");
+                }else{
+                    Toast.makeText(getApplicationContext(), "¡Error al cargar el estado de los dispositivos del usuario!", Toast.LENGTH_SHORT).show();
                 }
+
             }
 
             @Override
             public void onFailure(Call<ArrayList<Dispositivo>> call, Throwable t) {
                 t.printStackTrace();
-                Log.e("Error", "Error loading from API");
+                Log.e("Error", "Error loading from API (ObtenerDispositivos) ");
             }
         });
 
@@ -97,7 +118,121 @@ public class VentanaControlDispositivos extends AppCompatActivity {
 
         // Recibir cambios
         // Enviar Cuenta, Aposento, Dispositivo, Estado
-        mAdapter.listaOrdenes();
+        mAdapter.listaEstados();
+        if (mAdapter.listaEstados().size() > 0) {
+            for (int i = 0; i < mAdapter.listaEstados().size(); i++) {
+
+                // Revisar el cambio de estado, si paso de falso a true enviar a ActivarDispositivo, caso contrario enviar a DesactivarDispositivo
+                boolean estadoNuevo = (boolean) mAdapter.listaEstados().get(i).get(1);
+
+                JsonObject gsonObject = new JsonObject();
+                try {
+                    JSONObject jsonObj_ = new JSONObject();
+                    jsonObj_.put("NumeroSerie", mAdapter.listaEstados().get(i).get(0));
+                    jsonObj_.put("EstadoActivo", estadoNuevo);
+
+                    JsonParser jsonParser = new JsonParser();
+                    gsonObject = (JsonObject) jsonParser.parse(jsonObj_.toString());
+
+                    //print parameter
+                    Log.v("MY gson.JSON:  ", "AS PARAMETER  " + gsonObject);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                if (estadoNuevo) {
+
+                    Call<ResponseBody> call = ApiAdapter.getApiService().activarDispositivo(gsonObject);
+                    call.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            Log.v("mytag", "GET DATA USER");
+                        }
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            t.printStackTrace();
+                            Log.e("Error", "Error loading from API (ObtenerDispositivos) ");
+                        }
+                    });
+
+                } else {
+
+                    Call<ResponseBody> call = ApiAdapter.getApiService().desactivarDispositivo(gsonObject);
+                    call.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            Log.v("mytag", "GET DATA USER");
+                        }
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            t.printStackTrace();
+                            Log.e("Error", "Error loading from API (ObtenerDispositivos) ");
+                        }
+                    });
+
+                }
+            }
+
+        }
+
+        // Recuperar datos del cliente
+        // Metodo GET
+
+        /*JsonObject gsonObject = new JsonObject();
+        try {
+            JSONObject jsonObj_ = new JSONObject();
+            jsonObj_.put("Correo", Utilidades.correoUsuario);
+
+            JsonParser jsonParser = new JsonParser();
+            gsonObject = (JsonObject) jsonParser.parse(jsonObj_.toString());
+
+            //print parameter
+            Log.v("MY gson.JSON:  ", "AS PARAMETER  " + gsonObject);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Call<ArrayList<Dispositivo>> call = ApiAdapter.getApiService().obtenerDispositivosConEstado(gsonObject);
+        call.enqueue(new Callback<ArrayList<Dispositivo>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Dispositivo>> call, Response<ArrayList<Dispositivo>> response) {
+
+                if (response.isSuccessful()){
+                    Log.v("mytag", "GET DATA USER");
+                    ArrayList<Dispositivo> datos_dispositivos = response.body();
+
+                    if (datos_dispositivos.size() > 0) {
+                        ArrayList<DispositivoEncendidoApagado> listaDispositivos = new ArrayList<>();
+
+                        for (int i = 0; i < datos_dispositivos.size(); i++) {
+                            DispositivoEncendidoApagado a1 = new DispositivoEncendidoApagado(datos_dispositivos.get(i).getNombreAposento(),
+                                    datos_dispositivos.get(i).getTipo(),
+                                    datos_dispositivos.get(i).getNumeroSerie(),
+                                    datos_dispositivos.get(i).getEstadoActivo(),
+                                    datos_dispositivos.get(i).getEstadoActivo());
+                            listaDispositivos.add(a1);
+                        }
+
+                        mAdapter.setDataSet(listaDispositivos);
+                    }else{
+                        Toast.makeText(getApplicationContext(), "¡El usuario no posee dispositivos!", Toast.LENGTH_SHORT).show();
+                    }
+
+                }else{
+                    Toast.makeText(getApplicationContext(), "¡Error al cargar el estado de los dispositivos del usuario!", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Dispositivo>> call, Throwable t) {
+                t.printStackTrace();
+                Log.e("Error", "Error loading from API (ObtenerDispositivos) ");
+            }
+        });*/
+
     }
 
     public void btn_historial_dispositivo(View view) {

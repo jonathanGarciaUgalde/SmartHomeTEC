@@ -1,62 +1,63 @@
 package com.example.appmovil.io;
 
-import com.example.appmovil.model.Dispositivo;
-import com.example.appmovil.model.Usuario;
+import com.example.appmovil.modelos.Aposentos;
+import com.example.appmovil.modelos.Dispositivo;
+import com.example.appmovil.modelos.Historial;
+import com.example.appmovil.modelos.Usuario;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
-import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 // Mediante esta interface cada método abstracto va a representar una ruta específica de la API.
 public interface ApiService {
 
-    //http://localhost:3000/api/User/verify/Login/123/123
-    @POST("api/User/verify/Login/{username}/{password}/")
-    Call<Boolean> getLoginRespueta(
+    //http://localhost:3000/api/User/Login/123/123
+    @POST("api/User/Login/{username}/{password}")
+    Call<Boolean> verificacionLogin(
             @Path("username") String username,
             @Path("password") String password
     );
 
+    //http://localhost:3000/api/User/Credenciales
+    @POST("api/User/Credenciales")
+    Call<Usuario> obtenerCredenciales(@Body JsonObject body);
 
-    @GET("usuarios/305.json")
-    Call<Usuario> getDataUser();
+    //http://localhost:3000/api/User/Aposento
+    @POST("api/User/Aposento")
+    Call<ResponseBody> registrarAposento(@Body JsonObject body);
 
-    @GET("usuarios/305.json")
-    Call<ArrayList<Dispositivo>> getDataDevices();
+    //http://localhost:3000/api/User/GetDispositivos
+    @POST("api/User/GetDispositivos")
+    Call<ArrayList<Dispositivo>> obtenerDispositivos(@Body JsonObject body);
 
-    /*@POST("api/User")
-    Call<ResponseBody> postUser(@Body Registro registro);
+    //http://localhost:3000/api/User/GetEstadoDispositivos
+    @POST("api/User/GetEstadoDispositivos")
+    Call<ArrayList<Dispositivo>> obtenerDispositivosConEstado(@Body JsonObject body);
 
-    @GET("api/Menu/All")
-    Call<ArrayList<Menu>> getMenu();
+    //http://localhost:3000/api/User/PasarDispositivo
+    @POST("api/User/PasarDispositivo")
+    Call<ResponseBody> pasarDispositivo(@Body JsonObject body);
 
-    @POST("api/Orden")
-    Call<ResponseBody> postFeedback(@Body Feedback feedback );
+    //http://localhost:3000/api/User/ActivarDispositivo
+    @POST("api/User/ActivarDispositivo")
+    Call<ResponseBody> activarDispositivo(@Body JsonObject body);
 
-    @POST("api/Carrito")
-    Call<ResponseBody> postCarrito(@Body Carrito carrito );
+    //http://localhost:3000/api/User/DesactivarDispositivo
+    @POST("api/User/DesactivarDispositivo")
+    Call<ResponseBody> desactivarDispositivo(@Body JsonObject body);
 
-    @POST("api/Orden/{id}")
-    Call<ResponseBody> postPedido(@Path("id") String id);
+    //http://localhost:3000/api/User/GetHistorial
+    @POST("api/User/GetHistorial")
+    Call<ArrayList<Historial>> obtenerHistorial(@Body JsonObject body);
 
-    @DELETE("api/User/{id}")
-    Call<ResponseBody> deleteUser(@Path("id") String id);
-
-    // Consultar las ordenes activas (asignadas) del usuario
-    @GET("api/Orden/orden/{id}")
-    Call<ArrayList<EstadoPedido>> getOrdenes(@Path("id") String id);
-
-    @PUT("api/User/{id}")
-    Call<ResponseBody> putUser(@Path("id") String id,
-                               @Body Registro registro);*/
-
+    //http://localhost:3000/api/User/GetAposentos
+    @POST("api/User/GetAposentos")
+    Call<ArrayList<Aposentos>> obtenerAposentos(@Body JsonObject body);
 
 }

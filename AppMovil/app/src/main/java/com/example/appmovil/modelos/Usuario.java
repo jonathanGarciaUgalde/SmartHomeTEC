@@ -1,10 +1,9 @@
-package com.example.appmovil.model;
+package com.example.appmovil.modelos;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Usuario {
 
@@ -18,27 +17,22 @@ public class Usuario {
 
     @SerializedName("region")
     @Expose
-    private Region region = null;
+    private Region region;
 
-    /*@SerializedName("Correo")
+    @SerializedName("correo")
     @Expose
     private String correo;
 
-    @SerializedName("Password")
+    @SerializedName("direccion")
     @Expose
-    private String password;
+    private ArrayList<Direccion> direcciones;
 
-    @SerializedName("Direcciones")
-    @Expose
-    private ArrayList<String> direcciones;*/
-
-    public Usuario(String nombre, String apellidos, Region region, String correo, String password, ArrayList<String> direcciones) {
+    public Usuario(String nombre, String apellidos, Region region, String correo, ArrayList<Direccion> direcciones) {
         this.nombre = nombre;
         this.apellidos = apellidos;
-        /*this.region = region;
+        this.region = region;
         this.correo = correo;
-        this.password = password;
-        this.direcciones = direcciones;*/
+        this.direcciones = direcciones;
     }
 
     public String getNombre() {
@@ -65,7 +59,7 @@ public class Usuario {
         this.region = region;
     }
 
-     /*public String getCorreo() {
+    public String getCorreo() {
         return correo;
     }
 
@@ -73,19 +67,12 @@ public class Usuario {
         this.correo = correo;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public ArrayList<String> getDirecciones() {
+    public ArrayList<Direccion> getDirecciones() {
         return direcciones;
     }
 
-    public void setDirecciones(ArrayList<String> direcciones) {
+    public void setDirecciones(ArrayList<Direccion> direcciones) {
         this.direcciones = direcciones;
-    }*/
+    }
+
 }

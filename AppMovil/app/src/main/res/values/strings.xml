@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">AppMovil</string>
+
+    <string name="URL_REGISTRAR_APOSENTO">http://10.0.2.2:3000/api/User/Aposento</string>
+    <string name="URL_REGISTRAR_DISPOSITIVO">http://10.0.2.2:3000/api/Dispositivo/setDispositivo</string>
+
+    <string name="text_input_correoElectronico">Correo electrónico</string>
+
 </resources>

@@ -9,8 +9,11 @@ public class Utilidades {
 
     // Constantes campos tabla aposento
     public static final String TABLA_APOSENTO = "aposento";
+    public static final String CAMPO_CORREO = "correo";
     public static final String CAMPO_NOMBRE = "nombre";
-    public static final String CREAR_TABLA_USUARIO = "CREATE TABLE " +TABLA_APOSENTO+" ("+CAMPO_NOMBRE+" TEXT)";
+    public static final String CREAR_TABLA_APOSENTO = "CREATE TABLE " +TABLA_APOSENTO+" ("
+            + CAMPO_CORREO +" TEXT,"
+            + CAMPO_NOMBRE +" TEXT )";
 
     // Constantes campos tabla dispositivo
     public static final String TABLA_DISPOSITIVO = "dispositivo";
@@ -24,8 +27,8 @@ public class Utilidades {
             + DESCRIPCION +" TEXT,"
             + TIPO +" TEXT,"
             + MARCA +" TEXT,"
-            + NUMERO_SERIE +" TEXT,"
-            + CONSUMO +" TEXT,"
+            + NUMERO_SERIE +" INTEGER PRIMARY KEY,"
+            + CONSUMO +" DOUBLE,"
             + APOSENTO +" TEXT )";
 
 }

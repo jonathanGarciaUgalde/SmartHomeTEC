@@ -18,16 +18,40 @@
         android:layout_marginBottom="20dp"
         android:text="Historial de dispositivos" />
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="Lista de dispositivos:" />
+        android:layout_marginBottom="15dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Dispositivo: "
+            android:textSize="15sp" />
+
+        <Spinner
+            android:id="@+id/spinner_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Revisar historial"
+        android:onClick="btn_revisar_historial"
+        android:background="@drawable/borde_redondo"
+        android:layout_marginBottom="30dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_historial_dispositivos"
         android:layout_width="match_parent"
         android:layout_height="350dp" >
+
     </androidx.recyclerview.widget.RecyclerView>
+
 
 </LinearLayout>

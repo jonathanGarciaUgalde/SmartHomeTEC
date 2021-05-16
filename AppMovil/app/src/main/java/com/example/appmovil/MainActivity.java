@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import com.example.appmovil.io.ApiAdapter;
 import com.example.appmovil.utilidades.Utilidades;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -19,7 +21,8 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText correo, password;
+    private EditText correo;
+    private TextInputEditText password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         correo = (EditText) findViewById(R.id.txt_correo);
-        password = (EditText) findViewById(R.id.txt_password);
+        password = (TextInputEditText) findViewById(R.id.txt_password);
 
     }
 
@@ -35,26 +38,25 @@ public class MainActivity extends AppCompatActivity {
 
         // Consulta si existe el usuario en la base de datos
 
-        Call<Boolean> call =  ApiAdapter.getApiService().getLoginRespueta("123", "123");
+        Call<Boolean> call =  ApiAdapter.getApiService().verificacionLogin(correo.getText().toString(), password.getText().toString());
         call.enqueue(new Callback<Boolean>() {
             @Override
             public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                 if (response.isSuccessful()){
-                    Boolean respuestaServer = response.body(); // Cedula(Id) del cliente
 
+                    Boolean respuestaServer = response.body(); // Cedula(Id) del cliente
                     // Permite o no el acceso al sistema
                     if(respuestaServer){
-
                         // Ir a otra ventana
                         Intent informacionPerfil = new Intent(getApplicationContext(), VentanaInformacionPerfil.class);
                         startActivity(informacionPerfil);
-
-                    }else{
-                        Toast.makeText(MainActivity.this, "Usuario Incorrecto", Toast.LENGTH_SHORT).show();
                     }
 
                     Log.v("mytag", "Respuesta exitosa");
+                }else{
+                    Toast.makeText(getApplicationContext(), "¡Usuario Incorrecto!", Toast.LENGTH_SHORT).show();
                 }
+
             }
 
             @Override
@@ -66,9 +68,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Asignar a la variable correoUsuario el correo (Id) del usuario
         Utilidades.correoUsuario = correo.getText().toString();
-
-        //Intent informacionPerfil = new Intent(this, VentanaInformacionPerfil.class);
-        //startActivity(informacionPerfil);
 
     }
 }

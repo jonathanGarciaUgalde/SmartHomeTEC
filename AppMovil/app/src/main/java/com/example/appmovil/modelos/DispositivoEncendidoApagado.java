@@ -1,4 +1,4 @@
-package com.example.appmovil.model;
+package com.example.appmovil.modelos;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -13,17 +13,22 @@ public class DispositivoEncendidoApagado {
     @Expose
     private String dispositivo;
 
+    @SerializedName("Serie")
+    @Expose
+    private Integer serie;
+
     @SerializedName("EstadoActual")
     @Expose
-    private String estadoActual;
+    private Boolean estadoActual;
 
     @SerializedName("EstadoNuevo")
     @Expose
-    private String estadoNuevo;
+    private Boolean estadoNuevo;
 
-    public DispositivoEncendidoApagado(String aposento, String dispositivo, String estadoActual, String estadoNuevo) {
+    public DispositivoEncendidoApagado(String aposento, String dispositivo, Integer serie, Boolean estadoActual, Boolean estadoNuevo) {
         this.aposento = aposento;
         this.dispositivo = dispositivo;
+        this.serie = serie;
         this.estadoActual = estadoActual;
         this.estadoNuevo = estadoNuevo;
     }
@@ -44,19 +49,27 @@ public class DispositivoEncendidoApagado {
         this.dispositivo = dispositivo;
     }
 
-    public String getEstadoActual() {
+    public Integer getSerie() {
+        return serie;
+    }
+
+    public void setSerie(Integer serie) {
+        this.serie = serie;
+    }
+
+    public Boolean getEstadoActual() {
         return estadoActual;
     }
 
-    public void setEstadoActual(String estadoActual) {
+    public void setEstadoActual(Boolean estadoActual) {
         this.estadoActual = estadoActual;
     }
 
-    public String getEstadoNuevo() {
+    public Boolean getEstadoNuevo() {
         return estadoNuevo;
     }
 
-    public void setEstadoNuevo(String estadoNuevo) {
+    public void setEstadoNuevo(Boolean estadoNuevo) {
         this.estadoNuevo = estadoNuevo;
     }
 }

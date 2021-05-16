@@ -1,12 +1,13 @@
 package com.example.appmovil.ui;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.appmovil.R;
-import com.example.appmovil.model.Dispositivo;
+import com.example.appmovil.modelos.Dispositivo;
 import java.util.ArrayList;
 
 // Convierte nuestra data en elementos visibles por parte del usuario
@@ -19,13 +20,14 @@ public class DispositivoAdapter extends RecyclerView.Adapter<DispositivoAdapter.
     public class ViewHolder extends RecyclerView.ViewHolder {
         // en este ejemplo cada elemento consta solo de un título
 
-        TextView aposento, dispositivos;
+        TextView aposento, dispositivo, serie;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             aposento = (TextView) itemView.findViewById(R.id.textViewAposento);
-            dispositivos = (TextView) itemView.findViewById(R.id.textViewDipositivos);
+            dispositivo = (TextView) itemView.findViewById(R.id.textViewDipositivos);
+            serie = (TextView) itemView.findViewById(R.id.textViewSerie);
 
         }
     }
@@ -64,14 +66,9 @@ public class DispositivoAdapter extends RecyclerView.Adapter<DispositivoAdapter.
         // - obtenemos un elemento del dataset según su posición
         // - reemplazamos el contenido usando tales datos
 
-        String lista_dispositivos = "";
-        for(int i = 0; i < mDataSet.get(position).getDispositivos().size(); i++){
-            lista_dispositivos += mDataSet.get(position).getDispositivos().get(i) + "\n";
-        }
-
-        holder.aposento.setText(mDataSet.get(position).getAposento());
-        holder.dispositivos.setText(lista_dispositivos);
-
+        holder.aposento.setText(mDataSet.get(position).getNombreAposento());
+        holder.dispositivo.setText(mDataSet.get(position).getTipo());
+        holder.serie.setText(mDataSet.get(position).getNumeroSerie().toString());
 
     }
 

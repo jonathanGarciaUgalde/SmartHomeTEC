@@ -93,7 +93,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="15dp"
         android:orientation="horizontal">
 
         <TextView
@@ -110,6 +110,27 @@
             android:textSize="15sp" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="Direcciones: "
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/list_direcciones"
+        android:layout_marginBottom="20dp"
+        android:cacheColorHint="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="100dp" />
 
     <Button
         android:id="@+id/button1"

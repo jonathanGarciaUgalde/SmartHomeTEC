@@ -3,15 +3,24 @@ package com.example.appmovil;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appmovil.io.ApiAdapter;
-import com.example.appmovil.model.Dispositivo;
+import com.example.appmovil.modelos.Dispositivo;
 import com.example.appmovil.ui.DispositivoAdapter;
+import com.example.appmovil.utilidades.Utilidades;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -20,7 +29,6 @@ public class VentanaVisualizarDispositivos extends AppCompatActivity {
 
     private DispositivoAdapter mAdapter;
     private RecyclerView mRecyclerView;
-    private EditText descripcion, tipo, marca, numero_serie, consumo, aposento;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,27 +52,65 @@ public class VentanaVisualizarDispositivos extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
         // Fin RecyclerVew
 
-        // Metodo GET -> Obtener dispositivos
-        Call<ArrayList<Dispositivo>> call =  ApiAdapter.getApiService().getDataDevices();
+        // Recuperar datos del cliente
+        // Metodo GET
+
+        JsonObject gsonObject = new JsonObject();
+        try {
+            JSONObject jsonObj_ = new JSONObject();
+            jsonObj_.put("Correo", Utilidades.correoUsuario);
+
+            JsonParser jsonParser = new JsonParser();
+            gsonObject = (JsonObject) jsonParser.parse(jsonObj_.toString());
+
+            //print parameter
+            Log.v("MY gson.JSON:  ", "AS PARAMETER  " + gsonObject);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Call<ArrayList<Dispositivo>> call = ApiAdapter.getApiService().obtenerDispositivos(gsonObject);
         call.enqueue(new Callback<ArrayList<Dispositivo>>() {
             @Override
             public void onResponse(Call<ArrayList<Dispositivo>> call, Response<ArrayList<Dispositivo>> response) {
+
                 if (response.isSuccessful()){
+                    Log.v("mytag", "GET DATA USER");
+                    ArrayList<Dispositivo> datos_dispositivos = response.body();
 
-                    ArrayList<Dispositivo> respuestaServerDispositivos = response.body();
+                    if (datos_dispositivos.size() > 0){
+                        ArrayList<Dispositivo> listaDispositivos = new ArrayList<Dispositivo>();
 
-                    mAdapter.setDataSet(respuestaServerDispositivos);
+                        for(int i = 0; i < datos_dispositivos.size(); i++){
+                            Log.v("mytag",  datos_dispositivos.get(i).getTipo());
+                            Dispositivo a1 = new Dispositivo(datos_dispositivos.get(i).getNumeroSerie(),
+                                    datos_dispositivos.get(i).getEstadoActivo(),
+                                    datos_dispositivos.get(i).getTipo(),
+                                    datos_dispositivos.get(i).getNombreAposento());
+                            listaDispositivos.add(a1);
+                        }
 
-                    Log.v("mytag", "Respuesta exitosa");
+                        mAdapter.setDataSet(listaDispositivos);
+                    }else{
+                        Toast.makeText(getApplicationContext(), "¡El usuario no posee dispositivos!", Toast.LENGTH_SHORT).show();
+                    }
+
+                }else{
+                    Toast.makeText(getApplicationContext(), "¡Error al cargar los dispositivos del usuario!", Toast.LENGTH_SHORT).show();
                 }
+
             }
 
             @Override
             public void onFailure(Call<ArrayList<Dispositivo>> call, Throwable t) {
                 t.printStackTrace();
-                Log.e("Error", "Error loading from API");
+                Log.e("Error", "Error loading from API (ObtenerDispositivos) ");
             }
         });
+
+
     }
+
 
 }

@@ -6,13 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appmovil.R;
-import com.example.appmovil.model.Dispositivo;
-import com.example.appmovil.model.DispositivoEncendidoApagado;
+import com.example.appmovil.modelos.DispositivoEncendidoApagado;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +77,7 @@ public class EncenderApagarDispositivoAdapter extends RecyclerView.Adapter<Encen
         List<String> mlists = new ArrayList<>();
 
         holder.dispositivo.setText(mDataSet.get(position).getAposento() + ": " + mDataSet.get(position).getDispositivo());
-        if (mDataSet.get(position).getEstadoActual().equals("On")){
+        if (mDataSet.get(position).getEstadoActual()){
             holder.aSwitch.setChecked(true);
         }else{
             holder.aSwitch.setChecked(false);
@@ -89,9 +87,9 @@ public class EncenderApagarDispositivoAdapter extends RecyclerView.Adapter<Encen
             @Override
             public void onClick(View v) {
                 if(holder.aSwitch.isChecked()){
-                    mDataSet.get(position).setEstadoNuevo("On");
+                    mDataSet.get(position).setEstadoNuevo(true);
                 }else{
-                    mDataSet.get(position).setEstadoNuevo("Off");
+                    mDataSet.get(position).setEstadoNuevo(false);
                 }
             }
         });
@@ -105,18 +103,24 @@ public class EncenderApagarDispositivoAdapter extends RecyclerView.Adapter<Encen
         return mDataSet.size();
     }
 
-    public ArrayList<List> listaOrdenes(){
+    public ArrayList<List> listaEstados(){
+
+        ArrayList<List> listaEstadosModificados = new ArrayList<>();
 
         for (int i = 0; i < mDataSet.size(); i++){
-
+            // Agrega dispositivos que han cambiado de estado
             if(!mDataSet.get(i).getEstadoActual().equals(mDataSet.get(i).getEstadoNuevo())) {
-                //
-                Log.v("mytag", mDataSet.get(i).getAposento() + ": " + mDataSet.get(i).getDispositivo());
-            }
 
+                ArrayList<Object> estadosModificados = new ArrayList<>();
+                estadosModificados.add(mDataSet.get(i).getSerie());
+                estadosModificados.add(mDataSet.get(i).getEstadoNuevo());
+                listaEstadosModificados.add(estadosModificados);
+
+                Log.v("mytag", listaEstadosModificados.size()+"");
+            }
         }
 
-        return selectedValues;
+        return listaEstadosModificados;
     }
 
 }

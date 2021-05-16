@@ -23,7 +23,8 @@ public class ApiAdapter {
 
         //String baseUrl = "https://apiprueba-b5f94-default-rtdb.firebaseio.com/";
         //String baseUrl = "http://192.168.1.110:3000/"; // Funciona para Physical Device
-        String baseUrl = "http://10.0.3.2:3000/"; // Funciona para GenyMotion
+        //String baseUrl = "http://10.0.3.2:3000/"; // Funciona para GenyMotion
+        String baseUrl = "http://10.0.2.2:3000/"; // Funciona para Emulador Android Studio
 
         if (API_SERVICE == null) {
             Retrofit retrofit = new Retrofit.Builder()

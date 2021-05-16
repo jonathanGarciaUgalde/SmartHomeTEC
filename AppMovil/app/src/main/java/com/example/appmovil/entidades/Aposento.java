@@ -1,10 +1,9 @@
 package com.example.appmovil.entidades;
 
 /*
-*  Este paquete va a agrupar las tablas de la BD
+*  Este paquete va a almacenar las tablas de la BD SQLite como objetos POJO
 * POJO (acrónimo de Plain Old Java Object) -> Un objeto POJO es una instancia de una clase que no
 * extiende ni implementa nada en especial.
-* Con el auge de JSON se utilizan POJO para serializar los objetos en formato json, con bibliotecas como Gson.
  * */
 public class Aposento {
 
