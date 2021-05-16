@@ -12,6 +12,12 @@ using System.Security.Cryptography;
 
 namespace WebServices.Controllers
 {
+    ///<summary>
+    /// Esta Clase   tiene la funcion  para poder  realizar  Gestion des dispositivos que se insertan  a traves de la pagina web 
+    ///</summary>
+    ///<remarks>
+    ///
+    ///</remarks>
 
     [Route("api/[controller]/[action]")]
     [ApiController]
@@ -27,6 +33,8 @@ namespace WebServices.Controllers
         {
             return Ok(getListcurrentDispStock());
         }
+
+        //Metodo  que devuelve  los dispositivos  insertados  en la pagina web
         public List<DispositivoStock> getListcurrentDispStock()
         {
             connection.ConnectionString = server.init();
@@ -39,7 +47,7 @@ namespace WebServices.Controllers
             NpgsqlDataReader dr = command.ExecuteReader();
             List<DispositivoStock> ListDispositivosStock = new List<DispositivoStock>();
             while (dr.Read())
-            {
+            {// objeto de dispositivo stock, se carga con la informacion de la tabla, hasta que dr.read() sea null
                 DispositivoStock dispositivoStock = new DispositivoStock()
                 {
                     NumeroSerie = (int)dr["numeroSerie"],
@@ -58,6 +66,8 @@ namespace WebServices.Controllers
             connection.Close();
             return ListDispositivosStock;
         }
+
+        //Este metodo permite insertar  de forma manual un dispositivo.
         [HttpPost]
        public async Task<IActionResult> setDispositivoStock([FromBody] DispositivoStock newDispositivo)
         {
@@ -72,13 +82,14 @@ namespace WebServices.Controllers
             return Ok();
         }
         // Metodo para  insertar el Stock cargado por un administrador atraves de  un documento Excel.
+         //toma los valores  que se van  evaluando el  while y prodece  a insertarlo. devuelve un mensaje de confirmacion Ok
         [HttpPost]
         public async Task<IActionResult> setListDispositivosStock([FromBody] ListaDispositivoStock newDispositivo)
         {
             connection.ConnectionString = server.init();
             int i = 0;
             while (newDispositivo.Stocks.Count > i)
-            {
+            {// inserta 1 por cada vez que i aumente 
                 string query = $"INSERT INTO \"DispositivoStock\" VALUES({newDispositivo.Stocks.ElementAt(i).NumeroSerie},'{newDispositivo.Stocks.ElementAt(i).Marca}'," +
                     $"{newDispositivo.Stocks.ElementAt(i).ConsumoElectrico},{newDispositivo.Stocks.ElementAt(i).CedulaJuridica},'{newDispositivo.Stocks.ElementAt(i).Tipo}'," +
                     $"{newDispositivo.Stocks.ElementAt(i).TiempoGarantia}," +
@@ -92,6 +103,8 @@ namespace WebServices.Controllers
             return Ok();
 
         }
+        // Este metodo Recibe  un numero de serie, este  dispositivo solo e posible eliminarlo  si  no ha sido vendido, 
+        // por esa razón se evalua  que  los elementos  tengan el parametro  "enVenta"=true para saber que no se han selecionado aun 
          [HttpDelete("{numeroSerie}")]
         public async Task<IActionResult> DeleteDispStock(int numeroSerie)
         {
@@ -123,6 +136,9 @@ namespace WebServices.Controllers
 
             }
         }
+
+        //Este metodo recibe  un dispositivo de la pagina web  y lo actualiza, validano que este esté almacenado y que los parametros 
+        // de inserción sean los permitidos
         [HttpPost]
         public async Task<IActionResult> UpdateDispositivoStock([FromBody] DispositivoStock disp)
         {

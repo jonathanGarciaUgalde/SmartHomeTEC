@@ -12,6 +12,15 @@ using System.Security.Cryptography;
 namespace WebServices.Controllers
 {
 
+
+
+    ///<summary>
+    /// Esta Clase  le permmite al usuario  realizar un pedido del producto selecionado  y poder   obtener así su factura  y  cerfificado de garantia  
+    ///</summary>
+    ///<remarks>
+    ///
+    ///</remarks>
+
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class PedidoFacturaController : ControllerBase
@@ -26,6 +35,7 @@ namespace WebServices.Controllers
         {
             return Ok(getListcurrentDispStock());
         }
+        //Devuelve los pedidos que se han realizado 
         public List<Pedido> getListcurrentDispStock()
         {
             string query = $"SELECT " +
@@ -50,7 +60,8 @@ namespace WebServices.Controllers
             return ListPedidos;
         }
 
-
+//Este metodo es el  encargado de realizar la gestion del pedido, lo toma, lo valida,  lo  inserta
+// i se devuelve el valor  de los 
         [HttpPost]
         public async Task<IActionResult> SetVenta([FromBody] Pedido pedido)
         {
@@ -77,8 +88,8 @@ namespace WebServices.Controllers
             return Ok(GetFactura(pedido));
         }
 
-            
 
+          
         
         public Tuple<Factura, CertificadoGarantia> GetFactura(Pedido pedido) {
             connection.ConnectionString = server.init();

@@ -17,6 +17,9 @@ namespace WebServices.Controllers
         ServerConexion server = new ServerConexion();// conexion de servidor 
         Validaciones validaciones = new Validaciones();
 
+        // Este Metodo hace  que se  se le muestre al usuario los dispositivos asociados a la region
+        // Este devuelve mediante el protocolo http   las restriciones  que deben tomarse en cuenta en la base de datos para obtenerlos
+
         [HttpPost]
         public async Task<IActionResult> GetDispositivoStock(User usuario)
         { connection.ConnectionString = server.init();
@@ -52,7 +55,7 @@ namespace WebServices.Controllers
             }
             catch {
 
-                return BadRequest("TeMamaste"); }
+                return BadRequest("Ese usuario no tiene una  region permitida"); }
 
         }
       

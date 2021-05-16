@@ -6,6 +6,9 @@ using WebServices.Models;
 
 namespace WebServices.Models
 {
+    // modelo  que convierte  las peticiones 
+    //que se realicen con él por los metodos POST,
+    //GET,PUT,DELETE, y generan estructuras de DispositivoStock
     public class DispositivoStock
     {
         public int NumeroSerie { get; set; }

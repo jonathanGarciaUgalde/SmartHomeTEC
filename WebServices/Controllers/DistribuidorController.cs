@@ -9,8 +9,19 @@ using WebServices.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
+
+
 namespace WebServices.Controllers
 {
+
+
+
+    ///<summary>
+    /// Esta Clase  consisten en  realizar  Gestion de dispositivos manuales, que le cliente  pueda editar 
+    ///</summary>
+    ///<remarks>
+    ///Es importante mencionar   que exist
+    ///</remarks>
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class DistribuidorController : ControllerBase

@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace WebServices.Models
 {
+    // modelo  que convierte  las peticiones 
+    //que se realicen con él por los metodos POST,
+    //GET,PUT,DELETE, y generan estructuras de Factura 
     public class Factura
     { public string Consecutivo { get; set; }
         public string Fecha { get; set; }
