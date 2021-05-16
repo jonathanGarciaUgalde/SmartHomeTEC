@@ -54,31 +54,35 @@ namespace WebServices.Controllers
         [HttpPost]
         public async Task<IActionResult> SetVenta([FromBody] Pedido pedido)
         {
+            connection.ConnectionString = server.init();
+            connection.Open();
+            string query = $"INSERT INTO \"Pedido\"(\"correoComprador\"," +
+                $"\"fecha\",\"numeroSerie\") VALUES('{pedido.CorreoComprador}'" +
+                $",'{pedido.Fecha}',{pedido.NumeroSerie});";
 
-              
-                connection.ConnectionString = server.init();
-                connection.Open();
-                string query = $"INSERT INTO \"Pedido\"(\"correoComprador\"," +
-                    $"\"fecha\",\"numeroSerie\") VALUES('{pedido.CorreoComprador}'" +
-                    $",'{pedido.Fecha}',{pedido.NumeroSerie});";
-               
-                NpgsqlCommand insertVenta = new NpgsqlCommand(query, connection);
-                insertVenta.ExecuteNonQuery();
-               
-                // se toma el dispositivo y se le  actualiza el  estado para que 
-                //ya no esté disponible en los dispositivos
-                string query1 = $"UPDATE \"DispositivoStock\" SET \"enVenta\" ={ false } WHERE \"numeroSerie\" = {pedido.NumeroSerie};";
-                
-                NpgsqlCommand command = new NpgsqlCommand(query1, connection);
-                command.ExecuteNonQuery();
-                connection.Close();
-                return Ok(GetFactura(pedido));
+            NpgsqlCommand insertVenta = new NpgsqlCommand(query, connection);
+            insertVenta.ExecuteNonQuery();
+
+            // se toma el dispositivo y se le  actualiza el  estado para que 
+            //ya no esté disponible en los dispositivos
+            string query1 = $"UPDATE \"DispositivoStock\" SET \"enVenta\" ={ false } WHERE \"numeroSerie\" = {pedido.NumeroSerie};";
+
+            NpgsqlCommand command = new NpgsqlCommand(query1, connection);
+            command.ExecuteNonQuery();
+            connection.Close();
+           // Tuple<Factura, CertificadoGarantia> request = new Tuple<Factura, CertificadoGarantia>(GetFactura(pedido), GetCertificado(pedido));
+
+
+
+            return Ok(GetFactura(pedido));
+        }
 
             
 
-        }
-        public Factura GetFactura(Pedido pedido) {
-
+        
+        public Tuple<Factura, CertificadoGarantia> GetFactura(Pedido pedido) {
+            connection.ConnectionString = server.init();
+          
             // se trae el Dispositivo para  insertarlo en la Factura 
             string queryDipositivoStock =  $"SELECT " +
                $"                    \"numeroSerie\", \"marca\", \"consumoElectrico\"," +
@@ -92,7 +96,6 @@ namespace WebServices.Controllers
             commandDisStock.ExecuteNonQuery();
             NpgsqlDataReader dr = commandDisStock.ExecuteReader();
             dr.Read();
-
             DispositivoStock dispositivoStock = new DispositivoStock()
             {
                 NumeroSerie = (int)dr["numeroSerie"],
@@ -108,16 +111,26 @@ namespace WebServices.Controllers
             Factura factura = new Factura() {
 
                 Consecutivo = GetCode(3),
-                Fecha =$" {DateTime.Now.DayOfWeek.ToString()} {DateTime.Now.Day.ToString()}of the year{DateTime.Now.Year.ToString()}",
+                Fecha =$" {DateTime.Now.DayOfWeek.ToString()} {DateTime.Now.Day.ToString()}of the year {DateTime.Now.Year.ToString()}",
                 Hora = $"{DateTime.Now.Hour.ToString()}:{DateTime.Now.Minute.ToString()}",
                 CorreoComprador = pedido.CorreoComprador,
                 Producto = dispositivoStock
-
-
             };
+            CertificadoGarantia garantia = new CertificadoGarantia()
+            {
+                Serie = pedido.NumeroSerie,
+
+                CorreoUsuario = pedido.CorreoComprador,
+                FechaLimite = factura.Hora
+            };
+
+
+            Tuple<Factura, CertificadoGarantia> request = new Tuple<Factura, CertificadoGarantia>(factura, garantia);
+
             connection.Close();
-            return factura;
+            return request;
         }
+
 
         [HttpPost]
         public async Task<IActionResult> GetAllPedidos()
